@@ -1,2 +1,37 @@
+name: Daily MLB Lines Update
+
+on:
+  schedule:
+    - cron: '0 16 * * *'   # 12:00 PM Eastern every day
+  workflow_dispatch:         # lets you also click "Run" manually anytime
+
 permissions:
-  contents: write
+  contents: write            # THIS is what was missing — allows the bot to push commits
+
+jobs:
+  update-site:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run generator
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: python generate.py
+
+      - name: Commit and push
+        run: |
+          git config user.name "MLB Bot"
+          git config user.email "bot@mlbsharplines.com"
+          git add index.html
+          git diff --staged --quiet || git commit -m "Daily update $(date +'%B %d %Y')"
+          git push
