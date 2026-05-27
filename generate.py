@@ -5,7 +5,7 @@ Costs: $0.00/month
 """
 
 import os, json, sys, requests
-from datetime import datetime
+from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
 ODDS_API_KEY = os.environ.get("ODDS_API_KEY", "")
@@ -28,8 +28,25 @@ def fetch_odds():
         timeout=30
     )
     r.raise_for_status()
-    games = r.json()
-    print(f"Got {len(games)} games")
+    all_games = r.json()
+
+    # ── FILTER OUT GAMES THAT HAVE ALREADY STARTED ──────────
+    # The API returns live in-play lines for games in progress.
+    # Those lines are completely different from pre-game odds
+    # and will skew analysis badly (e.g. Angels +436 mid-game).
+    now_utc = datetime.now(timezone.utc)
+    games = []
+    for g in all_games:
+        try:
+            start = datetime.fromisoformat(g["commence_time"].replace("Z", "+00:00"))
+            if start > now_utc:
+                games.append(g)   # only keep games that haven't started
+            else:
+                print(f"  Skipping in-progress/finished: {g['away_team']} @ {g['home_team']}")
+        except Exception:
+            games.append(g)       # if we can't parse the time, include it
+
+    print(f"Got {len(all_games)} total games, {len(games)} not yet started")
     return games
 
 
