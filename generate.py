@@ -274,14 +274,21 @@ def analyze_game(game):
     try:
         t = datetime.fromisoformat(game.get("commence_time","").replace("Z","+00:00")).astimezone(EASTERN)
         time_display = t.strftime("%-I:%M %p ET")
+        date_et      = t.strftime("%A, %B %d")   # e.g. "Wednesday, May 28"
+        date_sort    = t.strftime("%Y-%m-%d")     # for sorting
     except:
         time_display = ""
+        date_et      = "Today"
+        date_sort    = "9999-99-99"
 
     return {
         "game":          f"{away} @ {home}",
+        "game_id":       game.get("id", ""),
         "away":          away,
         "home":          home,
         "time":          time_display,
+        "date_et":       date_et,
+        "date_sort":     date_sort,
         "signal":        signal,
         "signal_label":  signal_label,
         "split_market":  split_market,
@@ -440,6 +447,7 @@ def build_html(analyzed_games, date_str, time_str):
             home_fav = "fav" if g["home_true"] > g["away_true"] else ""
 
             # Book rows
+            # ── BOOK ROWS with fixed totals display ──────────────
             book_rows = ""
             for b in g["book_data"]:
                 def pc(price, is_best, is_worst, is_out):
@@ -448,23 +456,31 @@ def build_html(analyzed_games, date_str, time_str):
                     if is_worst: return f'<td class="pw">{fp} ✗</td>'
                     if is_out:   return f'<td class="po">{fp} ⚠</td>'
                     return f'<td class="pc">{fp}</td>'
-                total_str = f'O{b["total_line"]} {"+"+str(b["over_price"]) if b.get("over_price","") and b["over_price"]>0 else b.get("over_price","—")}' if b.get("total_line") else "—"
+
+                # Fixed totals display
+                if b.get("total_line") and b.get("over_price") is not None:
+                    op = b["over_price"]
+                    op_str = f"+{op}" if op > 0 else str(op)
+                    total_str = f'O/U {b["total_line"]} &nbsp;<span style="color:var(--accent)">{op_str}</span>'
+                else:
+                    total_str = '<span style="color:var(--dim)">—</span>'
+
                 book_rows += f"""<tr>
               <td class="book">{b["name"]}</td>
               {pc(b["away_price"], b.get("best_away"), b.get("worst_away"), b.get("outlier_away"))}
               <td class="prob">{b["away_imp"]}%</td>
               {pc(b["home_price"], b.get("best_home"), b.get("worst_home"), b.get("outlier_home"))}
               <td class="prob">{b["home_imp"]}%</td>
-              <td class="prob c-muted">{total_str}</td>
+              <td class="prob">{total_str}</td>
             </tr>"""
 
-            # Best bet
-            bb_cls   = "best-bet pass" if g["bet_is_pass"] else "best-bet"
-            hdr_col  = "style='color:var(--muted)'" if g["bet_is_pass"] else ""
-            pl_col   = "style='color:#777'" if g["bet_is_pass"] else ""
-            sub_col  = "style='color:var(--muted)'" if g["bet_is_pass"] else ""
-            best_ap  = f"{'+' if g['best_away']['away_price']>0 else ''}{g['best_away']['away_price']}"
-            best_hp  = f"{'+' if g['best_home']['home_price']>0 else ''}{g['best_home']['home_price']}"
+            # ── BEST BET BOX ──────────────────────────────────────
+            bb_cls  = "best-bet pass" if g["bet_is_pass"] else "best-bet"
+            hdr_col = "style='color:var(--muted)'" if g["bet_is_pass"] else ""
+            pl_col  = "style='color:#777'" if g["bet_is_pass"] else ""
+            sub_col = "style='color:var(--muted)'" if g["bet_is_pass"] else ""
+            best_ap = f"{'+' if g['best_away']['away_price']>0 else ''}{g['best_away']['away_price']}"
+            best_hp = f"{'+' if g['best_home']['home_price']>0 else ''}{g['best_home']['home_price']}"
 
             best_bet = f"""
           <div class="{bb_cls}">
@@ -473,13 +489,47 @@ def build_html(analyzed_games, date_str, time_str):
             <div class="bb-sub" {sub_col}>{g["bet_sub"]}</div>
             <div class="bb-stats">
               <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">{g["away_true"]}% / {g["home_true"]}%</div></div>
-              <div class="bbs"><div class="bbs-label">Best {g["away"]} price</div><div class="bbs-val">{best_ap} @ {g["best_away"]["name"]}</div></div>
-              <div class="bbs"><div class="bbs-label">Best {g["home"]} price</div><div class="bbs-val">{best_hp} @ {g["best_home"]["name"]}</div></div>
-              <div class="bbs"><div class="bbs-label">Edge Signal</div><div class="bbs-val {'green' if not g['bet_is_pass'] else 'c-muted'}">{g["bet_edge"]}</div></div>
+              <div class="bbs"><div class="bbs-label">Best {g["away"][:12]}</div><div class="bbs-val">{best_ap} @ {g["best_away"]["name"]}</div></div>
+              <div class="bbs"><div class="bbs-label">Best {g["home"][:12]}</div><div class="bbs-val">{best_hp} @ {g["best_home"]["name"]}</div></div>
+              <div class="bbs"><div class="bbs-label">Edge</div><div class="bbs-val {'green' if not g['bet_is_pass'] else 'c-muted'}">{g["bet_edge"]}</div></div>
             </div>
           </div>"""
 
-            html += f"""
+            # ── PLAYER PROPS SECTION ──────────────────────────────
+            props_html = ""
+            if g.get("props"):
+                grouped = {}
+                for p in g["props"]:
+                    lbl = p["market_label"]
+                    if lbl not in grouped:
+                        grouped[lbl] = []
+                    grouped[lbl].append(p)
+
+                props_html = '<div class="props-section"><div class="props-header">🎯 Player Props — Best Available Lines</div>'
+                for mkt_label, entries in grouped.items():
+                    props_html += f'<div class="props-market-label">{mkt_label}</div>'
+                    props_html += '<table class="props-table"><thead><tr><th>Player</th><th>Line</th><th>Best Over</th><th>True Over%</th><th>Best Under</th><th>True Under%</th></tr></thead><tbody>'
+                    for e in entries:
+                        op = e.get("best_over_price")
+                        up = e.get("best_under_price")
+                        op_str = (f"+{op}" if op and op > 0 else str(op)) if op else "—"
+                        up_str = (f"+{up}" if up and up > 0 else str(up)) if up else "—"
+                        ob = e.get("best_over_book","—")
+                        ub = e.get("best_under_book","—")
+                        to = f'{e["true_over_pct"]}%'  if e.get("true_over_pct")  else "—"
+                        tu = f'{e["true_under_pct"]}%' if e.get("true_under_pct") else "—"
+                        props_html += f'<tr><td class="book">{e["player"]}</td><td class="mono">{e["point"]}</td><td class="pb" style="font-size:11px">{op_str} <span style="color:var(--muted);font-weight:400">@ {ob}</span></td><td class="prob">{to}</td><td class="pc" style="font-size:11px">{up_str} <span style="color:var(--muted);font-weight:400">@ {ub}</span></td><td class="prob">{tu}</td></tr>'
+                    props_html += '</tbody></table>'
+                props_html += '</div>'
+            elif FETCH_PROPS:
+                props_html = '<div class="props-section"><div class="props-header">🎯 Player Props</div><p style="font-size:12px;color:var(--muted);padding:8px 0">No props available for this game.</p></div>'
+
+            # ── DATE HEADER (inject before first game of each day) ─
+            day_header = ""
+            if i == 0 or g["date_et"] != analyzed_games[i-1]["date_et"]:
+                day_header = f'<div class="day-header"><span class="day-label">{g["date_et"]}</span></div>'
+
+            html += day_header + f"""
         <div class="game-block {open_cls}" onclick="toggleGame(this)">
           <div class="game-header">
             <div>
@@ -508,9 +558,10 @@ def build_html(analyzed_games, date_str, time_str):
                   <div class="cb-line">Fair: {g["home_fair"]}</div>
                 </div>
               </div>
-              <div class="cb-method">Implied probability extracted from each book, vig removed via normalization, averaged across all non-outlier books.</div>
+              <div class="cb-method">Vig removed from each book via normalization, averaged across all non-outlier books.</div>
             </div>
             {best_bet}
+            {props_html}
           </div>
         </div>"""
         return html
@@ -652,6 +703,18 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .bb-reason{display:none}
 .best-bet.pass .bb-play{color:#777}
 .best-bet.pass .bb-sub{color:var(--muted)}
+.day-header{display:flex;align-items:center;gap:12px;margin:1.5rem 0 10px}
+.day-label{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1.5px;white-space:nowrap}
+.day-header::after{content:'';flex:1;height:1px;background:rgba(163,230,53,0.2)}
+.props-section{margin-top:12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
+.props-header{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-family:'IBM Plex Mono',monospace;font-weight:700;margin-bottom:10px}
+.props-market-label{font-size:11px;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:0.5px;margin:10px 0 5px;padding-top:8px;border-top:1px solid var(--border)}
+.props-market-label:first-of-type{margin-top:0;padding-top:0;border-top:none}
+.props-table{width:100%;border-collapse:collapse;font-size:11px}
+.props-table th{text-align:left;padding:4px 8px;font-size:10px;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted);font-weight:500;font-family:'IBM Plex Mono',monospace;border-bottom:1px solid var(--border)}
+.props-table td{padding:6px 8px;border-bottom:1px solid rgba(39,39,42,0.5)}
+.props-table tr:last-child td{border-bottom:none}
+.props-table tr:hover td{background:rgba(255,255,255,0.012)}
 footer{margin-left:var(--sidebar);background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 2rem;font-size:11px;color:var(--muted);text-align:center;line-height:1.8}
 @media(max-width:900px){.sidebar{transform:translateX(-100%)}.main{margin-left:0}.metrics-grid{grid-template-columns:repeat(2,1fr)}.alert-grid{grid-template-columns:1fr}.home-grid{grid-template-columns:1fr 1fr}.bb-stats{grid-template-columns:1fr 1fr}footer{margin-left:0}}
 </style>"""
@@ -789,11 +852,18 @@ def main():
     for g in games_raw:
         result = analyze_game(g)
         if result:
+            # Attach player props if enabled
+            if FETCH_PROPS:
+                print(f"  Fetching props for {result['game']}...")
+                raw_props = fetch_props(result["game_id"])
+                result["props"] = best_props(raw_props)
+            else:
+                result["props"] = []
             analyzed.append(result)
 
-    # Sort: fire first, then value, then watch
-    order = {"fire": 0, "sharp": 1, "value": 2, "watch": 3, "pass": 4}
-    analyzed.sort(key=lambda x: order.get(x["signal"], 3))
+    # Sort by DATE first, then by signal within each day
+    signal_order = {"fire": 0, "sharp": 1, "value": 2, "watch": 3, "pass": 4}
+    analyzed.sort(key=lambda x: (x["date_sort"], signal_order.get(x["signal"], 3)))
 
     html = build_html(analyzed, date_str, time_str)
 
