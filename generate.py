@@ -543,6 +543,42 @@ def build_matchup_data(odds_games, date_str):
         mlb_game = mlb_lookup.get((away_id,home_id)) or mlb_lookup.get((home_id,away_id))
         away_p_raw = mlb_game.get("teams",{}).get("away",{}).get("probablePitcher") if mlb_game else None
         home_p_raw = mlb_game.get("teams",{}).get("home",{}).get("probablePitcher") if mlb_game else None
+
+        # Fallback: if probable pitcher missing from schedule, try direct team probable starter
+        if not away_p_raw and away_id:
+            try:
+                tp = mlb_get(f"/teams/{away_id}/roster",{"rosterType":"active","hydrate":"probablePitcher"})
+                if tp:
+                    # Try fetching via schedule with team filter
+                    ts = mlb_get("/schedule",{"sportId":1,"date":date_str,"teamId":away_id,"hydrate":"probablePitcher"})
+                    if ts:
+                        for db in ts.get("dates",[]):
+                            for tg in db.get("games",[]):
+                                pp = tg.get("teams",{}).get("away",{}).get("probablePitcher") or \
+                                     tg.get("teams",{}).get("home",{}).get("probablePitcher")
+                                if pp:
+                                    # Match to correct side
+                                    taid = tg.get("teams",{}).get("away",{}).get("team",{}).get("id")
+                                    if taid == away_id:
+                                        away_p_raw = tg.get("teams",{}).get("away",{}).get("probablePitcher")
+                                    else:
+                                        away_p_raw = tg.get("teams",{}).get("home",{}).get("probablePitcher")
+                                    break
+            except Exception:
+                pass
+
+        if not home_p_raw and home_id:
+            try:
+                ts = mlb_get("/schedule",{"sportId":1,"date":date_str,"teamId":home_id,"hydrate":"probablePitcher"})
+                if ts:
+                    for db in ts.get("dates",[]):
+                        for tg in db.get("games",[]):
+                            thid = tg.get("teams",{}).get("home",{}).get("team",{}).get("id")
+                            if thid == home_id:
+                                home_p_raw = tg.get("teams",{}).get("home",{}).get("probablePitcher")
+                                break
+            except Exception:
+                pass
         away_pitcher = fetch_pitcher_stats(away_p_raw["id"] if away_p_raw else None)
         home_pitcher = fetch_pitcher_stats(home_p_raw["id"] if home_p_raw else None)
 
@@ -1507,13 +1543,23 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                     f'<table class="dtable"><thead><tr><th>Batter</th><th>Pos</th><th>AB</th>'
                     f'<th>H</th><th>HR</th><th>K</th><th>Career BA</th></tr></thead>'
                     f'<tbody>{rows}</tbody></table>')
+        # Build date lookup from analyzed_games
+        date_lookup = {g["game"]: g.get("date_et","Today") for g in analyzed_games}
         html=""
+        prev_date = None
         for i,m in enumerate(matchups):
             open_cls="open" if i<1 else ""
             ap=m["away_pitcher"]; hp=m["home_pitcher"]
             ap_era=f'ERA {ap["era"]}' if ap.get("era","N/A")!="N/A" else "ERA N/A"
             hp_era=f'ERA {hp["era"]}' if hp.get("era","N/A")!="N/A" else "ERA N/A"
-            html+=(f'<div class="game-block {open_cls}" onclick="toggleGame(this)">'
+            # Day header
+            game_date = date_lookup.get(m["game"], "Today")
+            day_hdr = ""
+            if game_date != prev_date:
+                day_hdr = f'<div class="day-header"><span class="day-label">{game_date}</span></div>'
+                prev_date = game_date
+            html+=(day_hdr+
+                   f'<div class="game-block {open_cls}" onclick="toggleGame(this)">'
                    f'<div class="game-header">'
                    f'<div><div class="game-teams">{m["away"]} @ {m["home"]}</div>'
                    f'<div class="game-time">{ap["name"]} vs {hp["name"]}</div></div>'
@@ -1550,9 +1596,15 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
         if not weather:
             return '<p style="color:var(--muted);font-size:13px;padding:2rem 0;text-align:center">Weather data unavailable.</p>'
         html=""
+        prev_date = None
         for g in analyzed_games:
             home=g["home"]; away=g["away"]; w=weather.get(home)
             if not w: continue
+            # Day header
+            game_date = g.get("date_et","Today")
+            if game_date != prev_date:
+                html += f'<div class="day-header"><span class="day-label">{game_date}</span></div>'
+                prev_date = game_date
             if w.get("roof"):
                 html+=(f'<div class="game-block" onclick="toggleGame(this)">'
                        f'<div class="game-header">'
