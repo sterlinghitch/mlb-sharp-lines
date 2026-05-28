@@ -15,6 +15,20 @@ from zoneinfo import ZoneInfo
 EASTERN  = ZoneInfo("America/New_York")
 MLB_BASE = "https://statsapi.mlb.com/api/v1"
 
+MLB_IDS = {
+    "New York Yankees":147,"Boston Red Sox":111,"Tampa Bay Rays":139,
+    "Baltimore Orioles":110,"Toronto Blue Jays":141,"Chicago White Sox":145,
+    "Cleveland Guardians":114,"Detroit Tigers":116,"Kansas City Royals":118,
+    "Minnesota Twins":142,"Houston Astros":117,"Los Angeles Angels":108,
+    "Athletics":133,"Oakland Athletics":133,"Seattle Mariners":136,
+    "Texas Rangers":140,"Atlanta Braves":144,"Miami Marlins":146,
+    "New York Mets":121,"Philadelphia Phillies":143,"Washington Nationals":120,
+    "Chicago Cubs":112,"Cincinnati Reds":113,"Milwaukee Brewers":158,
+    "Pittsburgh Pirates":134,"St. Louis Cardinals":138,"Arizona Diamondbacks":109,
+    "Colorado Rockies":115,"Los Angeles Dodgers":119,"San Diego Padres":135,
+    "San Francisco Giants":137,
+}
+
 
 # =============================================================
 # HELPERS
@@ -272,8 +286,42 @@ def main():
 
     bets = picks_data.get("bets", [])
     if not bets:
-        print("picks.json has no bets recorded — nothing to grade.")
-        sys.exit(0)
+        # picks.json is empty — check if there are unresolved pushes in results.json
+        # that the 4am safety-net run should attempt to fix
+        results_data = load_json("results.json") or {"days": []}
+        existing_day = next((d for d in results_data.get("days",[])
+                             if d.get("date") == display_date), None)
+        if existing_day:
+            unresolved = [b for b in existing_day.get("bets",[]) if b.get("result")=="P"]
+            if unresolved:
+                print(f"picks.json is empty but found {len(unresolved)} unresolved pushes in results.json for {display_date} -- re-grading.")
+                # Reconstruct bets from results.json for re-grading
+                # We can only re-grade if we have enough info (game + type fields)
+                # Pushes without type info will stay as pushes
+                bets = []
+                for b in existing_day.get("bets",[]):
+                    bets.append({
+                        "game":       b.get("game",""),
+                        "play":       b.get("play",""),
+                        "price":      b.get("price",""),
+                        "book":       b.get("book",""),
+                        "signal":     b.get("signal",""),
+                        "type":       "total" if "Runs" in b.get("play","") else "ml",
+                        "away":       b.get("game","").split(" @ ")[0] if " @ " in b.get("game","") else "",
+                        "home":       b.get("game","").split(" @ ")[1] if " @ " in b.get("game","") else "",
+                        "away_id":    MLB_IDS.get(b.get("game","").split(" @ ")[0]) if " @ " in b.get("game","") else None,
+                        "home_id":    MLB_IDS.get(b.get("game","").split(" @ ")[1]) if " @ " in b.get("game","") else None,
+                        "side":       b.get("play","").split()[0] if "Runs" in b.get("play","") else None,
+                        "total_line": float(b.get("play","").split()[1]) if "Runs" in b.get("play","") and len(b.get("play","").split())>1 else None,
+                        "pick_team":  b.get("play","").replace(" Moneyline","") if "Moneyline" in b.get("play","") else None,
+                    })
+                picks_date = display_date
+            else:
+                print(f"picks.json is empty and no unresolved pushes found for {display_date} -- nothing to do.")
+                sys.exit(0)
+        else:
+            print("picks.json has no bets recorded -- nothing to grade.")
+            sys.exit(0)
 
     print(f"Found {len(bets)} best bets to grade.")
 
@@ -360,10 +408,17 @@ def main():
     # Load existing results.json
     results_data = load_json("results.json") or {"days": []}
 
-    # Check if this date already exists in results (avoid duplicates on re-run)
+    # If this date already exists, only update if we can improve on pushes/skips
+    # (handles the 4am safety-net re-run upgrading pushes from the 1am run)
     existing_dates = [d.get("date", "") for d in results_data.get("days", [])]
     if display_date in existing_dates:
-        print(f"results.json already has an entry for {display_date} — updating it.")
+        existing_day = next(d for d in results_data["days"] if d.get("date") == display_date)
+        existing_pushes = sum(1 for b in existing_day.get("bets",[]) if b.get("result")=="P")
+        new_pushes      = sum(1 for b in graded_bets if b.get("result")=="P")
+        if new_pushes >= existing_pushes and skipped == 0:
+            print(f"No improvement over existing entry for {display_date} ({existing_pushes} pushes -> {new_pushes} pushes) -- skipping update")
+            sys.exit(0)
+        print(f"Upgrading {display_date}: {existing_pushes} pushes -> {new_pushes} pushes. Updating.")
         results_data["days"] = [d for d in results_data["days"] if d.get("date") != display_date]
 
     # Prepend today's results (most recent at top)
@@ -375,9 +430,13 @@ def main():
     save_json("results.json", results_data)
     print(f"results.json updated — {display_date} logged ({wins}W/{losses}L/{pushes}P)")
 
-    # Clear picks.json so it doesn't get double-graded
-    save_json("picks.json", {"date": picks_date, "bets": [], "graded": True})
-    print("picks.json cleared (marked graded)")
+    # Only clear picks.json on the final pass (when no skipped bets remain)
+    # This lets the 4am run re-grade any pushes from the 1am run
+    if skipped == 0 and pushes == 0:
+        save_json("picks.json", {"date": picks_date, "bets": [], "graded": True})
+        print("picks.json cleared — all bets graded cleanly")
+    else:
+        print(f"picks.json kept — {skipped} skipped / {pushes} pushes may resolve on next run")
 
 
 if __name__ == "__main__":
