@@ -1,0 +1,38 @@
+name: Nightly Result Logger
+
+on:
+  schedule:
+    # Runs at 1:00 AM ET (6:00 AM UTC) — all MLB games including west coast have finished by then
+    - cron: '0 6 * * *'
+  workflow_dispatch:   # also allows manual trigger from Actions tab
+
+jobs:
+  log-results:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write   # needed to commit results.json and picks.json back to repo
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run result logger
+        run: python log_results.py
+
+      - name: Commit updated results
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Actions"
+          git add results.json picks.json
+          # Only commit if something actually changed
+          git diff --staged --quiet || git commit -m "Auto: log best bet results $(date -u '+%Y-%m-%d')"
+          git push
