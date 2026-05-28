@@ -135,23 +135,33 @@ def fetch_odds():
         timeout=30,
     )
     r.raise_for_status()
-    all_games = r.json()
-    now_et = datetime.now(EASTERN)
-    today_et = now_et.date()
+    all_games    = r.json()
+    now_et       = datetime.now(EASTERN)
+    now_utc      = datetime.now(timezone.utc)
+    today_et     = now_et.date()
     yesterday_et = today_et - timedelta(days=1)
     live_yesterday = fetch_live_mlb_games(yesterday_et.strftime("%Y-%m-%d"))
     games = []
     for g in all_games:
         try:
-            start = datetime.fromisoformat(g["commence_time"].replace("Z","+00:00"))
-            start_date = start.astimezone(EASTERN).date()
-            if start_date >= today_et:
+            start      = datetime.fromisoformat(g["commence_time"].replace("Z","+00:00"))
+            start_et   = start.astimezone(EASTERN)
+            start_date = start_et.date()
+            if start_date == today_et:
+                # Only include today's games that have NOT started yet
+                if start > now_utc:
+                    games.append(g)
+                else:
+                    print(f"  Skipping started: {g['away_team']} @ {g['home_team']} ({start_et.strftime('%-I:%M %p ET')})")
+            elif start_date > today_et:
+                # Future games always included
                 games.append(g)
             elif start_date == yesterday_et:
+                # Yesterday only if still live (west coast past-midnight)
                 aid = MLB_IDS.get(g["away_team"])
                 hid = MLB_IDS.get(g["home_team"])
                 if aid and hid and (aid,hid) in live_yesterday:
-                    print(f"  Live past-midnight: {g['away_team']} @ {g['home_team']}")
+                    print(f"  Keeping live past-midnight: {g['away_team']} @ {g['home_team']}")
                     games.append(g)
                 else:
                     print(f"  Skipping finished: {g['away_team']} @ {g['home_team']}")
@@ -159,7 +169,7 @@ def fetch_odds():
                 print(f"  Skipping old: {g['away_team']} @ {g['home_team']}")
         except Exception:
             games.append(g)
-    print(f"Got {len(all_games)} total, {len(games)} upcoming")
+    print(f"Got {len(all_games)} total, {len(games)} not yet started")
     return games
 
 
@@ -796,10 +806,12 @@ def analyze_game(game, context):
     # Qualify for value tab if:
     #   1. Book discrepancy signal (fire/value/sharp), OR
     #   2. Best bet has a genuine +2.5% or better edge from model adjustments
-    # Either way, must not be a pass
+    # Either way, must not be a pass and edge must be at least -1%
+    # (discrepancy plays are still shown even with slight negative edge
+    #  since the discrepancy itself is the signal, but hard cap at -1%)
     best_bet_edge_val = max((c["edge_val"] for c in candidates), default=0.0)
 
-    qualifies = (not bet_is_pass) and (
+    qualifies = (not bet_is_pass) and (best_bet_edge_val >= -1.0) and (
         signal in ("fire","value","sharp") or best_bet_edge_val >= 2.5
     )
 
