@@ -1081,51 +1081,97 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
     def parlay_legs_html(plays):
         if not plays:
             return '<div style="color:var(--muted);font-size:13px">No value plays available today to add as legs.</div>'
+
+        # Build date lookup from analyzed_games
+        date_lookup = {g["game"]: g.get("date_et","Today") for g in analyzed_games}
+        time_lookup = {g["game"]: g.get("time","") for g in analyzed_games}
+
+        # Group plays by date
+        from collections import OrderedDict
+        grouped = OrderedDict()
+        for p in plays[:12]:
+            game_date = date_lookup.get(p.get("game",""), "Today")
+            grouped.setdefault(game_date, []).append(p)
+
         rows = ""
-        for p in plays[:10]:
-            play  = p.get("play_label", p.get("team","") + " ML")
-            price = p.get("best_price","?")
-            tp    = p.get("true_pct",0)
-            game  = p.get("game","")
-            edge  = p.get("edge",0)
-            ec    = "var(--green)" if edge>0 else "var(--muted)"
-            rows += (f'<div style="display:flex;align-items:center;gap:10px;background:var(--bg2);'
-                     f'border:1px solid var(--border);border-radius:8px;padding:8px 12px">'
-                     f'<div style="flex:1">'
-                     f'<div style="font-size:13px;font-weight:700;color:var(--text)">{play}</div>'
-                     f'<div style="font-size:11px;color:var(--muted)">{game}</div>'
-                     f'</div>'
-                     f'<span style="font-family:monospace;color:var(--accent)">{price}</span>'
-                     f'<span style="font-family:monospace;font-size:11px;color:{ec}">'
-                     f'{("+" if edge>0 else "")}{edge}%</span>'
-                     f'<button onclick="addParlayLeg(\'{game.replace(chr(39),"")}\',\'{play.replace(chr(39),"")}\',\'{price}\',\'{tp}\')" '
-                     f'style="background:var(--green-bg);border:1px solid var(--green-border);color:var(--green);'
-                     f'border-radius:4px;padding:3px 10px;cursor:pointer;font-size:12px;font-weight:700">+</button>'
-                     f'</div>')
+        for date_lbl, date_plays in grouped.items():
+            rows += (f'<div style="font-size:10px;font-family:monospace;text-transform:uppercase;'
+                     f'letter-spacing:1.5px;color:var(--accent);padding:8px 4px 4px;'
+                     f'font-weight:700">{date_lbl}</div>')
+            for p in date_plays:
+                play  = p.get("play_label", p.get("team","") + " ML")
+                price = p.get("best_price","?")
+                tp    = p.get("true_pct",0)
+                game  = p.get("game","")
+                edge  = p.get("edge",0)
+                gtime = time_lookup.get(game,"")
+                ec    = "var(--green)" if edge>0 else "var(--muted)"
+                rows += (f'<div style="display:flex;align-items:center;gap:10px;background:var(--bg2);'
+                         f'border:1px solid var(--border);border-radius:8px;padding:8px 12px">'
+                         f'<div style="flex:1">'
+                         f'<div style="font-size:13px;font-weight:700;color:var(--text)">{play}</div>'
+                         f'<div style="font-size:11px;color:var(--muted)">{game}</div>'
+                         f'<div style="font-size:10px;color:var(--dim);font-family:monospace">{gtime}</div>'
+                         f'</div>'
+                         f'<span style="font-family:monospace;color:var(--accent)">{price}</span>'
+                         f'<span style="font-family:monospace;font-size:11px;color:{ec}">'
+                         f'{("+" if edge>0 else "")}{edge}%</span>'
+                         f'<button onclick="addParlayLeg(\'{game.replace(chr(39),"")}\',\'{play.replace(chr(39),"")}\',\'{price}\',\'{tp}\')" '
+                         f'style="background:var(--green-bg);border:1px solid var(--green-border);color:var(--green);'
+                         f'border-radius:4px;padding:3px 10px;cursor:pointer;font-size:12px;font-weight:700">+</button>'
+                         f'</div>')
         return rows
 
     def best_bet_of_day():
         if not all_plays:
             return ""
-        # Best play = highest edge with positive value
-        positive = [p for p in all_plays if (p.get("edge") or 0) > 0]
+
+        # Build game date/time lookup from analyzed_games
+        date_lookup = {g["game"]: g.get("date_et","Today") for g in analyzed_games}
+        time_lookup = {g["game"]: g.get("time","") for g in analyzed_games}
+        today_date  = analyzed_games[0].get("date_et","Today") if analyzed_games else "Today"
+
+        # Only consider today's games with positive edge
+        positive = [
+            p for p in all_plays
+            if (p.get("edge") or 0) > 0
+            and date_lookup.get(p.get("game",""), today_date) == today_date
+        ]
+        # If no today plays, fall back to any positive-edge play but note it
+        if not positive:
+            positive = [p for p in all_plays if (p.get("edge") or 0) > 0]
         if not positive:
             return ""
-        best = positive[0]  # already sorted by edge descending
-        sig  = best.get("signal","watch")
+
+        best    = positive[0]  # already sorted by edge descending
+        sig     = best.get("signal","watch")
         sig_col = {"fire":"var(--red)","sharp":"var(--blue)","value":"var(--green)","watch":"var(--amber)"}.get(sig,"var(--amber)")
-        play  = best.get("play_label", best.get("team","") + " ML")
-        price = best.get("best_price","?")
-        book  = best.get("best_book","?")
-        edge  = best.get("edge",0)
-        tp    = best.get("true_pct",0)
-        ip    = best.get("implied_pct",0)
-        reason= best.get("reasoning","")
+        play    = best.get("play_label", best.get("team","") + " ML")
+        price   = best.get("best_price","?")
+        book    = best.get("best_book","?")
+        edge    = best.get("edge",0)
+        tp      = best.get("true_pct",0)
+        ip      = best.get("implied_pct",0)
+        reason  = best.get("reasoning","")
+        game    = best.get("game","")
+        gtime   = time_lookup.get(game,"")
+        gdate   = date_lookup.get(game, today_date)
+        is_tomorrow = gdate != today_date
+
+        tomorrow_note = ""
+        if is_tomorrow:
+            tomorrow_note = (f'<div style="font-size:10px;background:var(--amber-bg);border:1px solid var(--amber-border);'
+                             f'border-radius:4px;padding:3px 10px;color:var(--amber);font-family:monospace;'
+                             f'display:inline-block;margin-bottom:8px">TOMORROW\'S GAME</div>')
+
         return (
             f'<div style="background:linear-gradient(135deg,rgba(163,230,53,0.08),rgba(163,230,53,0.02));'
             f'border:2px solid rgba(163,230,53,0.3);border-radius:16px;padding:1.5rem;margin-bottom:2rem;position:relative;overflow:hidden">'
             f'<div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,{sig_col},var(--accent))"></div>'
-            f'<div style="font-size:10px;font-family:monospace;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:8px">Best Bet of the Day</div>'
+            f'<div style="font-size:10px;font-family:monospace;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:6px">Best Bet of the Day</div>'
+            f'{tomorrow_note}'
+            f'<div style="font-size:14px;color:var(--muted);margin-bottom:4px;font-family:monospace">'
+            f'{game} &nbsp;·&nbsp; {gdate}{(" · " + gtime) if gtime else ""}</div>'
             f'<div style="font-size:22px;font-weight:700;color:#fff;margin-bottom:4px">{play}</div>'
             f'<div style="font-size:15px;color:var(--accent);font-family:monospace;margin-bottom:12px">{price} at {book}</div>'
             f'<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px">'
