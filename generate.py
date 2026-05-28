@@ -177,15 +177,17 @@ def fetch_odds():
 # =============================================================
 def fetch_pitcher_stats(pitcher_id):
     if not pitcher_id:
-        return {"name":"TBD","era":"N/A","whip":"N/A","k9":"N/A","id":None,"quality":0.0,"pitch_hand":"R","last3_era":None}
+        return {"name":"TBD","era":"N/A","whip":"N/A","k9":"N/A","id":None,"quality":0.0,
+                "pitch_hand":"R","last3_era":None,"days_rest":None,"last_pitch_count":None,"fatigue_adj":0.0}
     data = mlb_get(f"/people/{pitcher_id}", {
         "hydrate": "stats(group=pitching,type=season,season=2026),stats(group=pitching,type=lastXGames,limit=3)"
     })
     if not data:
-        return {"name":"TBD","era":"N/A","whip":"N/A","k9":"N/A","id":pitcher_id,"quality":0.0,"pitch_hand":"R","last3_era":None}
+        return {"name":"TBD","era":"N/A","whip":"N/A","k9":"N/A","id":pitcher_id,"quality":0.0,
+                "pitch_hand":"R","last3_era":None,"days_rest":None,"last_pitch_count":None,"fatigue_adj":0.0}
     person      = data.get("people",[{}])[0]
     name        = person.get("fullName","TBD")
-    pitch_hand  = person.get("pitchHand",{}).get("code","R")  # 'L' or 'R'
+    pitch_hand  = person.get("pitchHand",{}).get("code","R")
     era = whip = k9 = "N/A"
     season_quality = 0.0
     last3_era      = None
@@ -209,7 +211,6 @@ def fetch_pitcher_stats(pitcher_id):
                 try: last3_era = float(raw)
                 except Exception: pass
 
-    # Blend last 3 starts with season ERA (60/40) for better recent-form signal
     quality = season_quality
     if last3_era is not None:
         try:
@@ -218,15 +219,63 @@ def fetch_pitcher_stats(pitcher_id):
         except Exception:
             pass
 
+    # SP fatigue: fetch last start date and pitch count
+    days_rest       = None
+    last_pitch_count= None
+    fatigue_adj     = 0.0
+    try:
+        now_et    = datetime.now(EASTERN)
+        end_str   = now_et.strftime("%Y-%m-%d")
+        start_str = (now_et - timedelta(days=10)).strftime("%Y-%m-%d")
+        glogs = mlb_get(f"/people/{pitcher_id}/stats", {
+            "stats":     "gameLog",
+            "group":     "pitching",
+            "season":    "2026",
+            "startDate": start_str,
+            "endDate":   end_str,
+        })
+        if glogs:
+            splits = []
+            for sg in glogs.get("stats",[]):
+                splits.extend(sg.get("splits",[]))
+            # Find most recent start (IP >= 3 = SP appearance)
+            starts = [s for s in splits
+                      if float(str(s.get("stat",{}).get("inningsPitched","0") or "0").split(".")[0]) >= 3]
+            if starts:
+                last = starts[-1]
+                last_date_str = last.get("date","")
+                pc = last.get("stat",{}).get("pitchesThrown") or last.get("stat",{}).get("numberOfPitches")
+                last_pitch_count = int(pc) if pc else None
+                if last_date_str:
+                    try:
+                        last_date = datetime.strptime(last_date_str, "%Y-%m-%d").replace(tzinfo=EASTERN)
+                        days_rest = (now_et.replace(tzinfo=None) - last_date.replace(tzinfo=None)).days
+                    except Exception:
+                        pass
+                # Fatigue adjustments
+                if days_rest is not None and days_rest <= 3:
+                    fatigue_adj -= 0.025   # short rest penalty
+                elif days_rest is not None and days_rest >= 7:
+                    fatigue_adj += 0.01    # extra rest slight boost
+                if last_pitch_count and last_pitch_count >= 110:
+                    fatigue_adj -= 0.015   # high pitch count last start
+                fatigue_adj = round(max(-0.04, min(0.02, fatigue_adj)), 3)
+    except Exception:
+        pass
+
     return {
-        "name":       name,
-        "era":        era,
-        "whip":       whip,
-        "k9":         k9,
-        "id":         pitcher_id,
-        "quality":    round(quality,3),
-        "pitch_hand": pitch_hand,
-        "last3_era":  f"{last3_era:.2f}" if last3_era is not None else None,
+        "name":             name,
+        "era":              era,
+        "whip":             whip,
+        "k9":               k9,
+        "id":               pitcher_id,
+        "quality":          round(quality + fatigue_adj, 3),
+        "quality_base":     round(quality, 3),
+        "fatigue_adj":      fatigue_adj,
+        "pitch_hand":       pitch_hand,
+        "last3_era":        f"{last3_era:.2f}" if last3_era is not None else None,
+        "days_rest":        days_rest,
+        "last_pitch_count": last_pitch_count,
     }
 
 def fetch_injuries(team_id):
@@ -910,6 +959,23 @@ def analyze_game(game, context):
                 elif wind_effect=="blowing_in":  adj_ov=max(0.15,adj_ov-wind_adj)
                 adj_un = 1.0-adj_ov
 
+            # Temperature effect on fly ball distance / HR suppression
+            # Every 10F below 70F reduces fly ball distance ~4ft, suppresses scoring
+            try:
+                temp_f = float(str(wx.get("temp","70") or "70"))
+                if temp_f < 70:
+                    temp_adj = ((70 - temp_f) / 10.0) * 0.004  # -0.4% per 10F below 70
+                    temp_adj = min(temp_adj, 0.04)   # cap at -4%
+                    adj_ov = max(0.15, adj_ov - temp_adj)
+                    adj_un = 1.0 - adj_ov
+                elif temp_f > 85:
+                    # Hot games slightly favor scoring
+                    temp_adj = ((temp_f - 85) / 10.0) * 0.002
+                    adj_ov = min(0.85, adj_ov + temp_adj)
+                    adj_un = 1.0 - adj_ov
+            except Exception:
+                pass
+
         best_ov_b  = max(filtered,key=lambda b:float(b["over_price"]))
         best_un_b  = max(filtered,key=lambda b:float(b["under_price"]))
         for side,tp,best_b,pk in [("Over",adj_ov,best_ov_b,"over_price"),
@@ -1139,6 +1205,82 @@ def fetch_game_context(game, matchup_data, weather_data, mlb_schedule_games, ope
 # =============================================================
 # HTML BUILDER
 # =============================================================
+def build_why_this_bet(game):
+    """Build structured checklist of factors for/against the best bet."""
+    items = []
+    ap = game.get("away_pitcher",{}); hp = game.get("home_pitcher",{})
+    away = game.get("away",""); home = game.get("home","")
+    bet_play = game.get("bet_play","")
+    is_total = "Runs" in bet_play
+    is_over  = "Over" in bet_play
+
+    # SP quality + fatigue
+    for pitcher, side in [(ap,"away"),(hp,"home")]:
+        if pitcher.get("era","N/A") != "N/A":
+            try:
+                era=float(pitcher["era"]); name=pitcher.get("name","SP")
+                dr=pitcher.get("days_rest"); pc=pitcher.get("last_pitch_count")
+                own_team = away if side=="away" else home
+                helps_bet = own_team in bet_play or (is_total and era < 3.50 and not is_over)
+                if era < 3.50:
+                    items.append((f"{name} ERA {era}", "for" if helps_bet else "against",
+                                  "Elite pitcher -- well below 4.20 avg"))
+                elif era > 5.00:
+                    items.append((f"{name} ERA {era}", "against" if helps_bet else "for",
+                                  "Struggling pitcher -- above 4.20 avg"))
+                if dr is not None and dr<=3:
+                    items.append((f"{name} short rest ({dr}d)", "against", "3-day rest penalty applied"))
+                if pc and pc>=110:
+                    items.append((f"{name} {pc} pitches last start", "against", "High pitch count fatigue"))
+            except Exception: pass
+
+    # Bullpen
+    abp=game.get("away_bullpen",{}); hbp=game.get("home_bullpen",{})
+    if abp.get("fatigue",0)>0.5:
+        items.append((f"{away} bullpen ({abp.get('label','?')})",
+                      "against" if away in bet_play else "for",
+                      f"{abp.get('ip','?')} relief IP last 3 days"))
+    if hbp.get("fatigue",0)>0.5:
+        items.append((f"{home} bullpen ({hbp.get('label','?')})",
+                      "against" if home in bet_play else "for",
+                      f"{hbp.get('ip','?')} relief IP last 3 days"))
+
+    # Discrepancy
+    max_gap=max(game.get("away_gap",0),game.get("home_gap",0))
+    if max_gap>=18: items.append((f"Book discrepancy {max_gap}c","for","Major price disagreement"))
+    elif max_gap>=10: items.append((f"Book discrepancy {max_gap}c","for","Worth shopping books"))
+
+    # Sharp line movement
+    lm=game.get("line_movement")
+    if lm and lm.get("significant"):
+        mt=lm.get("moved_team",""); mc=abs(lm.get("move_cents",0))
+        items.append((f"Sharp money: {mt} +{mc:.0f}c",
+                      "for" if mt.lower() in bet_play.lower() else "against",
+                      "10c+ move = professional money"))
+
+    # Umpire
+    ump=game.get("umpire",{}); ri=ump.get("run_impact",0) or 0
+    if abs(ri)>=0.3 and is_total:
+        ump_helps=(ri>0 and is_over) or (ri<0 and not is_over)
+        items.append((f"Ump {ump.get('name','?')} ({ri:+.1f} runs)",
+                      "for" if ump_helps else "against",
+                      "Hitter-friendly" if ri>0 else "Pitcher-friendly zone"))
+
+    # Injuries
+    for inj in game.get("away_injuries",[])[:2]:
+        if "out" in inj.get("status","").lower():
+            items.append((f"{away} {inj['name'].split()[-1]} OUT",
+                          "against" if away in bet_play else "for",
+                          inj.get("pos","?")))
+    for inj in game.get("home_injuries",[])[:2]:
+        if "out" in inj.get("status","").lower():
+            items.append((f"{home} {inj['name'].split()[-1]} OUT",
+                          "against" if home in bet_play else "for",
+                          inj.get("pos","?")))
+
+    return items
+
+
 def build_html(analyzed_games, matchups, weather, results_data, tracking_games, all_noon_data, date_str, time_str):
     all_disc=[]; all_plays=[]; sharp_ct=0; value_ct=0
     for g in analyzed_games:
@@ -1385,6 +1527,15 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                 f'<div style="display:flex;gap:3px">{dots}</div></div>')
 
     def game_blocks():
+        opening_lines = all_noon_data  # will be replaced by actual opening lines if available
+        try:
+            if os.path.exists("opening_lines.json"):
+                with open("opening_lines.json") as f:
+                    ol = json.load(f)
+                if ol.get("date","") == date_str[:10]:
+                    opening_lines = ol.get("games",{})
+        except Exception:
+            pass
         mlookup={m["game"]:m for m in matchups}
         html=""
         for i,g in enumerate(analyzed_games):
@@ -1542,6 +1693,50 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                     f'</div>'
                     f'</div>'
                 )
+            # Why This Bet checklist
+            why_items = build_why_this_bet(g) if not g["bet_is_pass"] else []
+            why_html = ""
+            if why_items:
+                rows_html = ""
+                for label, direction, detail in why_items:
+                    icon = "✓" if direction=="for" else ("✗" if direction=="against" else "·")
+                    col  = "var(--green)" if direction=="for" else ("var(--red)" if direction=="against" else "var(--muted)")
+                    rows_html += (f'<div style="display:flex;align-items:baseline;gap:8px;padding:3px 0">'
+                                  f'<span style="font-size:13px;font-weight:700;color:{col};flex-shrink:0;width:16px">{icon}</span>'
+                                  f'<span style="font-size:12px;color:var(--text);font-weight:600">{label}</span>'
+                                  f'<span style="font-size:11px;color:var(--muted);margin-left:auto;white-space:nowrap;padding-left:8px">{detail}</span>'
+                                  f'</div>')
+                why_html = (f'<div style="margin-top:9px;background:rgba(0,0,0,0.2);border-radius:6px;padding:10px 12px">'
+                            f'<div style="font-size:10px;font-family:monospace;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:6px">Why This Bet</div>'
+                            f'{rows_html}</div>')
+
+            # Opening line toggle (from opening_lines.json)
+            opening_games = all_noon_data  # proxy — opening lines stored separately
+            open_toggle = ""
+            if opening_lines and g.get("game") in {k for k in opening_lines}:
+                og_data  = opening_lines.get(g["game"],{})
+                og_books = og_data.get("books",{})
+                if og_books:
+                    og_prices = [(bname, bdata.get("away_price"), bdata.get("home_price"))
+                                 for bname, bdata in og_books.items()
+                                 if bdata.get("away_price") and bdata.get("home_price")]
+                    if og_prices:
+                        open_rows = "".join(
+                            f'<tr><td class="book">{bn}</td>'
+                            f'<td class="pc">{fmt(ap) if ap else "N/A"}</td>'
+                            f'<td class="pc">{fmt(hp) if hp else "N/A"}</td></tr>'
+                            for bn,ap,hp in og_prices[:5]
+                        )
+                        open_toggle = (
+                            f'<details style="margin-top:8px">'
+                            f'<summary style="font-size:11px;color:var(--muted);cursor:pointer;font-family:monospace;'
+                            f'text-transform:uppercase;letter-spacing:1px;padding:4px 0">▶ Opening Lines (9am)</summary>'
+                            f'<table class="otable" style="margin-top:6px">'
+                            f'<thead><tr><th>Book</th><th>{g["away"]}</th><th>{g["home"]}</th></tr></thead>'
+                            f'<tbody>{open_rows}</tbody></table>'
+                            f'</details>'
+                        )
+
             best_bet=(f'<div class="{bb_cls}">'
                       f'<div class="bb-header">Best Bet This Game</div>'
                       f'<div class="bb-play">{g["bet_play"]}</div>'
@@ -1554,6 +1749,7 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                       f'<div class="bbs-val {"green" if not g["bet_is_pass"] else "c-muted"}">{g["bet_edge"]}</div></div>'
                       f'</div>'
                       f'{up_to_note}'
+                      f'{why_html}'
                       f'</div>')
 
             html+=(day_header+
@@ -1587,6 +1783,7 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                    f'<div class="cb-method">Adjusted for: SP ERA/WHIP, bullpen fatigue, injuries, park factor, umpire zone, wind.</div>'
                    f'</div>'
                    f'{last5_section}'
+                   f'{open_toggle}'
                    f'{best_bet}'
                    f'</div></div>')
         return html
@@ -1596,10 +1793,31 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
         if not tracking_games:
             return ""
 
-        # all_noon_data is passed in directly from main()
-        noon_picks = all_noon_data
+        # Fetch live scores for in-progress games
+        live_scores = {}
+        mlb_today = mlb_get("/schedule",{"sportId":1,"date":datetime.now(EASTERN).strftime("%Y-%m-%d"),"hydrate":"linescore,team"})
+        if mlb_today:
+            for db in mlb_today.get("dates",[]):
+                for g in db.get("games",[]):
+                    state = g.get("status",{}).get("abstractGameState","")
+                    teams = g.get("teams",{})
+                    away_name = teams.get("away",{}).get("team",{}).get("name","")
+                    home_name = teams.get("home",{}).get("team",{}).get("name","")
+                    away_score= teams.get("away",{}).get("score")
+                    home_score= teams.get("home",{}).get("score")
+                    inning    = g.get("linescore",{}).get("currentInning")
+                    inn_half  = g.get("linescore",{}).get("inningHalf","")
+                    key = f"{away_name} @ {home_name}"
+                    if away_score is not None and home_score is not None:
+                        live_scores[key] = {
+                            "away_score": away_score,
+                            "home_score": home_score,
+                            "inning":     inning,
+                            "inn_half":   inn_half,
+                            "final":      state == "Final",
+                        }
 
-        html = '<div class="day-header"><span class="day-label" style="color:var(--muted)">In Progress / Completed Today</span></div>'
+        noon_picks = all_noon_data
 
         for g in tracking_games:
             away = g["away_team"]; home = g["home_team"]
@@ -1609,6 +1827,29 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                 time_display = start.strftime("%-I:%M %p ET")
             except Exception:
                 time_display = ""
+
+            # Live score
+            score_data = live_scores.get(game_key,{})
+            if score_data:
+                as_ = score_data.get("away_score","?"); hs_ = score_data.get("home_score","?")
+                inn = score_data.get("inning",""); ih = score_data.get("inn_half","")
+                if score_data.get("final"):
+                    score_html = (f'<div style="background:var(--bg3);border-radius:8px;padding:10px 14px;'
+                                  f'margin-top:10px;text-align:center">'
+                                  f'<div style="font-size:10px;color:var(--muted);font-family:monospace;margin-bottom:4px">FINAL</div>'
+                                  f'<div style="font-family:\'IBM Plex Mono\',monospace;font-size:22px;font-weight:700;color:#fff">'
+                                  f'{away} {as_} &nbsp;·&nbsp; {hs_} {home}</div></div>')
+                else:
+                    inn_str = f"{ih[:3] if ih else ''} {inn}".strip() if inn else "In Progress"
+                    score_html = (f'<div style="background:linear-gradient(135deg,rgba(74,222,128,0.06),rgba(74,222,128,0.01));'
+                                  f'border:1px solid rgba(74,222,128,0.2);border-radius:8px;padding:10px 14px;margin-top:10px;text-align:center">'
+                                  f'<div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:3px">'
+                                  f'<span class="live-dot"></span>'
+                                  f'<span style="font-size:10px;color:var(--green);font-family:monospace;text-transform:uppercase;letter-spacing:1px">Live &middot; {inn_str}</span>'
+                                  f'</div><div style="font-family:\'IBM Plex Mono\',monospace;font-size:22px;font-weight:700;color:#fff">'
+                                  f'{away} {as_} &nbsp;·&nbsp; {hs_} {home}</div></div>')
+            else:
+                score_html = ""
 
             pick = noon_picks.get(game_key)
 
@@ -1678,7 +1919,7 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                 f'<span class="badge b-pass" style="font-size:9px">IN PROGRESS</span>'
                 f'<span class="toggle">v</span></div>'
                 f'</div>'
-                f'<div class="game-body">{bet_box}</div>'
+                f'<div class="game-body">{score_html}{bet_box}</div>'
                 f'</div>'
             )
         return html
@@ -1719,7 +1960,36 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                     f'<tbody>{rows}</tbody></table>')
         # Build date lookup from analyzed_games
         date_lookup = {g["game"]: g.get("date_et","Today") for g in analyzed_games}
-        html=""
+
+        def matchup_strength(batters):
+            if not batters: return ""
+            total=len(batters); dominated=0; neutral=0; owned=0
+            for b in batters:
+                try:
+                    avg=float(b.get("avg","0"))
+                    if avg<0.200: dominated+=1
+                    elif avg>0.299: owned+=1
+                    else: neutral+=1
+                except Exception: pass
+            if total==0: return ""
+            dom_pct=dominated/total; own_pct=owned/total
+            if dom_pct>=0.6:   score=5; label="Pitcher dominates"
+            elif dom_pct>=0.4: score=4; label="Pitcher has edge"
+            elif own_pct>=0.4: score=2; label="Lineup has edge"
+            elif own_pct>=0.6: score=1; label="Lineup owns pitcher"
+            else:              score=3; label="Even matchup"
+            col="#4ade80" if score>=4 else ("#fbbf24" if score==3 else "#f87171")
+            dots="".join(
+                f'<span style="display:inline-block;width:11px;height:11px;border-radius:50%;'
+                f'background:{"#4ade80" if i<score else "#27272a"};margin-right:3px"></span>'
+                for i in range(5))
+            return (f'<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;'
+                    f'background:var(--bg3);border-radius:6px;margin-top:6px">'
+                    f'<span style="font-size:10px;color:var(--muted);white-space:nowrap">vs lineup:</span>'
+                    f'<div>{dots}</div>'
+                    f'<span style="font-size:11px;font-weight:700;color:{col}">{label}</span>'
+                    f'<span style="font-size:10px;color:var(--muted);margin-left:auto">'
+                    f'{dominated} dominated / {owned} owned</span></div>')
         prev_date = None
         for i,m in enumerate(matchups):
             open_cls="open" if i<1 else ""
@@ -1749,6 +2019,7 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                    f'</div>'
                    f'<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px">{m["home"]} Batters vs {ap["name"]}</div>'
                    f'{batter_table(m["home_batters"],ap,m["home"],m["home_source"])}'
+                   f'{matchup_strength(m["home_batters"])}'
                    f'</div>'
                    f'<div>'
                    f'<div class="pitcher-card">'
@@ -1758,12 +2029,12 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                    f'</div>'
                    f'<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px">{m["away"]} Batters vs {hp["name"]}</div>'
                    f'{batter_table(m["away_batters"],hp,m["away"],m["away_source"])}'
+                   f'{matchup_strength(m["away_batters"])}'
                    f'</div>'
                    f'</div>'
                    f'<div style="margin-top:10px;padding:8px 12px;background:var(--bg3);border-radius:6px;font-size:11px;color:var(--muted);line-height:1.6">'
                    f'Green = .300+ BA (batter owns pitcher) - Amber = .250-.299 - Red = under .250 (pitcher has edge) - Min 3 AB'
-                   f'</div>'
-                   f'</div></div>')
+                   f'</div></div></div>')
         return html
 
     def weather_page():
@@ -1942,6 +2213,41 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                 f'</div>'
                 f'</div>'
             )
+
+        # CLV Feedback Loop -- which adjustment types produce positive CLV?
+        clv_feedback = ""
+        if total_all >= 75 and clv_bets:
+            adj_types = {
+                "SP Quality":     lambda b: any(k in b.get("play","") for k in ["ERA","Pitcher"]),
+                "Bullpen":        lambda b: "bullpen" in b.get("note","").lower(),
+                "Park Factor":    lambda b: "park" in b.get("note","").lower() or "Over" in b.get("play","") or "Under" in b.get("play",""),
+                "Platoon Splits": lambda b: "platoon" in b.get("note","").lower(),
+                "Line Movement":  lambda b: "moved" in b.get("note","").lower() or "sharp" in b.get("note","").lower(),
+            }
+            fb_rows = ""
+            for adj_name, matcher in adj_types.items():
+                matched = [b for b in clv_bets if matcher(b)]
+                if not matched: continue
+                avg_c = round(sum(b["clv"]["clv_cents"] for b in matched)/len(matched),1)
+                beat  = sum(1 for b in matched if b["clv"]["clv_cents"]>0)
+                col   = "var(--green)" if avg_c>0 else "var(--red)"
+                rec   = "Amplify weight" if avg_c>1.5 else ("Reduce weight" if avg_c<-1.5 else "Keep as-is")
+                fb_rows += (f'<tr><td>{adj_name}</td>'
+                            f'<td class="mono">{len(matched)}</td>'
+                            f'<td class="mono" style="color:{col}">{("+") if avg_c>0 else ""}{avg_c}c</td>'
+                            f'<td class="mono">{round(beat/len(matched)*100)}%</td>'
+                            f'<td style="font-size:11px;color:{col}">{rec}</td></tr>')
+            if fb_rows:
+                clv_feedback = (
+                    f'<div class="sec-header"><h2>CLV Feedback Loop</h2><div class="sec-line"></div></div>'
+                    f'<div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:2rem">'
+                    f'<div style="padding:10px 14px;background:var(--bg3);font-size:11px;color:var(--muted)">'
+                    f'Which model adjustments consistently beat the closing line? Positive avg CLV = that factor finds real edge. '
+                    f'Use this to tune adjustment weights in generate.py.</div>'
+                    f'<table class="dtable"><thead><tr><th>Adjustment</th><th>Bets</th>'
+                    f'<th>Avg CLV</th><th>Beat Close%</th><th>Recommendation</th></tr></thead>'
+                    f'<tbody>{fb_rows}</tbody></table></div>'
+                )
 
         # Calibration audit at 75 bets
         AUDIT_THRESHOLD = 75
@@ -2202,6 +2508,7 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
             circles
             + hint
             + calib_section
+            + clv_feedback
             + clv_section
             + stats_table
             + roi_section
@@ -2524,6 +2831,14 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
 <footer>MLB Sharp Lines - The Gambling Cave - {date_str} - Enhanced model: SP quality, bullpen fatigue, injuries, park factors, umpire zone, wind - Gamble responsibly</footer>
 
 <script>
+  // ── NOTIFICATION BADGE ──
+  (function(){{
+    const playCount = {value_ct};
+    if(playCount > 0){{
+      document.title = playCount + ' plays | The Gambling Cave';
+    }}
+  }})();
+
   // ── PAGE NAVIGATION ──
   function showPage(name,el){{
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
