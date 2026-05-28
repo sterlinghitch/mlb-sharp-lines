@@ -953,14 +953,15 @@ def fetch_game_context(game, matchup_data, weather_data, mlb_schedule_games, ope
 # =============================================================
 # HTML BUILDER
 # =============================================================
-def build_html(analyzed_games, matchups, weather, results_data, tracking_games, date_str, time_str):
+def build_html(analyzed_games, matchups, weather, results_data, tracking_games, all_noon_data, date_str, time_str):
     all_disc=[]; all_plays=[]; sharp_ct=0; value_ct=0
     for g in analyzed_games:
         for d in g["discrepancies"]: all_disc.append({**d,"game":g["game"]})
         if g["value_play"]: all_plays.append(g["value_play"])
         if g["signal"]=="fire": sharp_ct+=1
-        if g["signal"] in ("fire","value","sharp") or (g["value_play"] and abs(g["value_play"].get("edge",0))>=2.5): value_ct+=1
+    # value_ct must match the alert cards filter exactly
     all_plays.sort(key=lambda x:-abs(x.get("edge",0)))
+    value_ct = len([p for p in all_plays if p["signal"] in ("fire","sharp","value") or abs(p.get("edge",0))>=2.5])
     all_disc.sort(key=lambda x:-(x.get("gap",0)))
     sig_cls={"fire":"b-fire","sharp":"b-sharp","value":"b-value","watch":"b-watch","pass":"b-pass"}
     alert_cls={"fire":"fire","sharp":"sharp","value":"value","watch":"watch"}
@@ -1221,58 +1222,10 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
         if not tracking_games:
             return ""
 
-        # Build lookup from the freshly-analyzed picks (already in memory)
-        # Also check picks.json as fallback for the 4pm run where tracking games
-        # were analyzed at noon but aren't in this run's analyzed list
-        import json as _json, os as _os
-        noon_picks = {}
-
-        # Primary: current run's analyzed games (4pm run re-analyzes pre-game games only,
-        # so tracking games won't be here — use picks.json for those)
-        for g in analyzed_games:
-            noon_picks[g["game"]] = {
-                "play":        g["bet_play"],
-                "price":       g["bet_sub"].split(" at ")[0] if " at " in g["bet_sub"] else g["bet_sub"],
-                "book":        g["bet_sub"].split(" at ")[1] if " at " in g["bet_sub"] else "",
-                "is_pass":     g["bet_is_pass"],
-                "edge":        g["bet_edge"],
-                "away_true":   g["away_true"],
-                "home_true":   g["home_true"],
-                "away_fair":   g["away_fair"],
-                "home_fair":   g["home_fair"],
-                "signal":      g["signal"],
-                "signal_label":g["signal_label"],
-            }
-
-        # Fallback: noon_analysis.json (full game analysis saved at noon including passes)
-        if _os.path.exists("noon_analysis.json"):
-            try:
-                with open("noon_analysis.json") as f:
-                    na = _json.load(f)
-                for gk, gdata in na.get("games", {}).items():
-                    if gk not in noon_picks:
-                        noon_picks[gk] = gdata
-            except Exception:
-                pass
-
-        # Second fallback: picks.json (only has games with actual bets, not passes)
-        if _os.path.exists("picks.json"):
-            try:
-                with open("picks.json") as f:
-                    pd = _json.load(f)
-                for bet in pd.get("bets", []):
-                    gk = bet.get("game","")
-                    if gk not in noon_picks:
-                        noon_picks[gk] = {
-                            "play":    bet.get("play",""),
-                            "price":   bet.get("price",""),
-                            "book":    bet.get("book",""),
-                            "is_pass": False,
-                            "edge":    bet.get("edge",""),
-                            "signal":  bet.get("signal",""),
-                        }
-            except Exception:
-                pass
+        # all_noon_data is passed in directly from main() — it contains every game
+        # analyzed today (pre-game AND tracking), so no file reading needed.
+        # Keys are "Away @ Home" game strings.
+        noon_picks = all_noon_data  # already a dict keyed by game string
 
         html = '<div class="day-header"><span class="day-label" style="color:var(--muted)">In Progress / Completed Today</span></div>'
 
@@ -2188,6 +2141,38 @@ def main():
     signal_order = {"fire":0,"sharp":1,"value":2,"watch":3,"pass":4}
     analyzed.sort(key=lambda x:(x["date_sort"],signal_order.get(x["signal"],3)))
 
+    # Build all_noon_data: every game analyzed today keyed by "Away @ Home"
+    # This is passed directly into build_html so tracking_cards always has data
+    # regardless of whether noon_analysis.json exists yet.
+    all_noon_data = {}
+    for g in analyzed:
+        all_noon_data[g["game"]] = {
+            "play":        g["bet_play"],
+            "price":       g["bet_sub"].split(" at ")[0] if " at " in g["bet_sub"] else g["bet_sub"],
+            "book":        g["bet_sub"].split(" at ")[1] if " at " in g["bet_sub"] else "",
+            "is_pass":     g["bet_is_pass"],
+            "edge":        g["bet_edge"],
+            "away_true":   g["away_true"],
+            "home_true":   g["home_true"],
+            "away_fair":   g["away_fair"],
+            "home_fair":   g["home_fair"],
+            "signal":      g["signal"],
+            "signal_label":g["signal_label"],
+        }
+    # Merge in noon_analysis.json so the 4pm run can see games
+    # that were pre-game at noon but are now in tracking
+    if os.path.exists("noon_analysis.json"):
+        try:
+            with open("noon_analysis.json") as f:
+                existing_na = json.load(f)
+            if existing_na.get("date") == mlb_date:
+                for gk, gdata in existing_na.get("games",{}).items():
+                    if gk not in all_noon_data:
+                        all_noon_data[gk] = gdata
+                        print(f"  Restored tracking data for: {gk}")
+        except Exception as e:
+            print(f"  noon_analysis.json read error: {e}")
+
     # Load results.json for accuracy tracking
     results_data = {"days": []}
     try:
@@ -2201,7 +2186,7 @@ def main():
     except Exception as e:
         print(f"results.json error: {e}")
 
-    html = build_html(analyzed, matchups, weather, results_data, tracking_games, date_str, time_str)
+    html = build_html(analyzed, matchups, weather, results_data, tracking_games, all_noon_data, date_str, time_str)
     with open("index.html","w",encoding="utf-8") as f:
         f.write(html)
 
