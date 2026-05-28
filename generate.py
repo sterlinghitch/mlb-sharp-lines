@@ -622,52 +622,56 @@ def analyze_game(game, context):
     #   1. Book discrepancy signal (fire/value/sharp), OR
     #   2. Best bet has a genuine +2.5% or better edge from model adjustments
     # Either way, must not be a pass
-    best_bet_edge_val = 0.0
-    if candidates:
-        best_bet_edge_val = max(c["edge_val"] for c in candidates)
+    best_bet_edge_val = max((c["edge_val"] for c in candidates), default=0.0)
 
     qualifies = (not bet_is_pass) and (
         signal in ("fire","value","sharp") or best_bet_edge_val >= 2.5
     )
 
-    if qualifies:
-        fav_t = home if adj_ht>adj_at else away
-        fav_p = max(adj_at,adj_ht); dog_p = min(adj_at,adj_ht)
-        dog_t = away if fav_t==home else home
-        dp    = best_away["away_price"] if dog_t==away else best_home["home_price"]
-        db    = best_away["name"]       if dog_t==away else best_home["name"]
-        di    = american_to_implied(dp); de = round((dog_p-(di or 0))*100,1)
-        if de>0:
-            vt=dog_t; vp=fmt(dp); vb=db; vtp=round(dog_p*100,1); vi=round((di or 0)*100,1); ve=de
-        else:
-            fp=best_home["home_price"] if fav_t==home else best_away["away_price"]
-            fb=best_home["name"]       if fav_t==home else best_away["name"]
-            fi=american_to_implied(fp)
-            vt=fav_t; vp=fmt(fp); vb=fb; vtp=round(fav_p*100,1); vi=round((fi or 0)*100,1)
-            ve=round((fav_p-(fi or 0))*100,1)
+    if qualifies and candidates:
+        # Always use the actual best candidate — avoids ML/total mismatch
+        best_c  = max(candidates, key=lambda c: c["edge_val"])
+        vp      = best_c["best_price"]
+        vb      = best_c["sub"].split(" at ")[-1] if " at " in best_c["sub"] else ""
+        ve      = best_c["edge_val"]
+        vtp_str = best_c["true_pct"].replace("%","")
+        vtp     = float(vtp_str) if vtp_str.replace(".","").isdigit() else 0.0
+        play_label = best_c["play"]
 
-        # For edge-only plays (no discrepancy), use the best bet candidate directly
-        # so the play shown matches what the model actually recommends
-        if signal not in ("fire","value","sharp") and candidates:
-            best_c = max(candidates, key=lambda c: c["edge_val"])
-            vp = best_c["best_price"]; vb = best_c["sub"].split(" at ")[-1] if " at " in best_c["sub"] else vb
-            vtp_str = best_c["true_pct"]; vi = round(american_to_implied(int(vp.replace("+","")) if vp.replace("+","").replace("-","").isdigit() else 0)*100,1) if vp not in ("N/A","—") else vi
-            ve = best_c["edge_val"]
-            play_label = best_c["play"]
+        # Implied% from the best price
+        try:
+            vi = round((american_to_implied(float(vp.replace("+",""))) or 0)*100, 1)
+        except Exception:
+            vi = 0.0
+
+        # Team label — for totals use home team as the "team" field (just for display grouping)
+        if best_c["type"] == "Total":
+            vt = home
         else:
-            play_label = f"{vt} ML"
+            # For ML picks figure out which side was picked from the play string
+            vt = away if away in play_label else home
 
         reason_parts = [f"{play_label} at {vp} ({vtp}% true vs {vi}% implied -- {'+' if ve>0 else ''}{ve}% edge)."]
         if adjustments:
-            reason_parts.append("Adj: " + " | ".join(f"{a[0]}" for a in adjustments[:2]) + ".")
+            reason_parts.append("Adj: " + " | ".join(a[0] for a in adjustments[:2]) + ".")
         if signal in ("fire","value","sharp"):
-            if split_market: reason_parts.append("Split market -- sharp divergence across books.")
-            elif max(away_gap,home_gap)>=15:
+            if split_market:
+                reason_parts.append("Split market -- sharp divergence across books.")
+            elif max(away_gap, home_gap) >= 15:
                 reason_parts.append(f"Line discrepancy {max(away_gap,home_gap)}c -- shop books.")
 
-        value_play = {"game":f"{away} @ {home}","signal":signal,"team":vt,
-                      "best_price":vp,"best_book":vb,"true_pct":vtp,
-                      "implied_pct":vi,"edge":ve,"reasoning":" ".join(reason_parts)}
+        value_play = {
+            "game":        f"{away} @ {home}",
+            "signal":      signal,
+            "team":        vt,
+            "play_label":  play_label,
+            "best_price":  vp,
+            "best_book":   vb,
+            "true_pct":    vtp,
+            "implied_pct": vi,
+            "edge":        ve,
+            "reasoning":   " ".join(reason_parts),
+        }
 
     try:
         t = datetime.fromisoformat(game.get("commence_time","").replace("Z","+00:00")).astimezone(EASTERN)
@@ -745,7 +749,7 @@ def build_html(analyzed_games, matchups, weather, results_data, date_str, time_s
             html+=(f'<div class="alert-card {alert_cls.get(sig,"value")}">'
                    f'<span class="badge {sig_cls.get(sig,"b-value")}">{sig.upper()}</span>'
                    f'<div class="alert-game">{p["game"]}</div>'
-                   f'<div class="alert-rec">{p["team"]} -- {ap} @ {ab}</div>'
+                   f'<div class="alert-rec">{p.get("play_label", p["team"] + " ML")} -- {ap} @ {ab}</div>'
                    f'<div class="alert-stats">'
                    f'<div class="stat-box"><div class="sl">Best Price</div><div class="sv">{ap}</div></div>'
                    f'<div class="stat-box"><div class="sl">Adj True%</div><div class="sv">{at}%</div></div>'
@@ -760,7 +764,7 @@ def build_html(analyzed_games, matchups, weather, results_data, date_str, time_s
         rows=""
         for p in all_plays:
             ec="c-green" if (p.get("edge") or 0)>0 else "c-red"
-            rows+=(f'<tr><td>{p["game"]}</td><td class="mono">{p["team"]} ML</td>'
+            rows+=(f'<tr><td>{p["game"]}</td><td class="mono">{p.get("play_label", p["team"] + " ML")}</td>'
                    f'<td><span class="pill pill-n">{p["best_price"]}</span></td>'
                    f'<td class="c-accent mono" style="font-size:11px">{p["best_book"]}</td>'
                    f'<td class="mono">{p["implied_pct"]}%</td><td class="mono">{p["true_pct"]}%</td>'
