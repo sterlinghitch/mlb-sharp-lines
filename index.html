@@ -194,12 +194,13 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
   <div class="nav-item" onclick="showPage('plays',this)"><span class="nav-icon">🔥</span><span class="nav-label">Top Value Plays</span><span class="nav-count">0</span></div>
   <div class="nav-item" onclick="showPage('games',this)"><span class="nav-icon">⚾</span><span class="nav-label">All Games</span><span class="nav-count">6</span></div>
   <div class="nav-item" onclick="showPage('matchups',this)"><span class="nav-icon">⚡</span><span class="nav-label">Pitcher / Batter</span><span class="nav-count">6</span></div>
+  <div class="nav-item" onclick="showPage('weather',this)"><span class="nav-icon">🌤️</span><span class="nav-label">Weather</span><span class="nav-count">6</span></div>
   <div class="sidebar-section" style="margin-top:8px">Today</div>
   <div class="sidebar-stats">
     <div class="sidebar-stat"><span class="sidebar-stat-label">Games</span><span class="sidebar-stat-val">6</span></div>
     <div class="sidebar-stat"><span class="sidebar-stat-label">Sharp alerts</span><span class="sidebar-stat-val amber">0</span></div>
     <div class="sidebar-stat"><span class="sidebar-stat-label">Value plays</span><span class="sidebar-stat-val green">0</span></div>
-    <div class="sidebar-stat"><span class="sidebar-stat-label">Updated</span><span class="sidebar-stat-val">12:50 AM ET</span></div>
+    <div class="sidebar-stat"><span class="sidebar-stat-label">Updated</span><span class="sidebar-stat-val">12:54 AM ET</span></div>
   </div>
 </div>
 <div class="main">
@@ -223,7 +224,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
         <div class="hero-badge"><strong>6</strong> games today</div>
         <div class="hero-badge"><strong>0</strong> 🔥 sharp alerts</div>
         <div class="hero-badge"><strong>0</strong> value plays</div>
-        <div class="hero-badge">Updated <strong>12:50 AM ET</strong></div>
+        <div class="hero-badge">Updated <strong>12:54 AM ET</strong></div>
         <div class="hero-badge">Cost: <strong>$0.00</strong></div>
       </div>
     </div>
@@ -242,6 +243,11 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
         <div class="home-card-icon">⚡</div><div class="home-card-title">Pitcher / Batter</div>
         <div class="home-card-desc">Career BA, HR, K for every batter against today's probable starters.</div>
         <div class="home-card-stat blue">6 games</div>
+      </div>
+      <div class="home-card" onclick="showPage('weather',document.querySelectorAll('.nav-item')[4])">
+        <div class="home-card-icon">🌤️</div><div class="home-card-title">Weather</div>
+        <div class="home-card-desc">Wind direction vs field orientation, temperature, and betting implications for every open-air park.</div>
+        <div class="home-card-stat blue">6 parks</div>
       </div>
       <div class="home-card">
         <div class="home-card-icon">🧮</div><div class="home-card-title">True Odds</div>
@@ -355,13 +361,13 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
             </div>
             <div class="best-bet">
             <div class="bb-header">★ Best Bet This Game</div>
-            <div class="bb-play">Detroit Tigers Moneyline</div>
-            <div class="bb-sub">-125 at LowVig.ag</div>
+            <div class="bb-play">Under 9.0 Runs</div>
+            <div class="bb-sub">+100 at MyBookie.ag</div>
             <div class="bb-stats">
               <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">46% / 54%</div></div>
-              <div class="bbs"><div class="bbs-label">Best Los Angeles</div><div class="bbs-val">+114 @ BetUS</div></div>
-              <div class="bbs"><div class="bbs-label">Best Detroit Tig</div><div class="bbs-val">-125 @ LowVig.ag</div></div>
-              <div class="bbs"><div class="bbs-label">Edge</div><div class="bbs-val green">Slight</div></div>
+              <div class="bbs"><div class="bbs-label">True Win%</div><div class="bbs-val">52%</div></div>
+              <div class="bbs"><div class="bbs-label">Fair Line</div><div class="bbs-val">-109</div></div>
+              <div class="bbs"><div class="bbs-label">Edge</div><div class="bbs-val green">+2.2%</div></div>
             </div></div>
           </div>
         </div>
@@ -380,6 +386,13 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
               <td class="pb">-130 ★</td>
               <td class="prob">56.5%</td>
               <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-120</span></td>
+            </tr><tr>
+              <td class="book">MyBookie.ag</td>
+              <td class="pc">+112</td>
+              <td class="prob">47.2%</td>
+              <td class="pc">-132</td>
+              <td class="prob">56.9%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-118</span></td>
             </tr><tr>
               <td class="book">DraftKings</td>
               <td class="pc">+113</td>
@@ -435,13 +448,13 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
             </div>
             <div class="best-bet">
             <div class="bb-header">★ Best Bet This Game</div>
-            <div class="bb-play">Chicago White Sox Moneyline</div>
-            <div class="bb-sub">-130 at FanDuel</div>
+            <div class="bb-play">Under 8.0 Runs</div>
+            <div class="bb-sub">-102 at FanDuel</div>
             <div class="bb-stats">
               <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">45% / 55%</div></div>
-              <div class="bbs"><div class="bbs-label">Best Minnesota T</div><div class="bbs-val">+118 @ BetOnline.ag</div></div>
-              <div class="bbs"><div class="bbs-label">Best Chicago Whi</div><div class="bbs-val">-130 @ FanDuel</div></div>
-              <div class="bbs"><div class="bbs-label">Edge</div><div class="bbs-val green">Slight</div></div>
+              <div class="bbs"><div class="bbs-label">True Win%</div><div class="bbs-val">51%</div></div>
+              <div class="bbs"><div class="bbs-label">Fair Line</div><div class="bbs-val">-104</div></div>
+              <div class="bbs"><div class="bbs-label">Edge</div><div class="bbs-val green">+0.6%</div></div>
             </div></div>
           </div>
         </div>
@@ -529,13 +542,13 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
             </div>
             <div class="best-bet">
             <div class="bb-header">★ Best Bet This Game</div>
-            <div class="bb-play">Atlanta Braves Moneyline</div>
-            <div class="bb-sub">-138 at FanDuel</div>
+            <div class="bb-play">Under 7.5 Runs</div>
+            <div class="bb-sub">+103 at DraftKings</div>
             <div class="bb-stats">
               <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">56% / 44%</div></div>
-              <div class="bbs"><div class="bbs-label">Best Atlanta Bra</div><div class="bbs-val">-138 @ FanDuel</div></div>
-              <div class="bbs"><div class="bbs-label">Best Boston Red </div><div class="bbs-val">+126 @ BetOnline.ag</div></div>
-              <div class="bbs"><div class="bbs-label">Edge</div><div class="bbs-val green">Slight</div></div>
+              <div class="bbs"><div class="bbs-label">True Win%</div><div class="bbs-val">54%</div></div>
+              <div class="bbs"><div class="bbs-label">Fair Line</div><div class="bbs-val">-118</div></div>
+              <div class="bbs"><div class="bbs-label">Edge</div><div class="bbs-val green">+4.8%</div></div>
             </div></div>
           </div>
         </div>
@@ -623,13 +636,13 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
             </div>
             <div class="best-bet">
             <div class="bb-header">★ Best Bet This Game</div>
-            <div class="bb-play">Baltimore Orioles Moneyline</div>
-            <div class="bb-sub">-124 at FanDuel</div>
+            <div class="bb-play">Toronto Blue Jays Moneyline</div>
+            <div class="bb-sub">+117 at BetUS</div>
             <div class="bb-stats">
               <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">45% / 55%</div></div>
-              <div class="bbs"><div class="bbs-label">Best Toronto Blu</div><div class="bbs-val">+117 @ BetUS</div></div>
-              <div class="bbs"><div class="bbs-label">Best Baltimore O</div><div class="bbs-val">-124 @ FanDuel</div></div>
-              <div class="bbs"><div class="bbs-label">Edge</div><div class="bbs-val green">Slight</div></div>
+              <div class="bbs"><div class="bbs-label">True Win%</div><div class="bbs-val">45%</div></div>
+              <div class="bbs"><div class="bbs-label">Fair Line</div><div class="bbs-val">+120</div></div>
+              <div class="bbs"><div class="bbs-label">Edge</div><div class="bbs-val green">-0.6%</div></div>
             </div></div>
           </div>
         </div>
@@ -717,13 +730,13 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
             </div>
             <div class="best-bet">
             <div class="bb-header">★ Best Bet This Game</div>
-            <div class="bb-play">Pittsburgh Pirates Moneyline</div>
-            <div class="bb-sub">-165 at BetOnline.ag</div>
+            <div class="bb-play">Chicago Cubs Moneyline</div>
+            <div class="bb-sub">+149 at BetOnline.ag</div>
             <div class="bb-stats">
               <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">39% / 61%</div></div>
-              <div class="bbs"><div class="bbs-label">Best Chicago Cub</div><div class="bbs-val">+149 @ BetOnline.ag</div></div>
-              <div class="bbs"><div class="bbs-label">Best Pittsburgh </div><div class="bbs-val">-165 @ BetOnline.ag</div></div>
-              <div class="bbs"><div class="bbs-label">Edge</div><div class="bbs-val green">Slight</div></div>
+              <div class="bbs"><div class="bbs-label">True Win%</div><div class="bbs-val">39%</div></div>
+              <div class="bbs"><div class="bbs-label">Fair Line</div><div class="bbs-val">+154</div></div>
+              <div class="bbs"><div class="bbs-label">Edge</div><div class="bbs-val green">-0.8%</div></div>
             </div></div>
           </div>
         </div>
@@ -811,13 +824,13 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
             </div>
             <div class="best-bet">
             <div class="bb-header">★ Best Bet This Game</div>
-            <div class="bb-play">Texas Rangers Moneyline</div>
-            <div class="bb-sub">-149 at BetOnline.ag</div>
+            <div class="bb-play">Houston Astros Moneyline</div>
+            <div class="bb-sub">+135 at BetOnline.ag</div>
             <div class="bb-stats">
               <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">42% / 58%</div></div>
-              <div class="bbs"><div class="bbs-label">Best Houston Ast</div><div class="bbs-val">+135 @ BetOnline.ag</div></div>
-              <div class="bbs"><div class="bbs-label">Best Texas Range</div><div class="bbs-val">-149 @ BetOnline.ag</div></div>
-              <div class="bbs"><div class="bbs-label">Edge</div><div class="bbs-val green">Slight</div></div>
+              <div class="bbs"><div class="bbs-label">True Win%</div><div class="bbs-val">42%</div></div>
+              <div class="bbs"><div class="bbs-label">Fair Line</div><div class="bbs-val">+139</div></div>
+              <div class="bbs"><div class="bbs-label">Edge</div><div class="bbs-val green">-0.7%</div></div>
             </div></div>
           </div>
         </div>
@@ -904,18 +917,6 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
                 <div style="font-size:10px;color:var(--muted);margin-bottom:6px;font-family:monospace">📋 Roster (lineup not yet posted)</div>
             <table class="dtable"><thead><tr><th>Batter</th><th>Pos</th><th>AB</th><th>H</th><th>HR</th><th>K</th><th>Career BA vs Pitcher</th></tr></thead>
             <tbody><tr>
-                  <td class="book">Adam Frazier</td>
-                  <td class="mono" style="color:var(--muted)">2B</td>
-                  <td class="mono">29</td>
-                  <td class="mono">8</td>
-                  <td class="mono">0</td>
-                  <td class="mono">7</td>
-                  <td>
-                    <span class="mono" style="color:#fbbf24;font-weight:700">.276</span>
-                    <span style="color:var(--muted);font-size:11px"> (8/29)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:91%;background:#fbbf24;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
                   <td class="book">Jorge Soler</td>
                   <td class="mono" style="color:var(--muted)">DH</td>
                   <td class="mono">11</td>
@@ -928,16 +929,16 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
                     <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:90%;background:#fbbf24;border-radius:2px"></div></div>
                   </td>
                 </tr><tr>
-                  <td class="book">Zach Neto</td>
-                  <td class="mono" style="color:var(--muted)">SS</td>
-                  <td class="mono">7</td>
-                  <td class="mono">2</td>
+                  <td class="book">Adam Frazier</td>
+                  <td class="mono" style="color:var(--muted)">2B</td>
+                  <td class="mono">8</td>
+                  <td class="mono">3</td>
                   <td class="mono">0</td>
-                  <td class="mono">4</td>
+                  <td class="mono">1</td>
                   <td>
-                    <span class="mono" style="color:#fbbf24;font-weight:700">.286</span>
-                    <span style="color:var(--muted);font-size:11px"> (2/7)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:95%;background:#fbbf24;border-radius:2px"></div></div>
+                    <span class="mono" style="color:#f87171;font-weight:700">.375</span>
+                    <span style="color:var(--muted);font-size:11px"> (3/8)</span>
+                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
                   </td>
                 </tr><tr>
                   <td class="book">Nick Madrigal</td>
@@ -1011,16 +1012,16 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
                 <div style="font-size:10px;color:var(--muted);margin-bottom:6px;font-family:monospace">📋 Roster (lineup not yet posted)</div>
             <table class="dtable"><thead><tr><th>Batter</th><th>Pos</th><th>AB</th><th>H</th><th>HR</th><th>K</th><th>Career BA vs Pitcher</th></tr></thead>
             <tbody><tr>
-                  <td class="book">Trevor Larnach</td>
-                  <td class="mono" style="color:var(--muted)">LF</td>
-                  <td class="mono">8</td>
-                  <td class="mono">2</td>
+                  <td class="book">Byron Buxton</td>
+                  <td class="mono" style="color:var(--muted)">CF</td>
+                  <td class="mono">10</td>
+                  <td class="mono">1</td>
                   <td class="mono">0</td>
-                  <td class="mono">0</td>
+                  <td class="mono">5</td>
                   <td>
-                    <span class="mono" style="color:#fbbf24;font-weight:700">.250</span>
-                    <span style="color:var(--muted);font-size:11px"> (2/8)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:83%;background:#fbbf24;border-radius:2px"></div></div>
+                    <span class="mono" style="color:#4ade80;font-weight:700">.100</span>
+                    <span style="color:var(--muted);font-size:11px"> (1/10)</span>
+                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:33%;background:#4ade80;border-radius:2px"></div></div>
                   </td>
                 </tr><tr>
                   <td class="book">Kody Clemens</td>
@@ -1118,6 +1119,30 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
                 <div style="font-size:10px;color:var(--muted);margin-bottom:6px;font-family:monospace">📋 Roster (lineup not yet posted)</div>
             <table class="dtable"><thead><tr><th>Batter</th><th>Pos</th><th>AB</th><th>H</th><th>HR</th><th>K</th><th>Career BA vs Pitcher</th></tr></thead>
             <tbody><tr>
+                  <td class="book">Willson Contreras</td>
+                  <td class="mono" style="color:var(--muted)">1B</td>
+                  <td class="mono">6</td>
+                  <td class="mono">1</td>
+                  <td class="mono">0</td>
+                  <td class="mono">1</td>
+                  <td>
+                    <span class="mono" style="color:#4ade80;font-weight:700">.167</span>
+                    <span style="color:var(--muted);font-size:11px"> (1/6)</span>
+                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:55%;background:#4ade80;border-radius:2px"></div></div>
+                  </td>
+                </tr><tr>
+                  <td class="book">Isiah Kiner-Falefa</td>
+                  <td class="mono" style="color:var(--muted)">2B</td>
+                  <td class="mono">5</td>
+                  <td class="mono">1</td>
+                  <td class="mono">0</td>
+                  <td class="mono">2</td>
+                  <td>
+                    <span class="mono" style="color:#4ade80;font-weight:700">.200</span>
+                    <span style="color:var(--muted);font-size:11px"> (1/5)</span>
+                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:66%;background:#4ade80;border-radius:2px"></div></div>
+                  </td>
+                </tr><tr>
                   <td class="book">Jarren Duran</td>
                   <td class="mono" style="color:var(--muted)">LF</td>
                   <td class="mono">5</td>
@@ -1188,18 +1213,6 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
                     <span class="mono" style="color:#f87171;font-weight:700">.667</span>
                     <span style="color:var(--muted);font-size:11px"> (2/3)</span>
                     <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Willson Contreras</td>
-                  <td class="mono" style="color:var(--muted)">1B</td>
-                  <td class="mono">3</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
-                    <span style="color:var(--muted);font-size:11px"> (0/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
                   </td>
                 </tr></tbody></table>
               </div>
@@ -1383,6 +1396,18 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
                     <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:66%;background:#4ade80;border-radius:2px"></div></div>
                   </td>
                 </tr><tr>
+                  <td class="book">Blaze Alexander</td>
+                  <td class="mono" style="color:var(--muted)">3B</td>
+                  <td class="mono">5</td>
+                  <td class="mono">1</td>
+                  <td class="mono">0</td>
+                  <td class="mono">4</td>
+                  <td>
+                    <span class="mono" style="color:#4ade80;font-weight:700">.200</span>
+                    <span style="color:var(--muted);font-size:11px"> (1/5)</span>
+                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:66%;background:#4ade80;border-radius:2px"></div></div>
+                  </td>
+                </tr><tr>
                   <td class="book">Coby Mayo</td>
                   <td class="mono" style="color:var(--muted)">3B</td>
                   <td class="mono">5</td>
@@ -1481,6 +1506,18 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
                     <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:55%;background:#4ade80;border-radius:2px"></div></div>
                   </td>
                 </tr><tr>
+                  <td class="book">Vladimir Guerrero Jr.</td>
+                  <td class="mono" style="color:var(--muted)">1B</td>
+                  <td class="mono">6</td>
+                  <td class="mono">1</td>
+                  <td class="mono">0</td>
+                  <td class="mono">2</td>
+                  <td>
+                    <span class="mono" style="color:#4ade80;font-weight:700">.167</span>
+                    <span style="color:var(--muted);font-size:11px"> (1/6)</span>
+                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:55%;background:#4ade80;border-radius:2px"></div></div>
+                  </td>
+                </tr><tr>
                   <td class="book">Andrés Giménez</td>
                   <td class="mono" style="color:var(--muted)">SS</td>
                   <td class="mono">5</td>
@@ -1540,18 +1577,6 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
                     <span style="color:var(--muted);font-size:11px"> (1/3)</span>
                     <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
                   </td>
-                </tr><tr>
-                  <td class="book">Vladimir Guerrero Jr.</td>
-                  <td class="mono" style="color:var(--muted)">1B</td>
-                  <td class="mono">3</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td class="mono">1</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
-                    <span style="color:var(--muted);font-size:11px"> (0/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
                 </tr></tbody></table>
               </div>
 
@@ -1588,18 +1613,6 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
                 <div style="font-size:10px;color:var(--muted);margin-bottom:6px;font-family:monospace">📋 Roster (lineup not yet posted)</div>
             <table class="dtable"><thead><tr><th>Batter</th><th>Pos</th><th>AB</th><th>H</th><th>HR</th><th>K</th><th>Career BA vs Pitcher</th></tr></thead>
             <tbody><tr>
-                  <td class="book">Bryan Reynolds</td>
-                  <td class="mono" style="color:var(--muted)">LF</td>
-                  <td class="mono">19</td>
-                  <td class="mono">8</td>
-                  <td class="mono">2</td>
-                  <td class="mono">5</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.421</span>
-                    <span style="color:var(--muted);font-size:11px"> (8/19)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
                   <td class="book">Jared Triolo</td>
                   <td class="mono" style="color:var(--muted)">3B</td>
                   <td class="mono">15</td>
@@ -1624,15 +1637,27 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
                     <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
                   </td>
                 </tr><tr>
-                  <td class="book">Spencer Horwitz</td>
-                  <td class="mono" style="color:var(--muted)">1B</td>
-                  <td class="mono">9</td>
-                  <td class="mono">3</td>
+                  <td class="book">Oneil Cruz</td>
+                  <td class="mono" style="color:var(--muted)">CF</td>
+                  <td class="mono">8</td>
+                  <td class="mono">2</td>
+                  <td class="mono">0</td>
+                  <td class="mono">2</td>
+                  <td>
+                    <span class="mono" style="color:#fbbf24;font-weight:700">.250</span>
+                    <span style="color:var(--muted);font-size:11px"> (2/8)</span>
+                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:83%;background:#fbbf24;border-radius:2px"></div></div>
+                  </td>
+                </tr><tr>
+                  <td class="book">Bryan Reynolds</td>
+                  <td class="mono" style="color:var(--muted)">LF</td>
+                  <td class="mono">6</td>
+                  <td class="mono">2</td>
                   <td class="mono">0</td>
                   <td class="mono">2</td>
                   <td>
                     <span class="mono" style="color:#f87171;font-weight:700">.333</span>
-                    <span style="color:var(--muted);font-size:11px"> (3/9)</span>
+                    <span style="color:var(--muted);font-size:11px"> (2/6)</span>
                     <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
                   </td>
                 </tr><tr>
@@ -1650,6 +1675,18 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
                 </tr><tr>
                   <td class="book">Brandon Lowe</td>
                   <td class="mono" style="color:var(--muted)">2B</td>
+                  <td class="mono">3</td>
+                  <td class="mono">1</td>
+                  <td class="mono">0</td>
+                  <td class="mono">1</td>
+                  <td>
+                    <span class="mono" style="color:#f87171;font-weight:700">.333</span>
+                    <span style="color:var(--muted);font-size:11px"> (1/3)</span>
+                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
+                  </td>
+                </tr><tr>
+                  <td class="book">Spencer Horwitz</td>
+                  <td class="mono" style="color:var(--muted)">1B</td>
                   <td class="mono">3</td>
                   <td class="mono">1</td>
                   <td class="mono">0</td>
@@ -1710,6 +1747,18 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
                     <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:83%;background:#fbbf24;border-radius:2px"></div></div>
                   </td>
                 </tr><tr>
+                  <td class="book">Nico Hoerner</td>
+                  <td class="mono" style="color:var(--muted)">2B</td>
+                  <td class="mono">12</td>
+                  <td class="mono">4</td>
+                  <td class="mono">1</td>
+                  <td class="mono">0</td>
+                  <td>
+                    <span class="mono" style="color:#f87171;font-weight:700">.333</span>
+                    <span style="color:var(--muted);font-size:11px"> (4/12)</span>
+                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
+                  </td>
+                </tr><tr>
                   <td class="book">Pete Crow-Armstrong</td>
                   <td class="mono" style="color:var(--muted)">CF</td>
                   <td class="mono">12</td>
@@ -1719,6 +1768,18 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
                   <td>
                     <span class="mono" style="color:#fbbf24;font-weight:700">.250</span>
                     <span style="color:var(--muted);font-size:11px"> (3/12)</span>
+                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:83%;background:#fbbf24;border-radius:2px"></div></div>
+                  </td>
+                </tr><tr>
+                  <td class="book">Dansby Swanson</td>
+                  <td class="mono" style="color:var(--muted)">SS</td>
+                  <td class="mono">8</td>
+                  <td class="mono">2</td>
+                  <td class="mono">1</td>
+                  <td class="mono">3</td>
+                  <td>
+                    <span class="mono" style="color:#fbbf24;font-weight:700">.250</span>
+                    <span style="color:var(--muted);font-size:11px"> (2/8)</span>
                     <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:83%;background:#fbbf24;border-radius:2px"></div></div>
                   </td>
                 </tr><tr>
@@ -1732,30 +1793,6 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
                     <span class="mono" style="color:#4ade80;font-weight:700">.167</span>
                     <span style="color:var(--muted);font-size:11px"> (1/6)</span>
                     <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:55%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Nico Hoerner</td>
-                  <td class="mono" style="color:var(--muted)">2B</td>
-                  <td class="mono">5</td>
-                  <td class="mono">2</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.400</span>
-                    <span style="color:var(--muted);font-size:11px"> (2/5)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Carson Kelly</td>
-                  <td class="mono" style="color:var(--muted)">C</td>
-                  <td class="mono">4</td>
-                  <td class="mono">2</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.500</span>
-                    <span style="color:var(--muted);font-size:11px"> (2/4)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
                   </td>
                 </tr><tr>
                   <td class="book">Michael Conforto</td>
@@ -1780,18 +1817,6 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
                     <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
                     <span style="color:var(--muted);font-size:11px"> (0/4)</span>
                     <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Dansby Swanson</td>
-                  <td class="mono" style="color:var(--muted)">SS</td>
-                  <td class="mono">3</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">2</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.333</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
                   </td>
                 </tr></tbody></table>
               </div>
@@ -1927,6 +1952,18 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
                 <div style="font-size:10px;color:var(--muted);margin-bottom:6px;font-family:monospace">📋 Roster (lineup not yet posted)</div>
             <table class="dtable"><thead><tr><th>Batter</th><th>Pos</th><th>AB</th><th>H</th><th>HR</th><th>K</th><th>Career BA vs Pitcher</th></tr></thead>
             <tbody><tr>
+                  <td class="book">Yordan Alvarez</td>
+                  <td class="mono" style="color:var(--muted)">DH</td>
+                  <td class="mono">15</td>
+                  <td class="mono">6</td>
+                  <td class="mono">1</td>
+                  <td class="mono">4</td>
+                  <td>
+                    <span class="mono" style="color:#f87171;font-weight:700">.400</span>
+                    <span style="color:var(--muted);font-size:11px"> (6/15)</span>
+                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
+                  </td>
+                </tr><tr>
                   <td class="book">Jeremy Peña</td>
                   <td class="mono" style="color:var(--muted)">SS</td>
                   <td class="mono">13</td>
@@ -1963,6 +2000,18 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
                     <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:36%;background:#4ade80;border-radius:2px"></div></div>
                   </td>
                 </tr><tr>
+                  <td class="book">Jake Meyers</td>
+                  <td class="mono" style="color:var(--muted)">CF</td>
+                  <td class="mono">9</td>
+                  <td class="mono">1</td>
+                  <td class="mono">0</td>
+                  <td class="mono">2</td>
+                  <td>
+                    <span class="mono" style="color:#4ade80;font-weight:700">.111</span>
+                    <span style="color:var(--muted);font-size:11px"> (1/9)</span>
+                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:36%;background:#4ade80;border-radius:2px"></div></div>
+                  </td>
+                </tr><tr>
                   <td class="book">Nick Allen</td>
                   <td class="mono" style="color:var(--muted)">SS</td>
                   <td class="mono">9</td>
@@ -1975,18 +2024,6 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
                     <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:36%;background:#4ade80;border-radius:2px"></div></div>
                   </td>
                 </tr><tr>
-                  <td class="book">Cam Smith</td>
-                  <td class="mono" style="color:var(--muted)">RF</td>
-                  <td class="mono">6</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td class="mono">3</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
-                    <span style="color:var(--muted);font-size:11px"> (0/6)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
                   <td class="book">Taylor Trammell</td>
                   <td class="mono" style="color:var(--muted)">CF</td>
                   <td class="mono">6</td>
@@ -1997,6 +2034,18 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
                     <span class="mono" style="color:#4ade80;font-weight:700">.167</span>
                     <span style="color:var(--muted);font-size:11px"> (1/6)</span>
                     <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:55%;background:#4ade80;border-radius:2px"></div></div>
+                  </td>
+                </tr><tr>
+                  <td class="book">Cam Smith</td>
+                  <td class="mono" style="color:var(--muted)">RF</td>
+                  <td class="mono">4</td>
+                  <td class="mono">0</td>
+                  <td class="mono">0</td>
+                  <td class="mono">2</td>
+                  <td>
+                    <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
+                    <span style="color:var(--muted);font-size:11px"> (0/4)</span>
+                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
                   </td>
                 </tr><tr>
                   <td class="book">Braden Shewmake</td>
@@ -2034,18 +2083,6 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
                     <span style="color:var(--muted);font-size:11px"> (0/3)</span>
                     <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
                   </td>
-                </tr><tr>
-                  <td class="book">Jake Meyers</td>
-                  <td class="mono" style="color:var(--muted)">CF</td>
-                  <td class="mono">3</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">1</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.333</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
                 </tr></tbody></table>
               </div>
 
@@ -2055,6 +2092,307 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
               <span style="color:var(--green)">■</span> .300+ BA = batter has historically hit this pitcher well &nbsp;
               <span style="color:var(--amber)">■</span> .250–.299 = moderate history &nbsp;
               <span style="color:var(--red)">■</span> Under .250 = pitcher has the edge &nbsp;·&nbsp; Min 3 AB shown
+            </div>
+          </div>
+        </div>
+  </div></div>
+
+  <!-- WEATHER -->
+  <div class="page" id="page-weather"><div class="page-inner">
+    <div style="margin-bottom:1.5rem">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;color:#fff;margin-bottom:6px">🌤️ Weather &amp; Wind</div>
+      <div style="font-size:13px;color:var(--muted)">Wind direction vs field orientation for every open-air park. Strong blowing-out winds favor hitters and the Over. Strong blowing-in favors pitchers and the Under.</div>
+    </div>
+    
+        <div class="game-block" onclick="toggleGame(this)">
+          <div class="game-header">
+            <div><div class="game-teams">Los Angeles Angels @ Detroit Tigers</div>
+            <div class="game-time">Comerica Park &nbsp;·&nbsp; 1:11 PM ET</div></div>
+            <div class="game-right"><span class="badge b-value">🌬️ BLOWING IN</span><span class="toggle">▼</span></div>
+          </div>
+          <div class="game-body">
+            <div style="display:grid;grid-template-columns:1fr 220px;gap:16px;margin-top:14px;align-items:start">
+
+              <div>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+                  <div class="stat-box"><div class="sl">Temp</div><div class="sv">64°F</div></div>
+                  <div class="stat-box"><div class="sl">Wind</div><div class="sv">5 mph NE</div></div>
+                  <div class="stat-box"><div class="sl">Humidity</div><div class="sv">54%</div></div>
+                  <div class="stat-box"><div class="sl">Condition</div><div class="sv" style="font-size:11px">Partly Cloudy</div></div>
+                </div>
+                <div style="background:var(--bg3);border-radius:8px;padding:12px 14px;border-left:3px solid var(--green)">
+                  <div style="font-size:12px;font-weight:600;color:var(--green);margin-bottom:4px">Wind blowing IN from CF at 5 mph — favors pitchers, Under</div>
+                  <div style="font-size:12px;color:#888;line-height:1.6">Light winds — weather is not a significant factor for totals today.</div>
+                </div>
+              </div>
+
+              <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+                <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-family:monospace">Wind Direction</div>
+                <svg viewBox="0 0 180 180" width="180" height="180" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Stadium outline -->
+                  <circle cx="90" cy="90" r="80" fill="none" stroke="#27272a" stroke-width="1"/>
+                  <!-- Outfield grass -->
+                  <path d="M90,90 L30,30 A85,85 0 0,1 150,30 Z" fill="#1a2e1a" opacity="0.6"/>
+                  <!-- Infield diamond -->
+                  <rect x="72" y="72" width="36" height="36" fill="#2d2010" transform="rotate(45,90,90)" rx="2"/>
+                  <!-- Bases -->
+                  <rect x="88" y="66" width="6" height="6" fill="#e8e8e8" transform="rotate(45,91,69)" rx="1"/>
+                  <rect x="108" y="86" width="6" height="6" fill="#e8e8e8" transform="rotate(45,111,89)" rx="1"/>
+                  <rect x="88" y="106" width="6" height="6" fill="#e8e8e8" transform="rotate(45,91,109)" rx="1"/>
+                  <!-- Home plate -->
+                  <polygon points="90,124 85,129 90,132 95,129" fill="#e8e8e8"/>
+                  <!-- CF label -->
+                  <text x="90" y="22" text-anchor="middle" fill="#555" font-size="10" font-family="monospace">CF</text>
+                  <!-- Wind arrow group, rotated around center -->
+                  <g transform="rotate(219, 90, 90)">
+                    <!-- Arrow shaft -->
+                    <line x1="90" y1="90" x2="90" y2="42" stroke="var(--green)" stroke-width="3" stroke-linecap="round"/>
+                    <!-- Arrowhead -->
+                    <polygon points="90,36 84,50 96,50" fill="var(--green)"/>
+                    <!-- Wind label on arrow -->
+                  </g>
+                  <!-- Wind speed label -->
+                  <text x="90" y="168" text-anchor="middle" fill="var(--green)" font-size="11" font-family="monospace" font-weight="bold">5 mph NE</text>
+                </svg>
+                <div style="font-size:10px;color:var(--muted);text-align:center;line-height:1.5">Arrow shows<br>wind direction</div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="game-block" onclick="toggleGame(this)">
+          <div class="game-header">
+            <div><div class="game-teams">Minnesota Twins @ Chicago White Sox</div>
+            <div class="game-time">Guaranteed Rate Field &nbsp;·&nbsp; 2:10 PM ET</div></div>
+            <div class="game-right"><span class="badge b-value">🌬️ BLOWING IN</span><span class="toggle">▼</span></div>
+          </div>
+          <div class="game-body">
+            <div style="display:grid;grid-template-columns:1fr 220px;gap:16px;margin-top:14px;align-items:start">
+
+              <div>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+                  <div class="stat-box"><div class="sl">Temp</div><div class="sv">58°F</div></div>
+                  <div class="stat-box"><div class="sl">Wind</div><div class="sv">15 mph N</div></div>
+                  <div class="stat-box"><div class="sl">Humidity</div><div class="sv">65%</div></div>
+                  <div class="stat-box"><div class="sl">Condition</div><div class="sv" style="font-size:11px">Mostly Clear</div></div>
+                </div>
+                <div style="background:var(--bg3);border-radius:8px;padding:12px 14px;border-left:3px solid var(--green)">
+                  <div style="font-size:12px;font-weight:600;color:var(--green);margin-bottom:4px">Wind blowing IN from CF at 15 mph — favors pitchers, Under</div>
+                  <div style="font-size:12px;color:#888;line-height:1.6">⚡ Strong in-blowing wind (15 mph) suppresses offense. Lean Under — pitchers gain a meaningful edge.</div>
+                </div>
+              </div>
+
+              <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+                <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-family:monospace">Wind Direction</div>
+                <svg viewBox="0 0 180 180" width="180" height="180" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Stadium outline -->
+                  <circle cx="90" cy="90" r="80" fill="none" stroke="#27272a" stroke-width="1"/>
+                  <!-- Outfield grass -->
+                  <path d="M90,90 L30,30 A85,85 0 0,1 150,30 Z" fill="#1a2e1a" opacity="0.6"/>
+                  <!-- Infield diamond -->
+                  <rect x="72" y="72" width="36" height="36" fill="#2d2010" transform="rotate(45,90,90)" rx="2"/>
+                  <!-- Bases -->
+                  <rect x="88" y="66" width="6" height="6" fill="#e8e8e8" transform="rotate(45,91,69)" rx="1"/>
+                  <rect x="108" y="86" width="6" height="6" fill="#e8e8e8" transform="rotate(45,111,89)" rx="1"/>
+                  <rect x="88" y="106" width="6" height="6" fill="#e8e8e8" transform="rotate(45,91,109)" rx="1"/>
+                  <!-- Home plate -->
+                  <polygon points="90,124 85,129 90,132 95,129" fill="#e8e8e8"/>
+                  <!-- CF label -->
+                  <text x="90" y="22" text-anchor="middle" fill="#555" font-size="10" font-family="monospace">CF</text>
+                  <!-- Wind arrow group, rotated around center -->
+                  <g transform="rotate(176, 90, 90)">
+                    <!-- Arrow shaft -->
+                    <line x1="90" y1="90" x2="90" y2="42" stroke="var(--green)" stroke-width="3" stroke-linecap="round"/>
+                    <!-- Arrowhead -->
+                    <polygon points="90,36 84,50 96,50" fill="var(--green)"/>
+                    <!-- Wind label on arrow -->
+                  </g>
+                  <!-- Wind speed label -->
+                  <text x="90" y="168" text-anchor="middle" fill="var(--green)" font-size="11" font-family="monospace" font-weight="bold">15 mph N</text>
+                </svg>
+                <div style="font-size:10px;color:var(--muted);text-align:center;line-height:1.5">Arrow shows<br>wind direction</div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="game-block" onclick="toggleGame(this)">
+          <div class="game-header">
+            <div><div class="game-teams">Atlanta Braves @ Boston Red Sox</div>
+            <div class="game-time">Fenway Park &nbsp;·&nbsp; 4:10 PM ET</div></div>
+            <div class="game-right"><span class="badge b-watch">↔️ CROSSWIND</span><span class="toggle">▼</span></div>
+          </div>
+          <div class="game-body">
+            <div style="display:grid;grid-template-columns:1fr 220px;gap:16px;margin-top:14px;align-items:start">
+
+              <div>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+                  <div class="stat-box"><div class="sl">Temp</div><div class="sv">68°F</div></div>
+                  <div class="stat-box"><div class="sl">Wind</div><div class="sv">6 mph N</div></div>
+                  <div class="stat-box"><div class="sl">Humidity</div><div class="sv">61%</div></div>
+                  <div class="stat-box"><div class="sl">Condition</div><div class="sv" style="font-size:11px">Mostly Cloudy</div></div>
+                </div>
+                <div style="background:var(--bg3);border-radius:8px;padding:12px 14px;border-left:3px solid var(--amber)">
+                  <div style="font-size:12px;font-weight:600;color:var(--amber);margin-bottom:4px">Crosswind at 6 mph — minor impact</div>
+                  <div style="font-size:12px;color:#888;line-height:1.6">Light winds — weather is not a significant factor for totals today.</div>
+                </div>
+              </div>
+
+              <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+                <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-family:monospace">Wind Direction</div>
+                <svg viewBox="0 0 180 180" width="180" height="180" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Stadium outline -->
+                  <circle cx="90" cy="90" r="80" fill="none" stroke="#27272a" stroke-width="1"/>
+                  <!-- Outfield grass -->
+                  <path d="M90,90 L30,30 A85,85 0 0,1 150,30 Z" fill="#1a2e1a" opacity="0.6"/>
+                  <!-- Infield diamond -->
+                  <rect x="72" y="72" width="36" height="36" fill="#2d2010" transform="rotate(45,90,90)" rx="2"/>
+                  <!-- Bases -->
+                  <rect x="88" y="66" width="6" height="6" fill="#e8e8e8" transform="rotate(45,91,69)" rx="1"/>
+                  <rect x="108" y="86" width="6" height="6" fill="#e8e8e8" transform="rotate(45,111,89)" rx="1"/>
+                  <rect x="88" y="106" width="6" height="6" fill="#e8e8e8" transform="rotate(45,91,109)" rx="1"/>
+                  <!-- Home plate -->
+                  <polygon points="90,124 85,129 90,132 95,129" fill="#e8e8e8"/>
+                  <!-- CF label -->
+                  <text x="90" y="22" text-anchor="middle" fill="#555" font-size="10" font-family="monospace">CF</text>
+                  <!-- Wind arrow group, rotated around center -->
+                  <g transform="rotate(85, 90, 90)">
+                    <!-- Arrow shaft -->
+                    <line x1="90" y1="90" x2="90" y2="42" stroke="var(--amber)" stroke-width="3" stroke-linecap="round"/>
+                    <!-- Arrowhead -->
+                    <polygon points="90,36 84,50 96,50" fill="var(--amber)"/>
+                    <!-- Wind label on arrow -->
+                  </g>
+                  <!-- Wind speed label -->
+                  <text x="90" y="168" text-anchor="middle" fill="var(--amber)" font-size="11" font-family="monospace" font-weight="bold">6 mph N</text>
+                </svg>
+                <div style="font-size:10px;color:var(--muted);text-align:center;line-height:1.5">Arrow shows<br>wind direction</div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="game-block" onclick="toggleGame(this)">
+          <div class="game-header">
+            <div><div class="game-teams">Toronto Blue Jays @ Baltimore Orioles</div>
+            <div class="game-time">Camden Yards &nbsp;·&nbsp; 6:36 PM ET</div></div>
+            <div class="game-right"><span class="badge b-fire">💨 BLOWING OUT</span><span class="toggle">▼</span></div>
+          </div>
+          <div class="game-body">
+            <div style="display:grid;grid-template-columns:1fr 220px;gap:16px;margin-top:14px;align-items:start">
+
+              <div>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+                  <div class="stat-box"><div class="sl">Temp</div><div class="sv">71°F</div></div>
+                  <div class="stat-box"><div class="sl">Wind</div><div class="sv">5 mph W</div></div>
+                  <div class="stat-box"><div class="sl">Humidity</div><div class="sv">87%</div></div>
+                  <div class="stat-box"><div class="sl">Condition</div><div class="sv" style="font-size:11px">Slight Chance Rain Showers</div></div>
+                </div>
+                <div style="background:var(--bg3);border-radius:8px;padding:12px 14px;border-left:3px solid var(--red)">
+                  <div style="font-size:12px;font-weight:600;color:var(--red);margin-bottom:4px">Wind blowing OUT toward CF at 5 mph — favors hitters, Over</div>
+                  <div style="font-size:12px;color:#888;line-height:1.6">Light winds — weather is not a significant factor for totals today.</div>
+                </div>
+              </div>
+
+              <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+                <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-family:monospace">Wind Direction</div>
+                <svg viewBox="0 0 180 180" width="180" height="180" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Stadium outline -->
+                  <circle cx="90" cy="90" r="80" fill="none" stroke="#27272a" stroke-width="1"/>
+                  <!-- Outfield grass -->
+                  <path d="M90,90 L30,30 A85,85 0 0,1 150,30 Z" fill="#1a2e1a" opacity="0.6"/>
+                  <!-- Infield diamond -->
+                  <rect x="72" y="72" width="36" height="36" fill="#2d2010" transform="rotate(45,90,90)" rx="2"/>
+                  <!-- Bases -->
+                  <rect x="88" y="66" width="6" height="6" fill="#e8e8e8" transform="rotate(45,91,69)" rx="1"/>
+                  <rect x="108" y="86" width="6" height="6" fill="#e8e8e8" transform="rotate(45,111,89)" rx="1"/>
+                  <rect x="88" y="106" width="6" height="6" fill="#e8e8e8" transform="rotate(45,91,109)" rx="1"/>
+                  <!-- Home plate -->
+                  <polygon points="90,124 85,129 90,132 95,129" fill="#e8e8e8"/>
+                  <!-- CF label -->
+                  <text x="90" y="22" text-anchor="middle" fill="#555" font-size="10" font-family="monospace">CF</text>
+                  <!-- Wind arrow group, rotated around center -->
+                  <g transform="rotate(35, 90, 90)">
+                    <!-- Arrow shaft -->
+                    <line x1="90" y1="90" x2="90" y2="42" stroke="var(--red)" stroke-width="3" stroke-linecap="round"/>
+                    <!-- Arrowhead -->
+                    <polygon points="90,36 84,50 96,50" fill="var(--red)"/>
+                    <!-- Wind label on arrow -->
+                  </g>
+                  <!-- Wind speed label -->
+                  <text x="90" y="168" text-anchor="middle" fill="var(--red)" font-size="11" font-family="monospace" font-weight="bold">5 mph W</text>
+                </svg>
+                <div style="font-size:10px;color:var(--muted);text-align:center;line-height:1.5">Arrow shows<br>wind direction</div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="game-block" onclick="toggleGame(this)">
+          <div class="game-header">
+            <div><div class="game-teams">Chicago Cubs @ Pittsburgh Pirates</div>
+            <div class="game-time">PNC Park &nbsp;·&nbsp; 6:41 PM ET</div></div>
+            <div class="game-right"><span class="badge b-pass">🌀 CALM</span><span class="toggle">▼</span></div>
+          </div>
+          <div class="game-body">
+            <div style="display:grid;grid-template-columns:1fr 220px;gap:16px;margin-top:14px;align-items:start">
+
+              <div>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+                  <div class="stat-box"><div class="sl">Temp</div><div class="sv">66°F</div></div>
+                  <div class="stat-box"><div class="sl">Wind</div><div class="sv">2 mph NW</div></div>
+                  <div class="stat-box"><div class="sl">Humidity</div><div class="sv">77%</div></div>
+                  <div class="stat-box"><div class="sl">Condition</div><div class="sv" style="font-size:11px">Mostly Cloudy</div></div>
+                </div>
+                <div style="background:var(--bg3);border-radius:8px;padding:12px 14px;border-left:3px solid var(--muted)">
+                  <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:4px">Calm winds — minimal impact on game</div>
+                  <div style="font-size:12px;color:#888;line-height:1.6">Light winds — weather is not a significant factor for totals today.</div>
+                </div>
+              </div>
+
+              <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+                <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-family:monospace">Wind Direction</div>
+                <svg viewBox="0 0 180 180" width="180" height="180" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Stadium outline -->
+                  <circle cx="90" cy="90" r="80" fill="none" stroke="#27272a" stroke-width="1"/>
+                  <!-- Outfield grass -->
+                  <path d="M90,90 L30,30 A85,85 0 0,1 150,30 Z" fill="#1a2e1a" opacity="0.6"/>
+                  <!-- Infield diamond -->
+                  <rect x="72" y="72" width="36" height="36" fill="#2d2010" transform="rotate(45,90,90)" rx="2"/>
+                  <!-- Bases -->
+                  <rect x="88" y="66" width="6" height="6" fill="#e8e8e8" transform="rotate(45,91,69)" rx="1"/>
+                  <rect x="108" y="86" width="6" height="6" fill="#e8e8e8" transform="rotate(45,111,89)" rx="1"/>
+                  <rect x="88" y="106" width="6" height="6" fill="#e8e8e8" transform="rotate(45,91,109)" rx="1"/>
+                  <!-- Home plate -->
+                  <polygon points="90,124 85,129 90,132 95,129" fill="#e8e8e8"/>
+                  <!-- CF label -->
+                  <text x="90" y="22" text-anchor="middle" fill="#555" font-size="10" font-family="monospace">CF</text>
+                  <!-- Wind arrow group, rotated around center -->
+                  <g transform="rotate(155, 90, 90)">
+                    <!-- Arrow shaft -->
+                    <line x1="90" y1="90" x2="90" y2="42" stroke="var(--muted)" stroke-width="3" stroke-linecap="round"/>
+                    <!-- Arrowhead -->
+                    <polygon points="90,36 84,50 96,50" fill="var(--muted)"/>
+                    <!-- Wind label on arrow -->
+                  </g>
+                  <!-- Wind speed label -->
+                  <text x="90" y="168" text-anchor="middle" fill="var(--muted)" font-size="11" font-family="monospace" font-weight="bold">2 mph NW</text>
+                </svg>
+                <div style="font-size:10px;color:var(--muted);text-align:center;line-height:1.5">Arrow shows<br>wind direction</div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="game-block" onclick="toggleGame(this)">
+          <div class="game-header">
+            <div><div class="game-teams">Houston Astros @ Texas Rangers</div>
+            <div class="game-time">Globe Life Field &nbsp;·&nbsp; 8:06 PM ET</div></div>
+            <div class="game-right"><span class="badge b-pass" style="font-size:9px">🏟️ DOME</span><span class="toggle">▼</span></div>
+          </div>
+          <div class="game-body">
+            <div style="padding:1rem;background:var(--bg3);border-radius:8px;margin-top:12px;font-size:13px;color:var(--muted);text-align:center">
+              ⛳ Globe Life Field has a retractable/fixed roof — weather does not affect this game.
             </div>
           </div>
         </div>
@@ -2070,7 +2408,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById('page-' + name).classList.add('active');
     if (el) el.classList.add('active');
-    const titles = {home:'Home',plays:'Top Value Plays',games:'All Games',matchups:'Pitcher / Batter Matchups'};
+    const titles = {home:'Home',plays:'Top Value Plays',games:'All Games',matchups:'Pitcher / Batter Matchups',weather:'Weather & Wind'};
     document.getElementById('topbar-title').textContent = titles[name] || name;
     window.scrollTo(0, 0);
     closeSidebar();
