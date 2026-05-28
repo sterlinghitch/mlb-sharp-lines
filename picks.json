@@ -15,7 +15,7 @@
       "pick_team": "Texas Rangers",
       "side": null,
       "total_line": null,
-      "edge": "+2.2%",
+      "edge": "+2.1%",
       "signal": "watch"
     },
     {
@@ -67,6 +67,22 @@
       "signal": "fire"
     },
     {
+      "game": "Philadelphia Phillies @ Los Angeles Dodgers",
+      "away": "Philadelphia Phillies",
+      "home": "Los Angeles Dodgers",
+      "away_id": 143,
+      "home_id": 119,
+      "play": "Over 8.0 Runs",
+      "price": "-115",
+      "book": "BetOnline.ag",
+      "type": "total",
+      "pick_team": null,
+      "side": "Over",
+      "total_line": 8.0,
+      "edge": "0.0%",
+      "signal": "fire"
+    },
+    {
       "game": "Minnesota Twins @ Pittsburgh Pirates",
       "away": "Minnesota Twins",
       "home": "Pittsburgh Pirates",
@@ -111,7 +127,7 @@
       "pick_team": null,
       "side": "Under",
       "total_line": 7.0,
-      "edge": "+4.9%",
+      "edge": "+4.3%",
       "signal": "watch"
     },
     {
@@ -137,13 +153,13 @@
       "away_id": 137,
       "home_id": 115,
       "play": "Over 10.5 Runs",
-      "price": "-106",
+      "price": "-110",
       "book": "FanDuel",
       "type": "total",
       "pick_team": null,
       "side": "Over",
       "total_line": 10.5,
-      "edge": "+3.8%",
+      "edge": "+2.9%",
       "signal": "watch"
     },
     {
