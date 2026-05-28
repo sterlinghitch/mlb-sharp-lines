@@ -2,7 +2,8 @@ name: Daily MLB Lines Update
 
 on:
   schedule:
-    - cron: '0 16 * * *'   # 12:00 PM Eastern every day
+    - cron: '0 16 * * *'   # 12:00 PM ET = 16:00 UTC
+    - cron: '0 21 * * *'   # 4:00 PM ET  = 21:00 UTC  (catches lineups + late scratches)
   workflow_dispatch:
 
 permissions:
@@ -15,7 +16,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # full history so rebase works cleanly
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -35,6 +36,6 @@ jobs:
           git config user.name "MLB Bot"
           git config user.email "bot@mlbsharplines.com"
           git add index.html picks.json || true
-          git diff --staged --quiet || git commit -m "Daily update $(date +'%B %d %Y')"
+          git diff --staged --quiet || git commit -m "Daily update $(date +'%B %d %Y %H:%M')"
           git pull --rebase origin main
           git push
