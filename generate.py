@@ -1527,6 +1527,43 @@ def main():
     with open("index.html","w",encoding="utf-8") as f:
         f.write(html)
 
+    # Save today's best bets to picks.json so log_results.py can check them tonight
+    import json
+    picks = {
+        "date": mlb_date,
+        "date_display": date_str,
+        "bets": []
+    }
+    for g in analyzed:
+        if not g["bet_is_pass"] and g["bet_play"] != "Pass -- near coin flip":
+            # Parse total line from bet_play if it's an O/U pick
+            bet_type = "total" if "Runs" in g["bet_play"] else "ml"
+            side = None; total_line = None
+            if bet_type == "total":
+                parts = g["bet_play"].split()  # e.g. ["Over", "8.5", "Runs"]
+                side       = parts[0] if len(parts)>0 else None
+                total_line = float(parts[1]) if len(parts)>1 else None
+            picks["bets"].append({
+                "game":       g["game"],
+                "away":       g["away"],
+                "home":       g["home"],
+                "away_id":    MLB_IDS.get(g["away"]),
+                "home_id":    MLB_IDS.get(g["home"]),
+                "play":       g["bet_play"],
+                "price":      g["bet_sub"].split(" at ")[0] if " at " in g["bet_sub"] else g["bet_sub"],
+                "book":       g["bet_sub"].split(" at ")[1] if " at " in g["bet_sub"] else "",
+                "type":       bet_type,
+                "pick_team":  g["away"] if "Away" in g["bet_play"] or g["away"] in g["bet_play"] else g["home"] if bet_type=="ml" else None,
+                "side":       side,
+                "total_line": total_line,
+                "edge":       g["bet_edge"],
+                "signal":     g["signal"],
+            })
+
+    with open("picks.json","w",encoding="utf-8") as f:
+        json.dump(picks, f, indent=2)
+    print(f"Saved picks.json: {len(picks['bets'])} best bets for tonight's checker")
+
     print(f"Done -- {len(analyzed)} games, {len(matchups)} matchups, {len(html):,} chars")
 
 if __name__ == "__main__":
