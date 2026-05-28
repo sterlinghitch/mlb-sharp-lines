@@ -2,8 +2,8 @@ name: Daily MLB Lines Update
 
 on:
   schedule:
-    - cron: '0 16 * * *'   # 12:00 PM ET = 16:00 UTC
-    - cron: '0 21 * * *'   # 4:00 PM ET  = 21:00 UTC  (catches lineups + late scratches)
+    - cron: '0 16 * * *'   # 12:00 PM ET (EDT = UTC-4, so 16:00 UTC)
+    - cron: '0 20 * * *'   # 4:00 PM ET  (EDT = UTC-4, so 20:00 UTC)
   workflow_dispatch:
 
 permissions:
