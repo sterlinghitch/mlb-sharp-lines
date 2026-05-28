@@ -696,7 +696,7 @@ def fetch_game_context(game, matchup_data, weather_data, mlb_schedule_games):
 # =============================================================
 # HTML BUILDER
 # =============================================================
-def build_html(analyzed_games, matchups, weather, date_str, time_str):
+def build_html(analyzed_games, matchups, weather, results_data, date_str, time_str):
     all_disc=[]; all_plays=[]; sharp_ct=0; value_ct=0
     for g in analyzed_games:
         for d in g["discrepancies"]: all_disc.append({**d,"game":g["game"]})
@@ -936,24 +936,6 @@ def build_html(analyzed_games, matchups, weather, date_str, time_str):
                 v=float(avg_str); pct=min(int(v*333),100)
                 return f'<div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:{pct}%;background:{avg_color(avg_str)};border-radius:2px"></div></div>'
             except Exception: return ""
-        def last5_html(record, tname):
-            if not record or not record.get("games"):
-                return f'<div style="font-size:12px;color:var(--muted);margin-bottom:10px">{tname}: record unavailable</div>'
-            w=record["wins"]; l=record["losses"]
-            wl_col="var(--green)" if w>l else ("var(--red)" if l>w else "var(--amber)")
-            dots=""
-            for r in record["games"]:
-                loc="vs" if r["home"] else "@"; tip=f'{loc} {r["opp"]} {r["my_runs"]}-{r["op_runs"]}'
-                col="var(--green)" if r["won"] else "var(--red)"; lbl="W" if r["won"] else "L"
-                dots+=(f'<span title="{tip}" style="display:inline-flex;align-items:center;justify-content:center;'
-                       f'width:24px;height:24px;border-radius:50%;background:{col};color:#000;font-size:10px;'
-                       f'font-weight:700;font-family:monospace;cursor:default">{lbl}</span>')
-            return (f'<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;'
-                    f'background:var(--bg3);border-radius:8px;padding:8px 12px">'
-                    f'<span style="font-size:11px;color:var(--muted);font-family:monospace;'
-                    f'text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap">Last 5:</span>'
-                    f'<span style="font-family:\'IBM Plex Mono\',monospace;font-size:16px;font-weight:700;color:{wl_col}">{w}-{l}</span>'
-                    f'<div style="display:flex;gap:4px">{dots}</div></div>')
         def batter_table(batters,pitcher,batting_team,source):
             if not batters:
                 sn="Official lineup" if source=="lineup" else "Roster (lineup not posted)"
@@ -993,7 +975,6 @@ def build_html(analyzed_games, matchups, weather, date_str, time_str):
                    f'<div class="pitcher-name">{ap["name"]}</div>'
                    f'<div class="pitcher-team">{m["away"]} - {ap_era} - WHIP {ap.get("whip","N/A")} - K/9 {ap.get("k9","N/A")}</div>'
                    f'</div>'
-                   f'{last5_html(m.get("away_last5"),m["away"])}'
                    f'<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px">{m["home"]} Batters vs {ap["name"]}</div>'
                    f'{batter_table(m["home_batters"],ap,m["home"],m["home_source"])}'
                    f'</div>'
@@ -1003,7 +984,6 @@ def build_html(analyzed_games, matchups, weather, date_str, time_str):
                    f'<div class="pitcher-name">{hp["name"]}</div>'
                    f'<div class="pitcher-team">{m["home"]} - {hp_era} - WHIP {hp.get("whip","N/A")} - K/9 {hp.get("k9","N/A")}</div>'
                    f'</div>'
-                   f'{last5_html(m.get("home_last5"),m["home"])}'
                    f'<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px">{m["away"]} Batters vs {hp["name"]}</div>'
                    f'{batter_table(m["away_batters"],hp,m["away"],m["away_source"])}'
                    f'</div>'
@@ -1092,6 +1072,103 @@ def build_html(analyzed_games, matchups, weather, date_str, time_str):
                    f'</div></div>')
         return html or '<p style="color:var(--muted);text-align:center;padding:2rem">No weather data.</p>'
 
+
+    def accuracy_page(results_data):
+        days   = results_data.get("days", [])
+        all_bets = [b for day in days for b in day.get("bets", [])]
+        wins   = sum(1 for b in all_bets if b.get("result","") == "W")
+        losses = sum(1 for b in all_bets if b.get("result","") == "L")
+        total  = wins + losses
+        pct    = round((wins / total) * 100) if total > 0 else 0
+
+        # SVG circle
+        r = 70; circ = round(2 * 3.14159 * r, 1)
+        filled = round(circ * pct / 100, 1)
+        gap    = round(circ - filled, 1)
+        pct_color = "#4ade80" if pct >= 55 else ("#fbbf24" if pct >= 45 else "#f87171")
+
+        circle_svg = (
+            f'<svg viewBox="0 0 180 180" width="200" height="200" xmlns="http://www.w3.org/2000/svg">'
+            f'<circle cx="90" cy="90" r="{r}" fill="none" stroke="#27272a" stroke-width="14"/>'
+            f'<circle cx="90" cy="90" r="{r}" fill="none" stroke="{pct_color}" stroke-width="14"'
+            f' stroke-dasharray="{filled} {gap}" stroke-dashoffset="{round(circ*0.25,1)}"'
+            f' stroke-linecap="round"/>'
+            f'<text x="90" y="84" text-anchor="middle" fill="#fff" font-size="32"'
+            f' font-family="IBM Plex Mono,monospace" font-weight="700">{pct}%</text>'
+            f'<text x="90" y="108" text-anchor="middle" fill="#71717a" font-size="13"'
+            f' font-family="IBM Plex Mono,monospace">{wins}W - {losses}L</text>'
+            f'</svg>'
+        )
+
+        if total == 0:
+            empty = ('<div style="text-align:center;padding:4rem 2rem;color:var(--muted);font-size:14px">'
+                     'No results recorded yet. Edit <code style="color:var(--accent)">results.json</code>'
+                     ' in your GitHub repo to log best bet outcomes.</div>')
+            return (f'<div style="text-align:center;margin-bottom:2rem">{circle_svg}</div>'
+                    + empty)
+
+        # Day blocks
+        day_blocks = ""
+        for day in reversed(days):
+            date_lbl = day.get("date","?")
+            bets     = day.get("bets",[])
+            dw = sum(1 for b in bets if b.get("result","")=="W")
+            dl = sum(1 for b in bets if b.get("result","")=="L")
+            dcolor = "var(--green)" if dw>dl else ("var(--red)" if dl>dw else "var(--amber)")
+            rows = ""
+            for b in bets:
+                res = b.get("result","?")
+                if res == "W":
+                    res_badge = '<span class="badge b-value">W</span>'
+                elif res == "L":
+                    res_badge = '<span class="badge b-fire">L</span>'
+                else:
+                    res_badge = '<span class="badge b-pass">PUSH</span>'
+                rows += (f'<tr>'
+                         f'<td>{b.get("game","?")}</td>'
+                         f'<td class="mono">{b.get("play","?")}</td>'
+                         f'<td class="mono">{b.get("price","?")}</td>'
+                         f'<td style="font-size:11px;color:var(--muted)">{b.get("book","?")}</td>'
+                         f'<td>{res_badge}</td>'
+                         f'<td style="font-size:11px;color:var(--muted)">{b.get("note","")}</td>'
+                         f'</tr>')
+            day_blocks += (
+                f'<div class="game-block" onclick="toggleGame(this)">'
+                f'<div class="game-header">'
+                f'<div><div class="game-teams">{date_lbl}</div>'
+                f'<div class="game-time">{len(bets)} best bets recorded</div></div>'
+                f'<div class="game-right">'
+                f'<span style="font-family:\'IBM Plex Mono\',monospace;font-size:14px;font-weight:700;color:{dcolor}">{dw}W-{dl}L</span>'
+                f'<span class="toggle">v</span></div>'
+                f'</div>'
+                f'<div class="game-body">'
+                f'<table class="dtable" style="margin-top:10px">'
+                f'<thead><tr><th>Game</th><th>Play</th><th>Price</th><th>Book</th><th>Result</th><th>Note</th></tr></thead>'
+                f'<tbody>{rows}</tbody></table>'
+                f'</div></div>'
+            )
+
+        return (
+            f'<div style="display:flex;flex-direction:column;align-items:center;gap:4px;margin-bottom:2rem">'
+            f'{circle_svg}'
+            f'<div style="display:flex;gap:20px;margin-top:8px">'
+            f'<div class="metric-card" style="text-align:center;min-width:90px">'
+            f'<div class="metric-label">Correct</div>'
+            f'<div class="metric-val green">{wins}</div></div>'
+            f'<div class="metric-card" style="text-align:center;min-width:90px">'
+            f'<div class="metric-label">Incorrect</div>'
+            f'<div class="metric-val" style="color:var(--red)">{losses}</div></div>'
+            f'<div class="metric-card" style="text-align:center;min-width:90px">'
+            f'<div class="metric-label">Total</div>'
+            f'<div class="metric-val">{total}</div></div>'
+            f'</div>'
+            f'<div style="font-size:12px;color:var(--muted);margin-top:10px;font-family:monospace">'
+            f'To log a result: edit <code style="color:var(--accent)">results.json</code> in your GitHub repo, then re-run the workflow.'
+            f'</div>'
+            f'</div>'
+            f'<div class="sec-header"><h2>Results by Day</h2><div class="sec-line"></div></div>'
+            + day_blocks
+        )
 
     css = """<style>
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
@@ -1256,6 +1333,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
   <div class="nav-item" onclick="showPage('games',this)"><span class="nav-icon">&#9918;</span><span class="nav-label">All Games</span><span class="nav-count">{tot}</span></div>
   <div class="nav-item" onclick="showPage('matchups',this)"><span class="nav-icon">&#9889;</span><span class="nav-label">Pitcher / Batter</span><span class="nav-count">{lm}</span></div>
   <div class="nav-item" onclick="showPage('weather',this)"><span class="nav-icon">&#127780;</span><span class="nav-label">Weather</span><span class="nav-count">{lw}</span></div>
+  <div class="nav-item" onclick="showPage('accuracy',this)"><span class="nav-icon">&#127919;</span><span class="nav-label">Model Accuracy</span></div>
   <div class="sidebar-section" style="margin-top:8px">Today</div>
   <div class="sidebar-stats">
     <div class="sidebar-stat"><span class="sidebar-stat-label">Games</span><span class="sidebar-stat-val">{tot}</span></div>
@@ -1353,6 +1431,10 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
     </div>
     {weather_page()}
   </div></div>
+
+  <div class="page" id="page-accuracy"><div class="page-inner">
+    {accuracy_page(results_data)}
+  </div></div>
 </div>
 
 <footer>MLB Sharp Lines - The Gambling Cave - {date_str} - Enhanced model: SP quality, bullpen fatigue, injuries, park factors, umpire zone, wind - Gamble responsibly</footer>
@@ -1363,7 +1445,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
     document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
     document.getElementById('page-'+name).classList.add('active');
     if(el)el.classList.add('active');
-    const t={{home:'Home',plays:'Top Value Plays',games:'All Games',matchups:'Pitcher / Batter',weather:'Weather & Wind'}};
+    const t={{home:'Home',plays:'Top Value Plays',games:'All Games',matchups:'Pitcher / Batter',weather:'Weather & Wind',accuracy:'Model Accuracy'}};
     document.getElementById('topbar-title').textContent=t[name]||name;
     window.scrollTo(0,0);closeSidebar();
   }}
@@ -1428,7 +1510,20 @@ def main():
     signal_order = {"fire":0,"sharp":1,"value":2,"watch":3,"pass":4}
     analyzed.sort(key=lambda x:(x["date_sort"],signal_order.get(x["signal"],3)))
 
-    html = build_html(analyzed, matchups, weather, date_str, time_str)
+    # Load results.json for accuracy tracking
+    results_data = {"days": []}
+    try:
+        if os.path.exists("results.json"):
+            import json
+            with open("results.json") as f:
+                results_data = json.load(f)
+            print(f"Loaded results.json: {sum(len(d.get('bets',[])) for d in results_data.get('days',[]))} bets")
+        else:
+            print("No results.json found -- accuracy tab will be empty")
+    except Exception as e:
+        print(f"results.json error: {e}")
+
+    html = build_html(analyzed, matchups, weather, results_data, date_str, time_str)
     with open("index.html","w",encoding="utf-8") as f:
         f.write(html)
 
