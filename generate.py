@@ -168,28 +168,57 @@ def fetch_odds():
 # =============================================================
 def fetch_pitcher_stats(pitcher_id):
     if not pitcher_id:
-        return {"name":"TBD","era":"N/A","whip":"N/A","k9":"N/A","id":None,"quality":0.0}
-    data = mlb_get(f"/people/{pitcher_id}",
-                   {"hydrate":"stats(group=pitching,type=season,season=2026)"})
+        return {"name":"TBD","era":"N/A","whip":"N/A","k9":"N/A","id":None,"quality":0.0,"pitch_hand":"R","last3_era":None}
+    data = mlb_get(f"/people/{pitcher_id}", {
+        "hydrate": "stats(group=pitching,type=season,season=2026),stats(group=pitching,type=lastXGames,limit=3)"
+    })
     if not data:
-        return {"name":"TBD","era":"N/A","whip":"N/A","k9":"N/A","id":pitcher_id,"quality":0.0}
-    person = data.get("people",[{}])[0]
-    name = person.get("fullName","TBD")
+        return {"name":"TBD","era":"N/A","whip":"N/A","k9":"N/A","id":pitcher_id,"quality":0.0,"pitch_hand":"R","last3_era":None}
+    person      = data.get("people",[{}])[0]
+    name        = person.get("fullName","TBD")
+    pitch_hand  = person.get("pitchHand",{}).get("code","R")  # 'L' or 'R'
     era = whip = k9 = "N/A"
+    season_quality = 0.0
+    last3_era      = None
+
     for sg in person.get("stats",[]):
+        stype  = sg.get("type",{}).get("displayName","")
         splits = sg.get("splits",[])
         if not splits: continue
         s = splits[0].get("stat",{})
-        era  = str(s.get("era","N/A"))
-        whip = str(s.get("whip","N/A"))
-        ip   = float(s.get("inningsPitched",0) or 0)
-        k    = float(s.get("strikeOuts",0) or 0)
-        k9   = f"{round(k/ip*9,1)}" if ip>0 else "N/A"
-    quality = 0.0
-    try:
-        quality = max(-0.08, min(0.08, (4.20 - float(era)) * 0.04))
-    except Exception: pass
-    return {"name":name,"era":era,"whip":whip,"k9":k9,"id":pitcher_id,"quality":round(quality,3)}
+        if "season" in stype.lower() or stype == "":
+            era  = str(s.get("era","N/A"))
+            whip = str(s.get("whip","N/A"))
+            ip   = float(s.get("inningsPitched",0) or 0)
+            k    = float(s.get("strikeOuts",0) or 0)
+            k9   = f"{round(k/ip*9,1)}" if ip>0 else "N/A"
+            try: season_quality = max(-0.08, min(0.08, (4.20-float(era))*0.04))
+            except Exception: pass
+        elif "last" in stype.lower() or "lastX" in stype:
+            raw = s.get("era")
+            if raw is not None:
+                try: last3_era = float(raw)
+                except Exception: pass
+
+    # Blend last 3 starts with season ERA (60/40) for better recent-form signal
+    quality = season_quality
+    if last3_era is not None:
+        try:
+            last3_quality = max(-0.08, min(0.08, (4.20-last3_era)*0.04))
+            quality = 0.6*last3_quality + 0.4*season_quality
+        except Exception:
+            pass
+
+    return {
+        "name":       name,
+        "era":        era,
+        "whip":       whip,
+        "k9":         k9,
+        "id":         pitcher_id,
+        "quality":    round(quality,3),
+        "pitch_hand": pitch_hand,
+        "last3_era":  f"{last3_era:.2f}" if last3_era is not None else None,
+    }
 
 def fetch_injuries(team_id):
     if not team_id: return []
@@ -308,7 +337,113 @@ def fetch_batter_vs_pitcher(batter_id, pitcher_id):
 
 
 # =============================================================
-# WEATHER
+# HANDEDNESS + PLATOON
+# =============================================================
+def fetch_batters_handedness(batter_ids):
+    """Batch fetch batting hand for multiple batters. Returns {id: 'L'/'R'/'S'}"""
+    if not batter_ids: return {}
+    ids_str = ",".join(str(b) for b in batter_ids)
+    data = mlb_get("/people", {"personIds": ids_str})
+    if not data: return {}
+    result = {}
+    for person in data.get("people", []):
+        pid  = person.get("id")
+        side = person.get("batSide", {}).get("code")
+        if pid and side:
+            result[pid] = side
+    return result
+
+
+def calc_platoon_adjustment(batter_sides, pitcher_hand):
+    """
+    Returns win probability adjustment for the batting team.
+    Same-hand matchup = platoon disadvantage (LHB vs LHP, RHB vs RHP).
+    Switch hitters (S) are neutral.
+    Max adjustment: -3% (heavy disadvantage) to +1.5% (platoon advantage).
+    """
+    if not pitcher_hand or not batter_sides:
+        return 0.0
+    disadvantaged = 0; total = 0
+    for side in batter_sides:
+        if side == "S": continue
+        total += 1
+        if side == pitcher_hand:
+            disadvantaged += 1
+    if total == 0: return 0.0
+    pct = disadvantaged / total
+    if   pct > 0.65: return -0.025
+    elif pct > 0.55: return -0.015
+    elif pct < 0.35: return  0.015
+    elif pct < 0.45: return  0.010
+    return 0.0
+
+
+def load_opening_lines():
+    """Load the 9am line snapshot if it exists."""
+    import json, os
+    if not os.path.exists("opening_lines.json"):
+        return {}
+    try:
+        with open("opening_lines.json") as f:
+            data = json.load(f)
+        return data.get("games", {})
+    except Exception:
+        return {}
+
+
+def calc_line_movement(game_key, opening_games, current_book_data):
+    """
+    Compare current consensus line to 9am opening line.
+    Returns dict with movement info or None.
+    """
+    opening = opening_games.get(game_key)
+    if not opening or not opening.get("books"):
+        return None
+
+    # Median current away/home prices
+    def median(lst):
+        s = sorted(lst); n = len(s)
+        return s[n//2] if n%2 else (s[n//2-1]+s[n//2])/2
+
+    curr_away = median([b["away_price"] for b in current_book_data if b.get("away_price")])
+    curr_home = median([b["home_price"] for b in current_book_data if b.get("home_price")])
+
+    # Median opening prices across books
+    open_away_list = [v["away_price"] for v in opening["books"].values() if v.get("away_price")]
+    open_home_list = [v["home_price"] for v in opening["books"].values() if v.get("home_price")]
+    if not open_away_list or not open_home_list:
+        return None
+
+    open_away = median(open_away_list)
+    open_home = median(open_home_list)
+
+    def implied_diff(p1, p2):
+        """Difference in implied probability in cents (percentage points * 100)."""
+        i1 = american_to_implied(p1); i2 = american_to_implied(p2)
+        if i1 is None or i2 is None: return 0
+        return round((i1 - i2) * 100, 1)
+
+    away_move = implied_diff(curr_away, open_away)  # positive = line moved toward away
+    home_move = implied_diff(curr_home, open_home)  # positive = line moved toward home
+
+    # Flag meaningful movement (5+ cents / percentage points)
+    if abs(away_move) >= 5 or abs(home_move) >= 5:
+        moved_team  = None; move_cents = 0
+        if abs(away_move) >= abs(home_move):
+            moved_team = "away"; move_cents = away_move
+        else:
+            moved_team = "home"; move_cents = home_move
+        direction   = "toward" if move_cents > 0 else "away from"
+        return {
+            "away_move":   away_move,
+            "home_move":   home_move,
+            "moved_team":  moved_team,
+            "move_cents":  move_cents,
+            "significant": abs(move_cents) >= 10,  # 10+ cents = sharp signal
+            "open_away":   open_away,
+            "open_home":   open_home,
+        }
+    return None
 # =============================================================
 def wind_vs_field(wind_dir_str, field_orientation):
     wind_deg = WIND_DIR_DEG.get(wind_dir_str.upper().replace(" ",""),None)
@@ -415,12 +550,19 @@ def build_matchup_data(odds_games, date_str):
         away_last5 = fetch_last_five_record(away_id)
         home_last5 = fetch_last_five_record(home_id)
 
+        # Fetch batter handedness for platoon adjustment (batch call)
+        all_batter_ids = [b["id"] for b in away_batters + home_batters if b.get("id")]
+        handedness_map = fetch_batters_handedness(all_batter_ids) if all_batter_ids else {}
+        away_sides = [handedness_map.get(b["id"]) for b in away_batters if handedness_map.get(b["id"])]
+        home_sides = [handedness_map.get(b["id"]) for b in home_batters if handedness_map.get(b["id"])]
+
         matchups.append({"game":f"{away_name} @ {home_name}",
                          "away":away_name,"home":home_name,
                          "away_pitcher":away_pitcher,"home_pitcher":home_pitcher,
                          "away_batters":away_vs_hp,"home_batters":home_vs_ap,
                          "away_source":away_source,"home_source":home_source,
-                         "away_last5":away_last5,"home_last5":home_last5})
+                         "away_last5":away_last5,"home_last5":home_last5,
+                         "away_batter_sides":away_sides,"home_batter_sides":home_sides})
     print(f"  Matchups ready: {len(matchups)} games")
     return matchups
 
@@ -509,6 +651,39 @@ def analyze_game(game, context):
         delta = inj_diff*0.02; adj_at += delta; adj_ht -= delta
         if abs(delta)>0.01:
             adjustments.append((f"Injuries {away_ki} away / {home_ki} home OUT",delta,-delta))
+
+    # 4. Platoon splits -- lineup handedness vs pitcher hand
+    away_sides  = context.get("away_batter_sides",[])
+    home_sides  = context.get("home_batter_sides",[])
+    hp_hand     = context.get("home_pitcher",{}).get("pitch_hand","R")
+    ap_hand     = context.get("away_pitcher",{}).get("pitch_hand","R")
+    # Away batters face home pitcher
+    away_plat = calc_platoon_adjustment(away_sides, hp_hand)
+    # Home batters face away pitcher
+    home_plat = calc_platoon_adjustment(home_sides, ap_hand)
+    net_plat  = away_plat - home_plat   # positive = away team has platoon advantage
+    if abs(net_plat) >= 0.01:
+        adj_at += net_plat; adj_ht -= net_plat
+        adjustments.append((f"Platoon splits (away {ap_hand} vs home {hp_hand})",net_plat,-net_plat))
+
+    # 5. Line movement signal -- sharp money indicator
+    line_movement = None
+    opening_games = context.get("opening_lines",{})
+    game_key      = context.get("game_key","")
+    if opening_games and game_key:
+        line_movement = calc_line_movement(game_key, opening_games, book_data)
+        if line_movement and line_movement.get("significant"):
+            # Significant line movement (10+ cents) = sharp money signal
+            # Apply a small nudge toward the team the sharp money is on
+            mt   = line_movement["moved_team"]
+            mc   = line_movement["move_cents"]
+            delta= min(abs(mc)*0.003, 0.03)  # max 3% nudge from line movement
+            if mt=="away" and mc>0:
+                adj_at+=delta; adj_ht-=delta
+                adjustments.append((f"Sharp line move: {away} moved {abs(mc):.0f}c",delta,-delta))
+            elif mt=="home" and mc>0:
+                adj_ht+=delta; adj_at-=delta
+                adjustments.append((f"Sharp line move: {home} moved {abs(mc):.0f}c",-delta,delta))
 
     # Renormalize to sum to 1.0
     t = adj_at + adj_ht
@@ -721,9 +896,10 @@ def analyze_game(game, context):
         "away_bullpen":context.get("away_bullpen",{}),
         "home_bullpen":context.get("home_bullpen",{}),
         "umpire":context.get("umpire",{}),
+        "line_movement":line_movement,
     }
 
-def fetch_game_context(game, matchup_data, weather_data, mlb_schedule_games):
+def fetch_game_context(game, matchup_data, weather_data, mlb_schedule_games, opening_lines):
     away=game["away_team"]; home=game["home_team"]
     away_id=MLB_IDS.get(away); home_id=MLB_IDS.get(home)
     m=next((x for x in matchup_data if x["game"]==f"{away} @ {home}"),{})
@@ -732,15 +908,21 @@ def fetch_game_context(game, matchup_data, weather_data, mlb_schedule_games):
         aid=g.get("teams",{}).get("away",{}).get("team",{}).get("id")
         hid=g.get("teams",{}).get("home",{}).get("team",{}).get("id")
         if aid==away_id and hid==home_id: mlb_gid=g.get("gamePk"); break
+
+    game_key = f"{away} @ {home}"
     return {
-        "away_pitcher": m.get("away_pitcher",{}),
-        "home_pitcher": m.get("home_pitcher",{}),
-        "away_injuries":fetch_injuries(away_id),
-        "home_injuries":fetch_injuries(home_id),
-        "away_bullpen": fetch_bullpen_fatigue(away_id),
-        "home_bullpen": fetch_bullpen_fatigue(home_id),
-        "umpire":       fetch_umpire(mlb_gid),
-        "weather":      weather_data.get(home,{}),
+        "away_pitcher":       m.get("away_pitcher",{}),
+        "home_pitcher":       m.get("home_pitcher",{}),
+        "away_injuries":      fetch_injuries(away_id),
+        "home_injuries":      fetch_injuries(home_id),
+        "away_bullpen":       fetch_bullpen_fatigue(away_id),
+        "home_bullpen":       fetch_bullpen_fatigue(home_id),
+        "umpire":             fetch_umpire(mlb_gid),
+        "weather":            weather_data.get(home,{}),
+        "away_batter_sides":  m.get("away_batter_sides",[]),
+        "home_batter_sides":  m.get("home_batter_sides",[]),
+        "opening_lines":      opening_lines,
+        "game_key":           game_key,
     }
 
 
@@ -899,6 +1081,26 @@ def build_html(analyzed_games, matchups, weather, results_data, date_str, time_s
                            f'HP Ump: <span style="color:var(--text)">{ump["name"]}</span> '
                            f'- Run impact: <span style="color:{ri_col}">{ri_lbl}</span></div>')
 
+            lm = g.get("line_movement")
+            lm_strip = ""
+            if lm:
+                mc   = lm.get("move_cents",0)
+                mt   = lm.get("moved_team","")
+                team = g["away"] if mt=="away" else g["home"]
+                sig  = lm.get("significant",False)
+                col  = "var(--red)" if sig else "var(--amber)"
+                icon = "🔥" if sig else "📈"
+                oa   = fmt(lm.get("open_away",0)); oh = fmt(lm.get("open_home",0))
+                direction = "toward" if mc>0 else "away from"
+                lm_strip = (
+                    f'<div style="font-size:11px;margin-top:6px;padding:6px 10px;'
+                    f'background:var(--bg3);border-radius:6px;border-left:3px solid {col};font-family:monospace">'
+                    f'<span style="color:{col};font-weight:700">{icon} Line moved {abs(mc):.0f}c {direction} {team}</span>'
+                    f'<span style="color:var(--muted);margin-left:10px">Open: {g["away"][:8]} {oa} / {g["home"][:8]} {oh}</span>'
+                    f'{"<span style=\"color:var(--red);margin-left:8px;font-weight:700\"> SHARP SIGNAL</span>" if sig else ""}'
+                    f'</div>'
+                )
+
             mkt_at=g.get("mkt_away",g["away_true"]); mkt_ht=g.get("mkt_home",g["home_true"])
             adj_note=""
             if abs(g["away_true"]-mkt_at)>=1 or abs(g["home_true"]-mkt_ht)>=1:
@@ -966,7 +1168,7 @@ def build_html(analyzed_games, matchups, weather, results_data, date_str, time_s
                    f'<div class="game-right">{sig_badge}<span class="toggle">v</span></div>'
                    f'</div>'
                    f'<div class="game-body">'
-                   f'{pitcher_strip}{ump_strip}{inj_row}{adj_row}{adj_note}'
+                   f'{pitcher_strip}{ump_strip}{lm_strip}{inj_row}{adj_row}{adj_note}'
                    f'<table class="otable" style="margin-top:10px">'
                    f'<thead><tr><th>Book</th><th>{g["away"]}</th><th>Implied%</th>'
                    f'<th>{g["home"]}</th><th>Implied%</th><th>Total O/U</th></tr></thead>'
@@ -1197,7 +1399,114 @@ def build_html(analyzed_games, matchups, weather, results_data, date_str, time_s
                 f'</div>'
             )
 
-        # ── THREE CIRCLES ────────────────────────────────
+        # CLV stats
+        clv_bets     = [b for b in all_bets if b.get("clv") and b["clv"].get("clv_cents") is not None]
+        clv_positive = sum(1 for b in clv_bets if b["clv"]["clv_cents"] > 0)
+        clv_avg      = round(sum(b["clv"]["clv_cents"] for b in clv_bets)/len(clv_bets),1) if clv_bets else None
+
+        # CLV summary strip
+        clv_section = ""
+        if clv_bets:
+            clv_col  = "var(--green)" if (clv_avg or 0)>0 else "var(--red)"
+            clv_beat = round(clv_positive/len(clv_bets)*100) if clv_bets else 0
+            clv_section = (
+                f'<div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;'
+                f'padding:14px 18px;margin-bottom:1.5rem">'
+                f'<div style="font-size:10px;font-family:monospace;text-transform:uppercase;'
+                f'letter-spacing:1.5px;color:var(--muted);margin-bottom:10px">Closing Line Value (CLV)</div>'
+                f'<div style="display:flex;gap:20px;flex-wrap:wrap">'
+                f'<div class="metric-card" style="min-width:120px;text-align:center">'
+                f'<div class="metric-label">Avg CLV</div>'
+                f'<div class="metric-val" style="color:{clv_col};font-size:20px">{("+" if (clv_avg or 0)>0 else "")}{clv_avg}c</div>'
+                f'</div>'
+                f'<div class="metric-card" style="min-width:120px;text-align:center">'
+                f'<div class="metric-label">Beat Close %</div>'
+                f'<div class="metric-val" style="font-size:20px">{clv_beat}%</div>'
+                f'</div>'
+                f'<div class="metric-card" style="min-width:120px;text-align:center">'
+                f'<div class="metric-label">CLV Tracked</div>'
+                f'<div class="metric-val" style="font-size:20px">{len(clv_bets)}</div>'
+                f'</div>'
+                f'</div>'
+                f'<div style="font-size:11px;color:var(--muted);margin-top:10px;line-height:1.6">'
+                f'Positive avg CLV = you are consistently finding better prices than the market closes at. '
+                f'This is the strongest indicator of genuine edge, independent of short-term win/loss noise.'
+                f'</div>'
+                f'</div>'
+            )
+
+        # Calibration audit at 75 bets
+        AUDIT_THRESHOLD = 75
+        calib_section = ""
+        if total_all >= AUDIT_THRESHOLD:
+            # Group bets by model-predicted probability bucket
+            # Bets need a "true_pct" field logged -- we add this to picks below
+            bucket_bets = {}
+            for b in all_bets:
+                tp = b.get("true_pct")
+                if tp is None: continue
+                try:
+                    tp_f = float(str(tp).replace("%",""))
+                    bucket = round(tp_f/5)*5   # round to nearest 5% bucket
+                    bucket_bets.setdefault(bucket,[]).append(b)
+                except Exception:
+                    continue
+
+            if len(bucket_bets) >= 3:
+                rows = ""
+                for bucket in sorted(bucket_bets.keys()):
+                    bets_in = bucket_bets[bucket]
+                    bw,bl   = wl(bets_in); bt=bw+bl
+                    actual  = pct(bw,bl)
+                    diff    = actual - bucket
+                    col     = "var(--green)" if diff>3 else ("var(--red)" if diff<-3 else "var(--muted)")
+                    note    = "Model UNDER-claiming edge" if diff>3 else ("Model OVER-claiming edge" if diff<-3 else "Well calibrated")
+                    rows   += (f'<tr>'
+                               f'<td class="mono">{bucket}%</td>'
+                               f'<td class="mono">{bt}</td>'
+                               f'<td class="mono c-green">{bw}W</td>'
+                               f'<td class="mono c-red">{bl}L</td>'
+                               f'<td class="mono" style="color:{col}">{actual}%</td>'
+                               f'<td style="font-size:11px;color:{col}">{note}</td>'
+                               f'</tr>')
+
+                calib_section = (
+                    f'<div class="sec-header"><h2>Calibration Audit ({total_all} bets)</h2>'
+                    f'<div class="sec-line"></div></div>'
+                    f'<div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;'
+                    f'overflow:hidden;margin-bottom:2rem">'
+                    f'<div style="padding:10px 14px;background:var(--bg3);font-size:11px;color:var(--muted)">'
+                    f'When the model says a team has X% true probability, do they actually win X% of the time? '
+                    f'Rows where "Actual Win%" deviates from "Model%" by 3+ points indicate the adjustment '
+                    f'multipliers need tuning.</div>'
+                    f'<table class="dtable">'
+                    f'<thead><tr><th>Model%</th><th>Bets</th><th>Wins</th><th>Losses</th>'
+                    f'<th>Actual Win%</th><th>Assessment</th></tr></thead>'
+                    f'<tbody>{rows}</tbody></table></div>'
+                )
+            else:
+                calib_section = (
+                    f'<div class="sec-header"><h2>Calibration Audit</h2><div class="sec-line"></div></div>'
+                    f'<div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;'
+                    f'padding:1rem 1.25rem;margin-bottom:2rem;color:var(--muted);font-size:13px">'
+                    f'You have {total_all} bets logged -- need true_pct data on bets to run calibration. '
+                    f'This will populate automatically as new bets are logged.</div>'
+                )
+        elif total_all > 0:
+            remaining = AUDIT_THRESHOLD - total_all
+            calib_section = (
+                f'<div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;'
+                f'padding:12px 16px;margin-bottom:1.5rem;display:flex;align-items:center;gap:12px">'
+                f'<div style="font-size:11px;color:var(--muted);flex:1">'
+                f'Calibration audit unlocks at <strong style="color:var(--text)">{AUDIT_THRESHOLD} bets</strong>. '
+                f'It will analyze whether the model is over- or under-claiming edge on each probability bucket '
+                f'and tell you exactly which adjustment multipliers to tune.</div>'
+                f'<div style="text-align:center;flex-shrink:0">'
+                f'<div style="font-family:\'IBM Plex Mono\',monospace;font-size:22px;font-weight:700;color:var(--accent)">'
+                f'{total_all}/{AUDIT_THRESHOLD}</div>'
+                f'<div style="font-size:10px;color:var(--muted)">{remaining} to go</div>'
+                f'</div></div>'
+            )
         circles = (
             f'<div style="display:flex;justify-content:center;flex-wrap:wrap;gap:32px;margin-bottom:2rem">'
             f'{make_circle(wins_all, losses_all, 200, "All Bets")}'
@@ -1246,12 +1555,21 @@ def build_html(analyzed_games, matchups, weather, results_data, date_str, time_s
             return f'<span class="badge {cls}" style="font-size:9px;margin-left:4px">{sig.upper()}</span>' if sig else ""
 
         # Wins dropdown
+        def clv_cell(b):
+            clv = b.get("clv")
+            if not clv or clv.get("clv_cents") is None:
+                return '<td style="font-size:11px;color:var(--dim)">-</td>'
+            c   = clv["clv_cents"]
+            col = "var(--green)" if c>0 else "var(--red)"
+            return f'<td class="mono" style="color:{col};font-size:11px">{("+" if c>0 else "")}{c}c</td>'
+
         win_rows = "".join(
             f'<tr>'
             f'<td>{b.get("game","?")}</td>'
             f'<td class="mono">{b.get("play","?")}{sig_badge(b.get("signal",""))}</td>'
             f'<td class="mono">{b.get("price","?")}</td>'
             f'<td style="font-size:11px;color:var(--muted)">{b.get("book","?")}</td>'
+            f'{clv_cell(b)}'
             f'<td style="font-size:11px;color:var(--muted)">{b.get("date","")}</td>'
             f'<td style="font-size:11px;color:#888">{b.get("note","")}</td>'
             f'</tr>'
@@ -1263,13 +1581,14 @@ def build_html(analyzed_games, matchups, weather, results_data, date_str, time_s
             f'<td class="mono">{b.get("play","?")}{sig_badge(b.get("signal",""))}</td>'
             f'<td class="mono">{b.get("price","?")}</td>'
             f'<td style="font-size:11px;color:var(--muted)">{b.get("book","?")}</td>'
+            f'{clv_cell(b)}'
             f'<td style="font-size:11px;color:var(--muted)">{b.get("date","")}</td>'
             f'<td style="font-size:11px;color:#888">{b.get("note","")}</td>'
             f'</tr>'
             for b in all_bets if b.get("result","")=="L"
         )
 
-        table_header = '<thead><tr><th>Game</th><th>Play</th><th>Price</th><th>Book</th><th>Date</th><th>Note</th></tr></thead>'
+        table_header = '<thead><tr><th>Game</th><th>Play</th><th>Price</th><th>Book</th><th>CLV</th><th>Date</th><th>Note</th></tr></thead>'
 
         all_bets_section = (
             f'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:2rem">'
@@ -1344,6 +1663,8 @@ def build_html(analyzed_games, matchups, weather, results_data, date_str, time_s
         return (
             circles
             + hint
+            + calib_section
+            + clv_section
             + stats_table
             + f'<div class="sec-header"><h2>Wins vs Losses</h2><div class="sec-line"></div></div>'
             + all_bets_section
@@ -1678,11 +1999,18 @@ def main():
         for db in mlb_sched_data.get("dates",[]):
             mlb_sched_games.extend(db.get("games",[]))
 
+    # Load opening lines snapshot (saved by 9am workflow)
+    opening_lines = load_opening_lines()
+    if opening_lines:
+        print(f"Loaded opening_lines.json: {len(opening_lines)} games")
+    else:
+        print("No opening_lines.json found -- line movement signals disabled today")
+
     analyzed = []
     for g in games_raw:
         print(f"Analyzing {g['away_team']} @ {g['home_team']}...")
         try:
-            ctx    = fetch_game_context(g, matchups, weather, mlb_sched_games)
+            ctx    = fetch_game_context(g, matchups, weather, mlb_sched_games, opening_lines)
             result = analyze_game(g, ctx)
             if result: analyzed.append(result)
         except Exception as e:
