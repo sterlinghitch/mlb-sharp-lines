@@ -141,36 +141,35 @@ def fetch_odds():
     today_et     = now_et.date()
     yesterday_et = today_et - timedelta(days=1)
     live_yesterday = fetch_live_mlb_games(yesterday_et.strftime("%Y-%m-%d"))
-    games = []
+    pregame  = []   # not yet started -- full odds analysis
+    tracking = []   # started today -- show locked tracking card until midnight
     for g in all_games:
         try:
             start      = datetime.fromisoformat(g["commence_time"].replace("Z","+00:00"))
             start_et   = start.astimezone(EASTERN)
             start_date = start_et.date()
             if start_date == today_et:
-                # Only include today's games that have NOT started yet
                 if start > now_utc:
-                    games.append(g)
+                    pregame.append(g)
                 else:
-                    print(f"  Skipping started: {g['away_team']} @ {g['home_team']} ({start_et.strftime('%-I:%M %p ET')})")
+                    print(f"  Tracking (started): {g['away_team']} @ {g['home_team']} ({start_et.strftime('%-I:%M %p ET')})")
+                    tracking.append(g)
             elif start_date > today_et:
-                # Future games always included
-                games.append(g)
+                pregame.append(g)
             elif start_date == yesterday_et:
-                # Yesterday only if still live (west coast past-midnight)
                 aid = MLB_IDS.get(g["away_team"])
                 hid = MLB_IDS.get(g["home_team"])
                 if aid and hid and (aid,hid) in live_yesterday:
                     print(f"  Keeping live past-midnight: {g['away_team']} @ {g['home_team']}")
-                    games.append(g)
+                    pregame.append(g)
                 else:
                     print(f"  Skipping finished: {g['away_team']} @ {g['home_team']}")
             else:
                 print(f"  Skipping old: {g['away_team']} @ {g['home_team']}")
         except Exception:
-            games.append(g)
-    print(f"Got {len(all_games)} total, {len(games)} not yet started")
-    return games
+            pregame.append(g)
+    print(f"Got {len(all_games)} total -- {len(pregame)} pre-game, {len(tracking)} tracking")
+    return pregame, tracking
 
 
 # =============================================================
@@ -941,7 +940,7 @@ def fetch_game_context(game, matchup_data, weather_data, mlb_schedule_games, ope
 # =============================================================
 # HTML BUILDER
 # =============================================================
-def build_html(analyzed_games, matchups, weather, results_data, date_str, time_str):
+def build_html(analyzed_games, matchups, weather, results_data, tracking_games, date_str, time_str):
     all_disc=[]; all_plays=[]; sharp_ct=0; value_ct=0
     for g in analyzed_games:
         for d in g["discrepancies"]: all_disc.append({**d,"game":g["game"]})
@@ -1204,7 +1203,67 @@ def build_html(analyzed_games, matchups, weather, results_data, date_str, time_s
                    f'</div></div>')
         return html
 
-    def matchup_page():
+    def tracking_cards():
+        """Locked cards for games already started today — shown for tracking until midnight."""
+        if not tracking_games:
+            return ""
+        html = '<div class="day-header"><span class="day-label" style="color:var(--muted)">In Progress / Completed Today</span></div>'
+        # Load picks.json to retrieve the best bet that was recommended at noon
+        import json as _json, os as _os
+        noon_picks = {}
+        if _os.path.exists("picks.json"):
+            try:
+                with open("picks.json") as f:
+                    pd = _json.load(f)
+                for bet in pd.get("bets", []):
+                    noon_picks[bet.get("game","")] = bet
+            except Exception:
+                pass
+
+        for g in tracking_games:
+            away = g["away_team"]; home = g["home_team"]
+            game_key = f"{away} @ {home}"
+            try:
+                start = datetime.fromisoformat(g["commence_time"].replace("Z","+00:00")).astimezone(EASTERN)
+                time_display = start.strftime("%-I:%M %p ET")
+            except Exception:
+                time_display = ""
+
+            pick = noon_picks.get(game_key, {})
+            if pick:
+                bet_box = (
+                    f'<div style="background:rgba(163,230,53,0.04);border:1px solid rgba(163,230,53,0.15);'
+                    f'border-radius:8px;padding:10px 14px;margin-top:10px">'
+                    f'<div style="font-size:10px;font-family:monospace;text-transform:uppercase;'
+                    f'letter-spacing:1px;color:var(--accent);margin-bottom:5px">Noon Best Bet (locked)</div>'
+                    f'<div style="font-size:14px;font-weight:700;color:#fff">{pick.get("play","N/A")}</div>'
+                    f'<div style="font-size:12px;color:var(--accent);font-family:monospace">'
+                    f'{pick.get("price","?")} at {pick.get("book","?")}</div>'
+                    f'</div>'
+                )
+            else:
+                bet_box = (
+                    f'<div style="font-size:12px;color:var(--muted);padding:8px 0">'
+                    f'Best bet recorded at noon -- run workflow again to see it here if missing.</div>'
+                )
+
+            html += (
+                f'<div class="game-block" onclick="toggleGame(this)">'
+                f'<div class="game-header" style="opacity:0.75">'
+                f'<div><div class="game-teams">{away} @ {home}</div>'
+                f'<div class="game-time">{time_display} -- tracking until midnight</div></div>'
+                f'<div class="game-right">'
+                f'<span class="badge b-pass" style="font-size:9px">IN PROGRESS</span>'
+                f'<span class="toggle">v</span></div>'
+                f'</div>'
+                f'<div class="game-body">'
+                f'{bet_box}'
+                f'<div style="font-size:11px;color:var(--muted);margin-top:8px">'
+                f'Live odds are not shown to prevent corrupted mid-game lines from affecting analysis. '
+                f'Pre-game best bet is displayed above for tracking purposes.</div>'
+                f'</div></div>'
+            )
+        return html
         if not matchups:
             return '<p style="color:var(--muted);font-size:13px;padding:2rem 0;text-align:center">Matchup data unavailable -- probable pitchers may not be announced yet.</p>'
         def avg_color(avg_str):
@@ -1929,7 +1988,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
     {disc_table()}
   </div></div>
 
-  <div class="page" id="page-games"><div class="page-inner">{game_blocks()}</div></div>
+  <div class="page" id="page-games"><div class="page-inner">{game_blocks()}{tracking_cards()}</div></div>
 
   <div class="page" id="page-matchups"><div class="page-inner">
     <div style="margin-bottom:1.5rem">
@@ -1985,11 +2044,11 @@ def main():
     mlb_date = now_et.strftime("%Y-%m-%d")
 
     try:
-        games_raw = fetch_odds()
+        games_raw, tracking_games = fetch_odds()
     except Exception as e:
         print(f"ERROR fetching odds: {e}"); sys.exit(1)
 
-    if not games_raw:
+    if not games_raw and not tracking_games:
         with open("index.html","w",encoding="utf-8") as f:
             f.write(f"<html><body style='background:#09090b;color:#e4e4e7;font-family:monospace;"
                     f"padding:3rem;text-align:center'><h1 style='color:#a3e635'>MLB Sharp Lines</h1>"
@@ -2001,8 +2060,10 @@ def main():
     except Exception as e:
         print(f"Matchup error: {e}"); matchups=[]
 
+    # Weather needs all games (pre-game + tracking) for stadium lookups
+    all_games_for_weather = games_raw + tracking_games
     try:
-        weather = fetch_weather_for_games(games_raw)
+        weather = fetch_weather_for_games(all_games_for_weather)
     except Exception as e:
         print(f"Weather error: {e}"); weather={}
 
@@ -2045,7 +2106,7 @@ def main():
     except Exception as e:
         print(f"results.json error: {e}")
 
-    html = build_html(analyzed, matchups, weather, results_data, date_str, time_str)
+    html = build_html(analyzed, matchups, weather, results_data, tracking_games, date_str, time_str)
     with open("index.html","w",encoding="utf-8") as f:
         f.write(html)
 
