@@ -197,11 +197,11 @@
       "signal_label": ""
     },
     "Minnesota Twins @ Pittsburgh Pirates": {
-      "play": "Under 8.0 Runs",
-      "price": "-110",
-      "book": "BetOnline.ag",
-      "is_pass": false,
-      "edge": "+1.4%",
+      "play": "No Play",
+      "price": "Best option (Minnesota Twins Moneyline) is overpriced",
+      "book": "current lines",
+      "is_pass": true,
+      "edge": "-1.0%",
       "away_true": 44,
       "home_true": 56,
       "away_fair": "+127",
