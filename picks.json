@@ -9,14 +9,14 @@
       "away_id": 108,
       "home_id": 116,
       "play": "Under 5.5 Runs",
-      "price": "-118",
-      "book": "MyBookie.ag",
+      "price": "-102",
+      "book": "BetMGM",
       "type": "total",
       "pick_team": null,
       "side": "Under",
       "total_line": 5.5,
-      "edge": "+6.0%",
-      "signal": "watch"
+      "edge": "+4.0%",
+      "signal": "value"
     },
     {
       "game": "Minnesota Twins @ Chicago White Sox",
@@ -24,14 +24,14 @@
       "home": "Chicago White Sox",
       "away_id": 142,
       "home_id": 145,
-      "play": "Under 8.0 Runs",
-      "price": "-112",
-      "book": "MyBookie.ag",
-      "type": "total",
-      "pick_team": null,
-      "side": "Under",
-      "total_line": 8.0,
-      "edge": "+2.9%",
+      "play": "Chicago White Sox Moneyline",
+      "price": "-165",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "pick_team": "Chicago White Sox",
+      "side": null,
+      "total_line": null,
+      "edge": "+2.8%",
       "signal": "watch"
     },
     {
@@ -47,7 +47,7 @@
       "pick_team": "Atlanta Braves",
       "side": null,
       "total_line": null,
-      "edge": "-0.1%",
+      "edge": "-0.4%",
       "signal": "watch"
     },
     {
@@ -79,7 +79,7 @@
       "pick_team": null,
       "side": "Under",
       "total_line": 7.5,
-      "edge": "+0.6%",
+      "edge": "+2.4%",
       "signal": "watch"
     },
     {
@@ -105,13 +105,13 @@
       "away_id": 135,
       "home_id": 120,
       "play": "Washington Nationals Moneyline",
-      "price": "-102",
-      "book": "FanDuel",
+      "price": "+109",
+      "book": "BetOnline.ag",
       "type": "ml",
       "pick_team": "Washington Nationals",
       "side": null,
       "total_line": null,
-      "edge": "+1.5%",
+      "edge": "+6.2%",
       "signal": "fire"
     },
     {
@@ -168,14 +168,14 @@
       "home": "New York Mets",
       "away_id": 146,
       "home_id": 121,
-      "play": "Miami Marlins Moneyline",
-      "price": "+108",
-      "book": "FanDuel",
+      "play": "New York Mets Moneyline",
+      "price": "-118",
+      "book": "BetOnline.ag",
       "type": "ml",
-      "pick_team": "Miami Marlins",
+      "pick_team": "New York Mets",
       "side": null,
       "total_line": null,
-      "edge": "-1.8%",
+      "edge": "-0.9%",
       "signal": "watch"
     },
     {
