@@ -1214,67 +1214,108 @@ def build_why_this_bet(game):
     is_total = "Runs" in bet_play
     is_over  = "Over" in bet_play
 
-    # SP quality + fatigue
+    # SP quality + fatigue -- always show ERA even if average
     for pitcher, side in [(ap,"away"),(hp,"home")]:
-        if pitcher.get("era","N/A") != "N/A":
-            try:
-                era=float(pitcher["era"]); name=pitcher.get("name","SP")
-                dr=pitcher.get("days_rest"); pc=pitcher.get("last_pitch_count")
-                own_team = away if side=="away" else home
-                helps_bet = own_team in bet_play or (is_total and era < 3.50 and not is_over)
-                if era < 3.50:
-                    items.append((f"{name} ERA {era}", "for" if helps_bet else "against",
-                                  "Elite pitcher -- well below 4.20 avg"))
-                elif era > 5.00:
-                    items.append((f"{name} ERA {era}", "against" if helps_bet else "for",
-                                  "Struggling pitcher -- above 4.20 avg"))
-                if dr is not None and dr<=3:
-                    items.append((f"{name} short rest ({dr}d)", "against", "3-day rest penalty applied"))
-                if pc and pc>=110:
-                    items.append((f"{name} {pc} pitches last start", "against", "High pitch count fatigue"))
-            except Exception: pass
+        name = pitcher.get("name","TBD")
+        if name == "TBD": continue
+        era_raw = pitcher.get("era","N/A")
+        dr  = pitcher.get("days_rest")
+        pc  = pitcher.get("last_pitch_count")
+        own_team = away if side=="away" else home
+        try:
+            era = float(era_raw)
+            if era < 3.50:
+                helps = own_team in bet_play or (is_total and not is_over)
+                items.append((f"{name} ERA {era:.2f}", "for" if helps else "against",
+                              f"Elite -- {era:.2f} vs 4.20 league avg"))
+            elif era < 4.20:
+                helps = own_team in bet_play or (is_total and not is_over)
+                items.append((f"{name} ERA {era:.2f}", "for" if helps else "neutral",
+                              f"Above avg -- {era:.2f} vs 4.20 league avg"))
+            elif era < 5.00:
+                helps = own_team not in bet_play and not (is_total and not is_over)
+                items.append((f"{name} ERA {era:.2f}", "against" if own_team in bet_play else "neutral",
+                              f"Below avg -- {era:.2f} vs 4.20 league avg"))
+            else:
+                items.append((f"{name} ERA {era:.2f}", "against" if own_team in bet_play else "for",
+                              "Struggling -- above 5.00"))
+            if dr is not None and dr <= 3:
+                items.append((f"{name}: {dr}d rest", "against", "Short rest penalty"))
+            elif dr is not None and dr >= 7:
+                items.append((f"{name}: {dr}d rest", "for", "Extra rest boost"))
+            if pc and pc >= 110:
+                items.append((f"{name}: {pc}p last start", "against", "High pitch count"))
+            elif pc and pc <= 80:
+                items.append((f"{name}: {pc}p last start", "for", "Fresh arm last outing"))
+        except Exception:
+            if era_raw != "N/A":
+                items.append((f"{name} ERA {era_raw}", "neutral", "vs 4.20 league avg"))
 
-    # Bullpen
+    # Bullpen -- show regardless of fatigue level
     abp=game.get("away_bullpen",{}); hbp=game.get("home_bullpen",{})
-    if abp.get("fatigue",0)>0.5:
-        items.append((f"{away} bullpen ({abp.get('label','?')})",
-                      "against" if away in bet_play else "for",
-                      f"{abp.get('ip','?')} relief IP last 3 days"))
-    if hbp.get("fatigue",0)>0.5:
-        items.append((f"{home} bullpen ({hbp.get('label','?')})",
-                      "against" if home in bet_play else "for",
-                      f"{hbp.get('ip','?')} relief IP last 3 days"))
+    for bp, team, side in [(abp,away,"away"),(hbp,home,"home")]:
+        label = bp.get("label","?"); ip = bp.get("ip",0)
+        fatigue = bp.get("fatigue",0)
+        direction = "against" if (fatigue > 0.4 and team in bet_play) else \
+                    "for"     if (fatigue > 0.4 and team not in bet_play) else \
+                    "for"     if (fatigue < 0.1 and team in bet_play) else "neutral"
+        items.append((f"{team} bullpen: {label}", direction, f"{ip} relief IP last 3d"))
 
     # Discrepancy
-    max_gap=max(game.get("away_gap",0),game.get("home_gap",0))
-    if max_gap>=18: items.append((f"Book discrepancy {max_gap}c","for","Major price disagreement"))
-    elif max_gap>=10: items.append((f"Book discrepancy {max_gap}c","for","Worth shopping books"))
+    max_gap = max(game.get("away_gap",0), game.get("home_gap",0))
+    if max_gap >= 18:
+        items.append((f"Book gap: {max_gap}c", "for", "Major discrepancy — shop books"))
+    elif max_gap >= 10:
+        items.append((f"Book gap: {max_gap}c", "for", "Worth shopping for better price"))
+    else:
+        items.append((f"Book gap: {max_gap}c", "neutral", "Books in agreement"))
+
+    # Model edge
+    edge_str = game.get("bet_edge","")
+    try:
+        edge_val = float(str(edge_str).replace("+","").replace("%",""))
+        if edge_val >= 5:
+            items.append((f"Model edge: {edge_str}", "for", "Strong edge vs book price"))
+        elif edge_val >= 2.5:
+            items.append((f"Model edge: {edge_str}", "for", "Solid positive edge"))
+        elif edge_val > 0:
+            items.append((f"Model edge: {edge_str}", "neutral", "Marginal edge"))
+        else:
+            items.append((f"Model edge: {edge_str}", "against", "Slim/no edge at this price"))
+    except Exception:
+        pass
 
     # Sharp line movement
-    lm=game.get("line_movement")
-    if lm and lm.get("significant"):
-        mt=lm.get("moved_team",""); mc=abs(lm.get("move_cents",0))
-        items.append((f"Sharp money: {mt} +{mc:.0f}c",
-                      "for" if mt.lower() in bet_play.lower() else "against",
-                      "10c+ move = professional money"))
+    lm = game.get("line_movement")
+    if lm:
+        mt = lm.get("moved_team",""); mc = abs(lm.get("move_cents",0))
+        if lm.get("significant"):
+            items.append((f"Sharp move: {mt} +{mc:.0f}c",
+                          "for" if mt.lower() in bet_play.lower() else "against",
+                          "Professional money signal"))
+        elif mc >= 5:
+            items.append((f"Line move: {mt} +{mc:.0f}c", "neutral", "Minor movement"))
+    else:
+        items.append(("No line movement", "neutral", "Line stable since open"))
 
     # Umpire
-    ump=game.get("umpire",{}); ri=ump.get("run_impact",0) or 0
-    if abs(ri)>=0.3 and is_total:
-        ump_helps=(ri>0 and is_over) or (ri<0 and not is_over)
-        items.append((f"Ump {ump.get('name','?')} ({ri:+.1f} runs)",
-                      "for" if ump_helps else "against",
-                      "Hitter-friendly" if ri>0 else "Pitcher-friendly zone"))
+    ump = game.get("umpire",{}); ri = ump.get("run_impact",0) or 0
+    if ump.get("name") and ump["name"] != "TBD":
+        if is_total:
+            ump_helps = (ri > 0 and is_over) or (ri < 0 and not is_over)
+            items.append((f"Ump {ump.get('name','?').split()[-1]} ({ri:+.1f} runs)",
+                          "for" if ump_helps else ("against" if abs(ri)>0.2 else "neutral"),
+                          "Hitter zone" if ri>0.2 else ("Pitcher zone" if ri<-0.2 else "Neutral zone")))
 
     # Injuries
     for inj in game.get("away_injuries",[])[:2]:
         if "out" in inj.get("status","").lower():
-            items.append((f"{away} {inj['name'].split()[-1]} OUT",
+            items.append((f"{away}: {inj.get('name','?').split()[-1]} OUT",
                           "against" if away in bet_play else "for",
                           inj.get("pos","?")))
     for inj in game.get("home_injuries",[])[:2]:
         if "out" in inj.get("status","").lower():
-            items.append((f"{home} {inj['name'].split()[-1]} OUT",
+            items.append((f"{home}: {inj.get('name','?').split()[-1]} OUT",
                           "against" if home in bet_play else "for",
                           inj.get("pos","?")))
 
