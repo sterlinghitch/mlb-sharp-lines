@@ -784,13 +784,26 @@ def analyze_game(game, context):
     candidates.extend(total_cands())
 
     if not candidates or is_coin:
-        bet_play="Pass -- near coin flip"; bet_sub="If forced: use BetOnline for lowest vig"
+        bet_play="No Play -- near coin flip"
+        bet_sub="Teams too evenly matched at current prices"
         bet_edge="None"; bet_fair="N/A"; bet_true="N/A"; bet_is_pass=True
     else:
-        best_c   = max(candidates,key=lambda c:c["edge_val"])
-        bet_play = best_c["play"]; bet_sub = best_c["sub"]
-        bet_edge = best_c["edge_label"]; bet_fair = best_c["fair_line"]
-        bet_true = best_c["true_pct"]; bet_is_pass = best_c["edge_val"]<-3
+        best_c = max(candidates, key=lambda c: c["edge_val"])
+        if best_c["edge_val"] < 0:
+            # Best available candidate is overpriced -- genuine no play
+            bet_play    = "No Play"
+            bet_sub     = f"Best option ({best_c['play']}) is overpriced at current lines"
+            bet_edge    = best_c["edge_label"]
+            bet_fair    = best_c["fair_line"]
+            bet_true    = best_c["true_pct"]
+            bet_is_pass = True
+        else:
+            bet_play    = best_c["play"]
+            bet_sub     = best_c["sub"]
+            bet_edge    = best_c["edge_label"]
+            bet_fair    = best_c["fair_line"]
+            bet_true    = best_c["true_pct"]
+            bet_is_pass = False
 
     discs = []
     for team,gap,best,worst,pk in [
@@ -1207,18 +1220,50 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
         """Locked cards for games already started today — shown for tracking until midnight."""
         if not tracking_games:
             return ""
-        html = '<div class="day-header"><span class="day-label" style="color:var(--muted)">In Progress / Completed Today</span></div>'
-        # Load picks.json to retrieve the best bet that was recommended at noon
+
+        # Build lookup from the freshly-analyzed picks (already in memory)
+        # Also check picks.json as fallback for the 4pm run where tracking games
+        # were analyzed at noon but aren't in this run's analyzed list
         import json as _json, os as _os
         noon_picks = {}
+
+        # Primary: current run's analyzed games (4pm run re-analyzes pre-game games only,
+        # so tracking games won't be here — use picks.json for those)
+        for g in analyzed_games:
+            noon_picks[g["game"]] = {
+                "play":        g["bet_play"],
+                "price":       g["bet_sub"].split(" at ")[0] if " at " in g["bet_sub"] else g["bet_sub"],
+                "book":        g["bet_sub"].split(" at ")[1] if " at " in g["bet_sub"] else "",
+                "is_pass":     g["bet_is_pass"],
+                "edge":        g["bet_edge"],
+                "away_true":   g["away_true"],
+                "home_true":   g["home_true"],
+                "away_fair":   g["away_fair"],
+                "home_fair":   g["home_fair"],
+                "signal":      g["signal"],
+                "signal_label":g["signal_label"],
+            }
+
+        # Fallback: picks.json (covers games analyzed at noon, now in tracking)
         if _os.path.exists("picks.json"):
             try:
                 with open("picks.json") as f:
                     pd = _json.load(f)
                 for bet in pd.get("bets", []):
-                    noon_picks[bet.get("game","")] = bet
+                    gk = bet.get("game","")
+                    if gk not in noon_picks:
+                        noon_picks[gk] = {
+                            "play":    bet.get("play",""),
+                            "price":   bet.get("price",""),
+                            "book":    bet.get("book",""),
+                            "is_pass": False,
+                            "edge":    bet.get("edge",""),
+                            "signal":  bet.get("signal",""),
+                        }
             except Exception:
                 pass
+
+        html = '<div class="day-header"><span class="day-label" style="color:var(--muted)">In Progress / Completed Today</span></div>'
 
         for g in tracking_games:
             away = g["away_team"]; home = g["home_team"]
@@ -1229,39 +1274,76 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
             except Exception:
                 time_display = ""
 
-            pick = noon_picks.get(game_key, {})
+            pick = noon_picks.get(game_key)
+
             if pick:
-                bet_box = (
-                    f'<div style="background:rgba(163,230,53,0.04);border:1px solid rgba(163,230,53,0.15);'
-                    f'border-radius:8px;padding:10px 14px;margin-top:10px">'
-                    f'<div style="font-size:10px;font-family:monospace;text-transform:uppercase;'
-                    f'letter-spacing:1px;color:var(--accent);margin-bottom:5px">Noon Best Bet (locked)</div>'
-                    f'<div style="font-size:14px;font-weight:700;color:#fff">{pick.get("play","N/A")}</div>'
-                    f'<div style="font-size:12px;color:var(--accent);font-family:monospace">'
-                    f'{pick.get("price","?")} at {pick.get("book","?")}</div>'
-                    f'</div>'
-                )
+                is_pass = pick.get("is_pass", False)
+                play    = pick.get("play","")
+                price   = pick.get("price","")
+                book    = pick.get("book","")
+                edge    = pick.get("edge","")
+                sig_lbl = pick.get("signal_label","")
+
+                if is_pass or not play or "Pass" in play or "coin flip" in play.lower():
+                    # Model had no play for this game
+                    bet_box = (
+                        f'<div style="background:var(--bg3);border:1px solid var(--border);'
+                        f'border-radius:8px;padding:10px 14px;margin-top:10px">'
+                        f'<div style="font-size:10px;font-family:monospace;text-transform:uppercase;'
+                        f'letter-spacing:1px;color:var(--muted);margin-bottom:5px">Noon Assessment</div>'
+                        f'<div style="font-size:14px;font-weight:700;color:var(--muted)">No Play</div>'
+                        f'<div style="font-size:12px;color:var(--dim);margin-top:3px">'
+                        f'Model did not find sufficient edge for this game at pre-game lines.</div>'
+                        f'</div>'
+                    )
+                else:
+                    edge_col = "var(--green)" if str(edge).startswith("+") else "var(--amber)"
+                    sig_html = f'<span style="font-size:10px;color:var(--muted)"> · {sig_lbl}</span>' if sig_lbl else ""
+                    bet_box = (
+                        f'<div style="background:rgba(163,230,53,0.04);border:1px solid rgba(163,230,53,0.18);'
+                        f'border-radius:8px;padding:10px 14px;margin-top:10px">'
+                        f'<div style="font-size:10px;font-family:monospace;text-transform:uppercase;'
+                        f'letter-spacing:1px;color:var(--accent);margin-bottom:6px">Noon Best Bet{sig_html}</div>'
+                        f'<div style="font-size:16px;font-weight:700;color:#fff;margin-bottom:3px">{play}</div>'
+                        f'<div style="font-size:13px;color:var(--accent);font-family:monospace;margin-bottom:8px">'
+                        f'{price} at {book}</div>'
+                        f'<div style="display:flex;gap:10px">'
+                        f'<div style="background:rgba(0,0,0,0.3);border-radius:6px;padding:5px 10px">'
+                        f'<div style="font-size:10px;color:var(--muted);margin-bottom:2px">EDGE</div>'
+                        f'<div style="font-family:monospace;font-size:13px;font-weight:700;color:{edge_col}">{edge}</div>'
+                        f'</div>'
+                        f'<div style="background:rgba(0,0,0,0.3);border-radius:6px;padding:5px 10px">'
+                        f'<div style="font-size:10px;color:var(--muted);margin-bottom:2px">TRUE ODDS</div>'
+                        f'<div style="font-family:monospace;font-size:13px;font-weight:700;color:var(--text)">'
+                        f'{pick.get("away_true","?")}% / {pick.get("home_true","?")}%</div>'
+                        f'</div>'
+                        f'<div style="background:rgba(0,0,0,0.3);border-radius:6px;padding:5px 10px">'
+                        f'<div style="font-size:10px;color:var(--muted);margin-bottom:2px">FAIR LINE</div>'
+                        f'<div style="font-family:monospace;font-size:13px;font-weight:700;color:var(--text)">'
+                        f'{pick.get("away_fair","?")} / {pick.get("home_fair","?")}</div>'
+                        f'</div>'
+                        f'</div>'
+                        f'</div>'
+                    )
             else:
                 bet_box = (
-                    f'<div style="font-size:12px;color:var(--muted);padding:8px 0">'
-                    f'Best bet recorded at noon -- run workflow again to see it here if missing.</div>'
+                    f'<div style="background:var(--bg3);border:1px solid var(--border);'
+                    f'border-radius:8px;padding:10px 14px;margin-top:10px">'
+                    f'<div style="font-size:12px;color:var(--muted)">Pre-game analysis not available for this game.</div>'
+                    f'</div>'
                 )
 
             html += (
                 f'<div class="game-block" onclick="toggleGame(this)">'
-                f'<div class="game-header" style="opacity:0.75">'
+                f'<div class="game-header" style="opacity:0.8">'
                 f'<div><div class="game-teams">{away} @ {home}</div>'
-                f'<div class="game-time">{time_display} -- tracking until midnight</div></div>'
+                f'<div class="game-time">{time_display}</div></div>'
                 f'<div class="game-right">'
                 f'<span class="badge b-pass" style="font-size:9px">IN PROGRESS</span>'
                 f'<span class="toggle">v</span></div>'
                 f'</div>'
-                f'<div class="game-body">'
-                f'{bet_box}'
-                f'<div style="font-size:11px;color:var(--muted);margin-top:8px">'
-                f'Live odds are not shown to prevent corrupted mid-game lines from affecting analysis. '
-                f'Pre-game best bet is displayed above for tracking purposes.</div>'
-                f'</div></div>'
+                f'<div class="game-body">{bet_box}</div>'
+                f'</div>'
             )
         return html
 
@@ -2120,7 +2202,7 @@ def main():
         "bets": []
     }
     for g in analyzed:
-        if not g["bet_is_pass"] and g["bet_play"] != "Pass -- near coin flip":
+        if not g["bet_is_pass"] and "No Play" not in g["bet_play"]:
             # Parse total line from bet_play if it's an O/U pick
             bet_type = "total" if "Runs" in g["bet_play"] else "ml"
             side = None; total_line = None
