@@ -7,12 +7,21 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#09090b;--bg2:#111113;--bg3:#18181b;--bg4:#1f1f23;--border:#27272a;--border2:#3f3f46;--text:#e4e4e7;--muted:#71717a;--dim:#52525b;--green:#4ade80;--green-bg:#052e16;--green-border:#166534;--red:#f87171;--red-bg:#2d0a0a;--red-border:#7f1d1d;--blue:#60a5fa;--blue-bg:#0c1a3a;--blue-border:#1e3a6e;--amber:#fbbf24;--amber-bg:#1c1400;--amber-border:#78350f;--accent:#a3e635;--sidebar:240px}
+:root{
+  --bg:#09090b;--bg2:#111113;--bg3:#18181b;--bg4:#1f1f23;
+  --border:#27272a;--border2:#3f3f46;
+  --text:#e4e4e7;--muted:#71717a;--dim:#52525b;
+  --green:#4ade80;--green-bg:#052e16;--green-border:#166534;
+  --red:#f87171;--red-bg:#2d0a0a;--red-border:#7f1d1d;
+  --blue:#60a5fa;--blue-bg:#0c1a3a;--blue-border:#1e3a6e;
+  --amber:#fbbf24;--amber-bg:#1c1400;--amber-border:#78350f;
+  --accent:#a3e635;--sidebar:240px;
+}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:14px;line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
-.shell{display:flex;flex:1;min-height:100vh}
-.sidebar{width:var(--sidebar);background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:200;overflow-y:auto}
-.sidebar-logo{padding:20px 18px 16px;border-bottom:1px solid var(--border)}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:14px;line-height:1.6;min-height:100vh}
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sidebar);background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:300;overflow-y:auto;transition:transform 0.25s ease}
+.sidebar-logo{padding:20px 18px 14px;border-bottom:1px solid var(--border)}
 .sidebar-logo-title{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:16px;color:var(--accent);letter-spacing:-0.5px}
 .sidebar-logo-sub{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
 .sidebar-date{padding:10px 18px;font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px}
@@ -31,63 +40,77 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .sidebar-stat-label{color:var(--muted)}
 .sidebar-stat-val{font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--text)}
 .sidebar-stat-val.green{color:var(--green)}.sidebar-stat-val.amber{color:var(--amber)}
-.main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh}
-.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 2rem;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+/* ── OVERLAY (mobile) ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200}
+.overlay.show{display:block}
+/* ── MAIN ── */
+.main{margin-left:var(--sidebar);min-height:100vh}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 1.5rem;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:4px;background:none;border:none}
+.hamburger span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px;transition:all 0.2s}
 .topbar-title{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:15px;color:#fff}
 .topbar-meta{font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
-.page{display:none;flex:1}.page.active{display:block}
+/* ── PAGES ── */
+.page{display:none}.page.active{display:block}
 .page-inner{padding:2rem}
+/* ── HERO ── */
 .hero{background:linear-gradient(135deg,rgba(163,230,53,0.06) 0%,rgba(163,230,53,0.01) 60%,transparent 100%);border:1px solid rgba(163,230,53,0.12);border-radius:16px;padding:2.5rem;margin-bottom:2rem;position:relative;overflow:hidden}
 .hero::before{content:'⚾';position:absolute;right:2rem;top:1.5rem;font-size:80px;opacity:0.06}
 .hero-eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent);font-family:'IBM Plex Mono',monospace;font-weight:600;margin-bottom:10px}
-.hero-title{font-family:'IBM Plex Mono',monospace;font-size:32px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:10px}
+.hero-title{font-family:'IBM Plex Mono',monospace;font-size:30px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:10px}
 .hero-title span{color:var(--accent)}
-.hero-sub{font-size:14px;color:var(--muted);max-width:540px;line-height:1.7;margin-bottom:20px}
+.hero-sub{font-size:14px;color:var(--muted);max-width:520px;line-height:1.7;margin-bottom:18px}
 .hero-badges{display:flex;flex-wrap:wrap;gap:8px}
 .hero-badge{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
 .hero-badge strong{color:var(--text)}
-.home-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:2rem}
-.home-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px;cursor:pointer;transition:all 0.15s}
+.home-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:2rem}
+.home-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;transition:all 0.15s}
 .home-card:hover{border-color:var(--border2);background:var(--bg3)}
-.home-card-icon{font-size:24px;margin-bottom:10px}
-.home-card-title{font-weight:700;font-size:14px;color:#fff;margin-bottom:4px}
+.home-card-icon{font-size:22px;margin-bottom:8px}
+.home-card-title{font-weight:700;font-size:13px;color:#fff;margin-bottom:3px}
 .home-card-desc{font-size:12px;color:var(--muted);line-height:1.5}
-.home-card-stat{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;margin-top:8px}
+.home-card-stat{font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:700;margin-top:6px}
 .home-card-stat.green{color:var(--green)}.home-card-stat.amber{color:var(--amber)}.home-card-stat.accent{color:var(--accent)}
+/* ── METRICS ── */
 .metrics-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:1.75rem}
-.metric-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.metric-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:13px 15px}
 .metric-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-family:'IBM Plex Mono',monospace;margin-bottom:5px}
-.metric-val{font-size:26px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:#fff}
+.metric-val{font-size:24px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:#fff}
 .metric-val.green{color:var(--green)}.metric-val.amber{color:var(--amber)}
 .metric-sub{font-size:11px;color:var(--muted);margin-top:2px}
+/* ── SECTION HEADERS ── */
 .sec-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem;margin-top:2rem}
 .sec-header:first-of-type{margin-top:0}
 .sec-header h2{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);white-space:nowrap}
 .sec-line{flex:1;height:1px;background:var(--border)}
+/* ── BADGES ── */
 .badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;padding:3px 8px;border-radius:5px;font-family:'IBM Plex Mono',monospace}
 .b-fire{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
 .b-sharp{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border)}
 .b-value{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
 .b-watch{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
 .b-pass{background:var(--bg4);color:var(--muted);border:1px solid var(--border)}
+/* ── ALERT CARDS ── */
 .alert-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.75rem}
-.alert-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.2rem;position:relative;overflow:hidden}
+.alert-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.1rem;position:relative;overflow:hidden}
 .alert-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
 .alert-card.fire::before{background:linear-gradient(90deg,#f87171,#fb923c)}
 .alert-card.sharp::before{background:linear-gradient(90deg,#60a5fa,#a78bfa)}
 .alert-card.value::before{background:linear-gradient(90deg,#4ade80,#a3e635)}
 .alert-card.watch::before{background:linear-gradient(90deg,#fbbf24,#fb923c)}
-.alert-game{font-weight:700;font-size:15px;color:#fff;margin:8px 0 2px}
-.alert-rec{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--accent);margin-bottom:10px}
-.alert-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:8px}
-.stat-box{background:var(--bg3);border-radius:6px;padding:7px 9px}
+.alert-game{font-weight:700;font-size:14px;color:#fff;margin:7px 0 2px}
+.alert-rec{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--accent);margin-bottom:9px}
+.alert-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:7px}
+.stat-box{background:var(--bg3);border-radius:6px;padding:6px 8px}
 .sl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px}
 .sv{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:#fff}
 .sv.green{color:var(--green)}.sv.red{color:var(--red)}.sv.amber{color:var(--amber)}
-.alert-reasoning{font-size:12px;color:#888;line-height:1.6;border-top:1px solid var(--border);padding-top:9px;margin-top:4px}
+.alert-reasoning{font-size:12px;color:#888;line-height:1.6;border-top:1px solid var(--border);padding-top:8px;margin-top:4px}
+/* ── DATA TABLE ── */
 .dtable{width:100%;border-collapse:collapse;font-size:12px}
 .dtable th{text-align:left;padding:8px 12px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:600;font-family:'IBM Plex Mono',monospace;background:var(--bg3);border-bottom:1px solid var(--border)}
-.dtable td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+.dtable td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
 .dtable tr:last-child td{border-bottom:none}
 .dtable tr:hover td{background:rgba(255,255,255,0.015)}
 .mono{font-family:'IBM Plex Mono',monospace;font-weight:600}
@@ -96,19 +119,25 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .pill-g{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
 .pill-r{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
 .pill-n{background:var(--bg3);color:var(--text);border:1px solid var(--border)}
+/* ── DAY HEADER ── */
+.day-header{display:flex;align-items:center;gap:12px;margin:1.5rem 0 10px}
+.day-label{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1.5px;white-space:nowrap}
+.day-header::after{content:'';flex:1;height:1px;background:rgba(163,230,53,0.2)}
+/* ── GAME BLOCKS ── */
 .game-block{background:var(--bg2);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden}
-.game-header{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;cursor:pointer;user-select:none;transition:background 0.12s}
+.game-header{display:flex;align-items:center;justify-content:space-between;padding:12px 15px;cursor:pointer;user-select:none;transition:background 0.12s}
 .game-header:hover{background:var(--bg3)}
 .game-teams{font-weight:700;font-size:14px;color:#fff}
 .game-time{font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-top:1px}
 .game-right{display:flex;align-items:center;gap:7px;flex-shrink:0}
 .toggle{font-size:12px;color:var(--muted);transition:transform 0.2s;margin-left:3px}
 .game-block.open .toggle{transform:rotate(180deg)}
-.game-body{display:none;padding:0 16px 16px}
+.game-body{display:none;padding:0 15px 15px}
 .game-block.open .game-body{display:block}
+/* ── ODDS TABLE ── */
 .otable{width:100%;border-collapse:collapse;margin-top:12px;font-size:12px}
 .otable th{text-align:left;padding:5px 9px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:500;font-family:'IBM Plex Mono',monospace;border-bottom:1px solid var(--border)}
-.otable td{padding:7px 9px;border-bottom:1px solid rgba(39,39,42,0.6)}
+.otable td{padding:7px 9px;border-bottom:1px solid rgba(39,39,42,0.5)}
 .otable tr:last-child td{border-bottom:none}
 .otable tr:hover td{background:rgba(255,255,255,0.015)}
 .book{color:#888;font-size:12px}
@@ -117,57 +146,106 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .pw{font-family:'IBM Plex Mono',monospace;font-weight:700;color:var(--red);font-size:12px}
 .po{font-family:'IBM Plex Mono',monospace;font-weight:700;color:var(--amber);font-size:12px}
 .prob{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted)}
+/* ── TRUE ODDS BOX ── */
 .claude-box{background:linear-gradient(135deg,rgba(163,230,53,0.05),rgba(163,230,53,0.01));border:1px solid rgba(163,230,53,0.18);border-radius:8px;padding:12px 14px;margin-top:12px}
 .cb-header{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);font-family:'IBM Plex Mono',monospace;font-weight:700;margin-bottom:10px}
 .cb-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}
-.cb-team{background:rgba(0,0,0,0.3);border-radius:7px;padding:10px 12px;text-align:center}
+.cb-team{background:rgba(0,0,0,0.3);border-radius:7px;padding:9px 11px;text-align:center}
 .cb-name{font-size:11px;color:var(--muted);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cb-pct{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;color:#fff}
 .cb-pct.fav{color:var(--accent)}
 .cb-line{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);margin-top:2px}
 .cb-vs{text-align:center;font-size:11px;color:var(--dim);font-family:'IBM Plex Mono',monospace}
 .cb-method{font-size:10px;color:#444;margin-top:8px;line-height:1.5;border-top:1px solid rgba(163,230,53,0.08);padding-top:7px}
-.best-bet{background:linear-gradient(135deg,rgba(74,222,128,0.06),rgba(74,222,128,0.01));border:1px solid rgba(74,222,128,0.22);border-radius:8px;padding:13px 15px;margin-top:10px}
+/* ── BEST BET ── */
+.best-bet{background:linear-gradient(135deg,rgba(74,222,128,0.06),rgba(74,222,128,0.01));border:1px solid rgba(74,222,128,0.22);border-radius:8px;padding:12px 14px;margin-top:10px}
 .best-bet.pass{background:rgba(0,0,0,0.2);border-color:var(--border)}
-.bb-header{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--green);font-family:'IBM Plex Mono',monospace;font-weight:700;margin-bottom:8px}
+.bb-header{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--green);font-family:'IBM Plex Mono',monospace;font-weight:700;margin-bottom:7px}
+.best-bet.pass .bb-header{color:var(--muted)}
 .bb-play{font-size:14px;font-weight:700;color:#fff;margin-bottom:3px}
-.bb-sub{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--accent);margin-bottom:9px}
-.bb-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:9px}
-.bbs{background:rgba(0,0,0,0.25);border-radius:6px;padding:7px 9px}
-.bbs-label{font-size:10px;color:var(--muted);margin-bottom:2px;text-transform:uppercase;letter-spacing:0.5px}
-.bbs-val{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:#fff}
-.bbs-val.green{color:var(--green)}
-.bb-reason{display:none}
 .best-bet.pass .bb-play{color:#777}
+.bb-sub{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--accent);margin-bottom:8px}
 .best-bet.pass .bb-sub{color:var(--muted)}
-footer{margin-left:var(--sidebar);background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 2rem;font-size:11px;color:var(--muted);text-align:center;line-height:1.8}
-@media(max-width:900px){.sidebar{transform:translateX(-100%)}.main{margin-left:0}.metrics-grid{grid-template-columns:repeat(2,1fr)}.alert-grid{grid-template-columns:1fr}.home-grid{grid-template-columns:1fr 1fr}.bb-stats{grid-template-columns:1fr 1fr}footer{margin-left:0}}
+.bb-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:0}
+.bbs{background:rgba(0,0,0,0.25);border-radius:6px;padding:6px 8px}
+.bbs-label{font-size:10px;color:var(--muted);margin-bottom:2px;text-transform:uppercase;letter-spacing:0.5px}
+.bbs-val{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:#fff}
+.bbs-val.green{color:var(--green)}.bbs-val.c-muted{color:var(--muted)}
+/* ── PROPS ── */
+.props-section{margin-top:10px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:11px 13px}
+.props-header{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-family:'IBM Plex Mono',monospace;font-weight:700;margin-bottom:8px}
+.props-mkt{font-size:11px;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:0.5px;margin:8px 0 4px;padding-top:7px;border-top:1px solid var(--border)}
+.props-mkt:first-of-type{margin-top:0;padding-top:0;border-top:none}
+.props-table{width:100%;border-collapse:collapse;font-size:11px}
+.props-table th{text-align:left;padding:4px 8px;font-size:10px;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted);font-weight:500;font-family:'IBM Plex Mono',monospace;border-bottom:1px solid var(--border)}
+.props-table td{padding:5px 8px;border-bottom:1px solid rgba(39,39,42,0.5)}
+.props-table tr:last-child td{border-bottom:none}
+/* ── FOOTER ── */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 2rem;font-size:11px;color:var(--muted);text-align:center;line-height:1.8;margin-left:var(--sidebar)}
+/* ── MOBILE ── */
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.mobile-open{transform:translateX(0)}
+  .main{margin-left:0}
+  footer{margin-left:0}
+  .hamburger{display:flex}
+  .topbar-meta{display:none}
+  .metrics-grid{grid-template-columns:repeat(2,1fr)}
+  .alert-grid{grid-template-columns:1fr}
+  .home-grid{grid-template-columns:1fr 1fr}
+  .bb-stats{grid-template-columns:1fr 1fr}
+  .alert-stats{grid-template-columns:1fr 1fr}
+  .page-inner{padding:1rem}
+  .hero{padding:1.5rem}
+  .hero-title{font-size:22px}
+  .otable th:nth-child(3),.otable td:nth-child(3),
+  .otable th:nth-child(5),.otable td:nth-child(5){display:none}
+}
 </style>
 </head>
 <body>
-<div class="shell">
-<div class="sidebar">
+
+<!-- MOBILE OVERLAY -->
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
   <div class="sidebar-logo">
     <div class="sidebar-logo-title">MLB Sharp Lines</div>
     <div class="sidebar-logo-sub">Daily Value Tracker</div>
   </div>
   <div class="sidebar-date"><span class="live-dot"></span>May 27, 2026</div>
   <div class="sidebar-section">Navigation</div>
-  <div class="nav-item active" onclick="showPage('home',this)"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></div>
-  <div class="nav-item" onclick="showPage('plays',this)"><span class="nav-icon">🔥</span><span class="nav-label">Top Value Plays</span><span class="nav-count">4</span></div>
-  <div class="nav-item" onclick="showPage('games',this)"><span class="nav-icon">⚾</span><span class="nav-label">All Games</span><span class="nav-count">15</span></div>
+  <div class="nav-item active" onclick="showPage('home',this)">
+    <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
+  </div>
+  <div class="nav-item" onclick="showPage('plays',this)">
+    <span class="nav-icon">🔥</span><span class="nav-label">Top Value Plays</span>
+    <span class="nav-count">1</span>
+  </div>
+  <div class="nav-item" onclick="showPage('games',this)">
+    <span class="nav-icon">⚾</span><span class="nav-label">All Games</span>
+    <span class="nav-count">7</span>
+  </div>
   <div class="sidebar-section" style="margin-top:8px">Today</div>
   <div class="sidebar-stats">
-    <div class="sidebar-stat"><span class="sidebar-stat-label">Games</span><span class="sidebar-stat-val">15</span></div>
-    <div class="sidebar-stat"><span class="sidebar-stat-label">Sharp alerts</span><span class="sidebar-stat-val amber">4</span></div>
-    <div class="sidebar-stat"><span class="sidebar-stat-label">Value plays</span><span class="sidebar-stat-val green">4</span></div>
-    <div class="sidebar-stat"><span class="sidebar-stat-label">Updated</span><span class="sidebar-stat-val">7:39 PM ET</span></div>
+    <div class="sidebar-stat"><span class="sidebar-stat-label">Games</span><span class="sidebar-stat-val">7</span></div>
+    <div class="sidebar-stat"><span class="sidebar-stat-label">Sharp alerts</span><span class="sidebar-stat-val amber">1</span></div>
+    <div class="sidebar-stat"><span class="sidebar-stat-label">Value plays</span><span class="sidebar-stat-val green">1</span></div>
+    <div class="sidebar-stat"><span class="sidebar-stat-label">Updated</span><span class="sidebar-stat-val">8:38 PM ET</span></div>
   </div>
 </div>
+
+<!-- MAIN -->
 <div class="main">
   <div class="topbar">
-    <div class="topbar-title" id="topbar-title">Home</div>
-    <div class="topbar-meta">15 games · May 27, 2026</div>
+    <div class="topbar-left">
+      <button class="hamburger" onclick="openSidebar()" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="topbar-title" id="topbar-title">Home</div>
+    </div>
+    <div class="topbar-meta">7 games &nbsp;·&nbsp; May 27, 2026</div>
   </div>
 
   <!-- HOME -->
@@ -175,12 +253,12 @@ footer{margin-left:var(--sidebar);background:var(--bg2);border-top:1px solid var
     <div class="hero">
       <div class="hero-eyebrow">MLB Sharp Lines Tracker</div>
       <div class="hero-title">Find the <span>edge</span><br>before the market does.</div>
-      <div class="hero-sub">Live odds from major US bookmakers. Vig-removed true probabilities, cross-book discrepancies, and a best bet for every game — auto-updated daily for free.</div>
+      <div class="hero-sub">Live pre-game odds from major US bookmakers. Vig-removed true probabilities, cross-book discrepancies, and a best bet for every game — auto-updated daily at noon ET.</div>
       <div class="hero-badges">
-        <div class="hero-badge"><strong>15</strong> games today</div>
-        <div class="hero-badge"><strong>4</strong> 🔥 sharp alerts</div>
-        <div class="hero-badge"><strong>4</strong> value plays</div>
-        <div class="hero-badge">Updated <strong>7:39 PM ET</strong></div>
+        <div class="hero-badge"><strong>7</strong> games today</div>
+        <div class="hero-badge"><strong>1</strong> 🔥 sharp alerts</div>
+        <div class="hero-badge"><strong>1</strong> value plays</div>
+        <div class="hero-badge">Updated <strong>8:38 PM ET</strong></div>
         <div class="hero-badge">Cost: <strong>$0.00</strong></div>
       </div>
     </div>
@@ -189,925 +267,67 @@ footer{margin-left:var(--sidebar);background:var(--bg2);border-top:1px solid var
         <div class="home-card-icon">🔥</div>
         <div class="home-card-title">Top Value Plays</div>
         <div class="home-card-desc">Discrepancy flags and best plays ranked by edge.</div>
-        <div class="home-card-stat amber">4 alerts</div>
+        <div class="home-card-stat amber">1 alerts</div>
       </div>
       <div class="home-card" onclick="showPage('games',document.querySelectorAll('.nav-item')[2])">
         <div class="home-card-icon">⚾</div>
         <div class="home-card-title">All Games</div>
         <div class="home-card-desc">Full odds, true probability, and best bet for every game.</div>
-        <div class="home-card-stat accent">15 games</div>
+        <div class="home-card-stat accent">7 games</div>
       </div>
       <div class="home-card">
         <div class="home-card-icon">🧮</div>
         <div class="home-card-title">True Odds</div>
-        <div class="home-card-desc">Vig removed from every book and averaged to find the real win probability.</div>
+        <div class="home-card-desc">Vig stripped from every book, averaged to find real win probability.</div>
         <div class="home-card-stat green">Free</div>
       </div>
     </div>
   </div></div>
 
-  <!-- PLAYS -->
+  <!-- VALUE PLAYS -->
   <div class="page" id="page-plays"><div class="page-inner">
     <div class="metrics-grid">
-      <div class="metric-card"><div class="metric-label">Games Today</div><div class="metric-val">15</div></div>
-      <div class="metric-card"><div class="metric-label">Books Scanned</div><div class="metric-val">9</div></div>
-      <div class="metric-card"><div class="metric-label">Sharp Alerts</div><div class="metric-val amber">4</div></div>
-      <div class="metric-card"><div class="metric-label">Value Plays</div><div class="metric-val green">4</div></div>
-      <div class="metric-card"><div class="metric-label">Cost</div><div class="metric-val" style="font-size:18px">$0 / mo</div></div>
+      <div class="metric-card"><div class="metric-label">Games</div><div class="metric-val">7</div></div>
+      <div class="metric-card"><div class="metric-label">Books</div><div class="metric-val">9</div></div>
+      <div class="metric-card"><div class="metric-label">Sharp Alerts</div><div class="metric-val amber">1</div></div>
+      <div class="metric-card"><div class="metric-label">Value Plays</div><div class="metric-val green">1</div></div>
+      <div class="metric-card"><div class="metric-label">Cost</div><div class="metric-val" style="font-size:16px">$0/mo</div></div>
     </div>
     <div class="sec-header"><h2>🔥 Sharp Alerts</h2><div class="sec-line"></div></div>
     <div class="alert-grid">
       <div class="alert-card fire">
         <span class="badge b-fire">FIRE</span>
-        <div class="alert-game">Atlanta Braves @ Boston Red Sox</div>
-        <div class="alert-rec">Boston Red Sox — -115 @ Bovada</div>
+        <div class="alert-game">Minnesota Twins @ Chicago White Sox</div>
+        <div class="alert-rec">Chicago White Sox — -115 @ BetRivers</div>
         <div class="alert-stats">
           <div class="stat-box"><div class="sl">Best Price</div><div class="sv">-115</div></div>
-          <div class="stat-box"><div class="sl">My True %</div><div class="sv">52.2%</div></div>
-          <div class="stat-box"><div class="sl">Implied %</div><div class="sv">53.5%</div></div>
+          <div class="stat-box"><div class="sl">My True %</div><div class="sv">52.0%</div></div>
+          <div class="stat-box"><div class="sl">Implied %</div><div class="sv red">53.5%</div></div>
         </div>
-        <div class="alert-reasoning">Boston Red Sox are 52% favorites by true odds (fair line -109). Market is split — some books favor Atlanta Braves, others favor Boston Red Sox. Watch for line movement before game time.</div>
+        <div class="alert-reasoning">Chicago White Sox are 52% favorites by true odds (fair line -108). Market is split — some books favor Minnesota Twins, others favor Chicago White Sox. Watch for movement before game time.</div>
       </div></div>
     <div class="sec-header"><h2>📊 All Value Plays</h2><div class="sec-line"></div></div>
     <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.75rem">
       <table class="dtable">
-        <thead><tr><th>Game</th><th>Play</th><th>Best Line</th><th>Best Book</th><th>Implied %</th><th>My True %</th><th>Edge</th><th>Signal</th></tr></thead>
+        <thead><tr><th>Game</th><th>Play</th><th>Best Line</th><th>Best Book</th><th>Implied%</th><th>True%</th><th>Edge</th><th>Signal</th></tr></thead>
         <tbody><tr>
-          <td>Atlanta Braves @ Boston Red Sox</td>
-          <td class="mono">Boston Red Sox ML</td>
+          <td>Minnesota Twins @ Chicago White Sox</td><td class="mono">Chicago White Sox ML</td>
           <td><span class="pill pill-n">-115</span></td>
-          <td class="c-accent mono" style="font-size:11px">Bovada</td>
+          <td class="c-accent mono" style="font-size:11px">BetRivers</td>
           <td class="mono">53.5%</td>
-          <td class="mono">52.2%</td>
-          <td class="mono c-red">-1.3%</td>
+          <td class="mono">52.0%</td>
+          <td class="mono c-red">-1.5%</td>
           <td><span class="badge b-fire" style="margin:0">FIRE</span></td>
         </tr></tbody>
-      </table>
-    </div>
+      </table></div>
     <div class="sec-header"><h2>📉 Line Discrepancies</h2><div class="sec-line"></div></div>
-    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden">
-      <table class="dtable">
-        <thead><tr><th>Game</th><th>Team</th><th>Best Price</th><th>Worst Price</th><th>Gap</th><th>Best Book</th><th>Worst Book</th></tr></thead>
-        <tbody><tr>
-          <td>Chicago Cubs @ Pittsburgh Pirates</td><td>Chicago Cubs</td>
-          <td><span class="pill pill-g">+115</span></td>
-          <td><span class="pill pill-r">-400</span></td>
-          <td class="mono c-red">33¢</td>
-          <td class="mono c-accent" style="font-size:11px">BetMGM</td>
-          <td class="mono c-red" style="font-size:11px">MyBookie.ag</td>
-        </tr><tr>
-          <td>Chicago Cubs @ Pittsburgh Pirates</td><td>Pittsburgh Pirates</td>
-          <td><span class="pill pill-g">+285</span></td>
-          <td><span class="pill pill-r">-145</span></td>
-          <td class="mono c-red">33¢</td>
-          <td class="mono c-accent" style="font-size:11px">MyBookie.ag</td>
-          <td class="mono c-red" style="font-size:11px">BetMGM</td>
-        </tr><tr>
-          <td>Los Angeles Angels @ Detroit Tigers</td><td>Los Angeles Angels</td>
-          <td><span class="pill pill-g">+434</span></td>
-          <td><span class="pill pill-r">+280</span></td>
-          <td class="mono ">8¢</td>
-          <td class="mono c-accent" style="font-size:11px">DraftKings</td>
-          <td class="mono c-red" style="font-size:11px">MyBookie.ag</td>
-        </tr><tr>
-          <td>Los Angeles Angels @ Detroit Tigers</td><td>Detroit Tigers</td>
-          <td><span class="pill pill-g">-400</span></td>
-          <td><span class="pill pill-r">-710</span></td>
-          <td class="mono ">8¢</td>
-          <td class="mono c-accent" style="font-size:11px">MyBookie.ag</td>
-          <td class="mono c-red" style="font-size:11px">DraftKings</td>
-        </tr></tbody>
-      </table>
-    </div>
+    <p style='color:var(--muted);font-size:13px;padding:1rem 0'>No major discrepancies today.</p>
   </div></div>
 
-  <!-- GAMES -->
+  <!-- ALL GAMES -->
   <div class="page" id="page-games"><div class="page-inner">
-    
+    <div class="day-header"><span class="day-label">Wednesday, May 27</span></div>
         <div class="game-block open" onclick="toggleGame(this)">
-          <div class="game-header">
-            <div>
-              <div class="game-teams">Chicago Cubs @ Pittsburgh Pirates</div>
-              <div class="game-time">6:41 PM ET</div>
-            </div>
-            <div class="game-right"><span class="badge b-fire" style="font-size:9px">🔥 SPLIT MARKET</span><span class="toggle">▼</span></div>
-          </div>
-          <div class="game-body">
-            <table class="otable">
-              <thead><tr><th>Book</th><th>Chicago Cubs</th><th>Implied%</th><th>Pittsburgh Pirates</th><th>Implied%</th><th>Total O/U</th></tr></thead>
-              <tbody><tr>
-              <td class="book">FanDuel</td>
-              <td class="po">+104 ⚠</td>
-              <td class="prob">49.0%</td>
-              <td class="pc">-132</td>
-              <td class="prob">56.9%</td>
-              <td class="prob c-muted">O11.5 +100</td>
-            </tr><tr>
-              <td class="book">DraftKings</td>
-              <td class="po">-104 ⚠</td>
-              <td class="prob">51.0%</td>
-              <td class="pc">-125</td>
-              <td class="prob">55.6%</td>
-              <td class="prob c-muted">O11.5 -108</td>
-            </tr><tr>
-              <td class="book">MyBookie.ag</td>
-              <td class="pw">-400 ✗</td>
-              <td class="prob">80.0%</td>
-              <td class="pb">+285 ★</td>
-              <td class="prob">26.0%</td>
-              <td class="prob c-muted">O9.0 -125</td>
-            </tr><tr>
-              <td class="book">BetMGM</td>
-              <td class="pb">+115 ★</td>
-              <td class="prob">46.5%</td>
-              <td class="pw">-145 ✗</td>
-              <td class="prob">59.2%</td>
-              <td class="prob c-muted">O11.5 -110</td>
-            </tr><tr>
-              <td class="book">BetRivers</td>
-              <td class="po">-103 ⚠</td>
-              <td class="prob">50.7%</td>
-              <td class="pc">-136</td>
-              <td class="prob">57.6%</td>
-              <td class="prob c-muted">O11.5 -112</td>
-            </tr><tr>
-              <td class="book">Bovada</td>
-              <td class="po">+100 ⚠</td>
-              <td class="prob">50.0%</td>
-              <td class="pc">-130</td>
-              <td class="prob">56.5%</td>
-              <td class="prob c-muted">O11.0 -130</td>
-            </tr></tbody>
-            </table>
-            <div class="claude-box">
-              <div class="cb-header">📊 Calculated True Odds (vig removed)</div>
-              <div class="cb-grid">
-                <div class="cb-team">
-                  <div class="cb-name">Chicago Cubs</div>
-                  <div class="cb-pct fav">51%</div>
-                  <div class="cb-line">Fair: -105</div>
-                </div>
-                <div class="cb-vs">vs</div>
-                <div class="cb-team">
-                  <div class="cb-name">Pittsburgh Pirates</div>
-                  <div class="cb-pct ">49%</div>
-                  <div class="cb-line">Fair: +105</div>
-                </div>
-              </div>
-              <div class="cb-method">Implied probability extracted from each book, vig removed via normalization, averaged across all non-outlier books.</div>
-            </div>
-            
-          <div class="best-bet pass">
-            <div class="bb-header" style='color:var(--muted)'>★ Best Bet This Game</div>
-            <div class="bb-play" style='color:#777'>Pass — near coin flip</div>
-            <div class="bb-sub" style='color:var(--muted)'>If forced: either team at BetOnline / LowVig for lowest vig</div>
-            <div class="bb-stats">
-              <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">51% / 49%</div></div>
-              <div class="bbs"><div class="bbs-label">Best Chicago Cubs price</div><div class="bbs-val">+115 @ BetMGM</div></div>
-              <div class="bbs"><div class="bbs-label">Best Pittsburgh Pirates price</div><div class="bbs-val">+285 @ MyBookie.ag</div></div>
-              <div class="bbs"><div class="bbs-label">Edge Signal</div><div class="bbs-val c-muted">None</div></div>
-            </div>
-          </div>
-          </div>
-        </div>
-        <div class="game-block open" onclick="toggleGame(this)">
-          <div class="game-header">
-            <div>
-              <div class="game-teams">Atlanta Braves @ Boston Red Sox</div>
-              <div class="game-time">6:46 PM ET</div>
-            </div>
-            <div class="game-right"><span class="badge b-fire" style="font-size:9px">🔥 SPLIT MARKET</span><span class="toggle">▼</span></div>
-          </div>
-          <div class="game-body">
-            <table class="otable">
-              <thead><tr><th>Book</th><th>Atlanta Braves</th><th>Implied%</th><th>Boston Red Sox</th><th>Implied%</th><th>Total O/U</th></tr></thead>
-              <tbody><tr>
-              <td class="book">FanDuel</td>
-              <td class="po">+100 ⚠</td>
-              <td class="prob">50.0%</td>
-              <td class="pc">-128</td>
-              <td class="prob">56.1%</td>
-              <td class="prob c-muted">O5.5 +100</td>
-            </tr><tr>
-              <td class="book">DraftKings</td>
-              <td class="pb">+101 ★</td>
-              <td class="prob">49.8%</td>
-              <td class="pw">-131 ✗</td>
-              <td class="prob">56.7%</td>
-              <td class="prob c-muted">O5.5 -109</td>
-            </tr><tr>
-              <td class="book">MyBookie.ag</td>
-              <td class="po">-105 ⚠</td>
-              <td class="prob">51.2%</td>
-              <td class="pc">-125</td>
-              <td class="prob">55.6%</td>
-              <td class="prob c-muted">O6.0 -118</td>
-            </tr><tr>
-              <td class="book">BetMGM</td>
-              <td class="po">+100 ⚠</td>
-              <td class="prob">50.0%</td>
-              <td class="pc">-125</td>
-              <td class="prob">55.6%</td>
-              <td class="prob c-muted">O5.5 -115</td>
-            </tr><tr>
-              <td class="book">BetRivers</td>
-              <td class="po">-106 ⚠</td>
-              <td class="prob">51.5%</td>
-              <td class="pc">-130</td>
-              <td class="prob">56.5%</td>
-              <td class="prob c-muted">O5.5 -115</td>
-            </tr><tr>
-              <td class="book">Bovada</td>
-              <td class="pw">-115 ✗</td>
-              <td class="prob">53.5%</td>
-              <td class="pb">-115 ★</td>
-              <td class="prob">53.5%</td>
-              <td class="prob c-muted">O5.5 -115</td>
-            </tr></tbody>
-            </table>
-            <div class="claude-box">
-              <div class="cb-header">📊 Calculated True Odds (vig removed)</div>
-              <div class="cb-grid">
-                <div class="cb-team">
-                  <div class="cb-name">Atlanta Braves</div>
-                  <div class="cb-pct ">48%</div>
-                  <div class="cb-line">Fair: +109</div>
-                </div>
-                <div class="cb-vs">vs</div>
-                <div class="cb-team">
-                  <div class="cb-name">Boston Red Sox</div>
-                  <div class="cb-pct fav">52%</div>
-                  <div class="cb-line">Fair: -109</div>
-                </div>
-              </div>
-              <div class="cb-method">Implied probability extracted from each book, vig removed via normalization, averaged across all non-outlier books.</div>
-            </div>
-            
-          <div class="best-bet">
-            <div class="bb-header" >★ Best Bet This Game</div>
-            <div class="bb-play" >Boston Red Sox Moneyline</div>
-            <div class="bb-sub" >-115 at Bovada</div>
-            <div class="bb-stats">
-              <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">48% / 52%</div></div>
-              <div class="bbs"><div class="bbs-label">Best Atlanta Braves price</div><div class="bbs-val">+101 @ DraftKings</div></div>
-              <div class="bbs"><div class="bbs-label">Best Boston Red Sox price</div><div class="bbs-val">-115 @ Bovada</div></div>
-              <div class="bbs"><div class="bbs-label">Edge Signal</div><div class="bbs-val green">Slight</div></div>
-            </div>
-          </div>
-          </div>
-        </div>
-        <div class="game-block " onclick="toggleGame(this)">
-          <div class="game-header">
-            <div>
-              <div class="game-teams">Minnesota Twins @ Chicago White Sox</div>
-              <div class="game-time">7:41 PM ET</div>
-            </div>
-            <div class="game-right"><span class="badge b-fire" style="font-size:9px">🔥 SPLIT MARKET</span><span class="toggle">▼</span></div>
-          </div>
-          <div class="game-body">
-            <table class="otable">
-              <thead><tr><th>Book</th><th>Minnesota Twins</th><th>Implied%</th><th>Chicago White Sox</th><th>Implied%</th><th>Total O/U</th></tr></thead>
-              <tbody><tr>
-              <td class="book">FanDuel</td>
-              <td class="pc">-108</td>
-              <td class="prob">51.9%</td>
-              <td class="pc">-108</td>
-              <td class="prob">51.9%</td>
-              <td class="prob c-muted">O8.0 -110</td>
-            </tr><tr>
-              <td class="book">BetOnline.ag</td>
-              <td class="pb">-107 ★</td>
-              <td class="prob">51.7%</td>
-              <td class="pc">-103</td>
-              <td class="prob">50.7%</td>
-              <td class="prob c-muted">O8.0 -112</td>
-            </tr><tr>
-              <td class="book">LowVig.ag</td>
-              <td class="pc">-107</td>
-              <td class="prob">51.7%</td>
-              <td class="pc">-103</td>
-              <td class="prob">50.7%</td>
-              <td class="prob c-muted">O8.0 -109</td>
-            </tr><tr>
-              <td class="book">DraftKings</td>
-              <td class="pc">-110</td>
-              <td class="prob">52.4%</td>
-              <td class="pc">-110</td>
-              <td class="prob">52.4%</td>
-              <td class="prob c-muted">O8.0 -112</td>
-            </tr><tr>
-              <td class="book">BetMGM</td>
-              <td class="pc">-110</td>
-              <td class="prob">52.4%</td>
-              <td class="pc">-110</td>
-              <td class="prob">52.4%</td>
-              <td class="prob c-muted">O8.0 -110</td>
-            </tr><tr>
-              <td class="book">MyBookie.ag</td>
-              <td class="pc">-108</td>
-              <td class="prob">51.9%</td>
-              <td class="pc">-109</td>
-              <td class="prob">52.2%</td>
-              <td class="prob c-muted">O8.0 -114</td>
-            </tr><tr>
-              <td class="book">BetRivers</td>
-              <td class="pc">-107</td>
-              <td class="prob">51.7%</td>
-              <td class="pw">-117 ✗</td>
-              <td class="prob">53.9%</td>
-              <td class="prob c-muted">O8.0 -106</td>
-            </tr><tr>
-              <td class="book">Bovada</td>
-              <td class="pw">-111 ✗</td>
-              <td class="prob">52.6%</td>
-              <td class="pc">-109</td>
-              <td class="prob">52.2%</td>
-              <td class="prob c-muted">O8.0 -115</td>
-            </tr><tr>
-              <td class="book">BetUS</td>
-              <td class="pc">-108</td>
-              <td class="prob">51.9%</td>
-              <td class="pb">-102 ★</td>
-              <td class="prob">50.5%</td>
-              <td class="prob c-muted">O8.0 -115</td>
-            </tr></tbody>
-            </table>
-            <div class="claude-box">
-              <div class="cb-header">📊 Calculated True Odds (vig removed)</div>
-              <div class="cb-grid">
-                <div class="cb-team">
-                  <div class="cb-name">Minnesota Twins</div>
-                  <div class="cb-pct ">50%</div>
-                  <div class="cb-line">Fair: -100</div>
-                </div>
-                <div class="cb-vs">vs</div>
-                <div class="cb-team">
-                  <div class="cb-name">Chicago White Sox</div>
-                  <div class="cb-pct ">50%</div>
-                  <div class="cb-line">Fair: +100</div>
-                </div>
-              </div>
-              <div class="cb-method">Implied probability extracted from each book, vig removed via normalization, averaged across all non-outlier books.</div>
-            </div>
-            
-          <div class="best-bet pass">
-            <div class="bb-header" style='color:var(--muted)'>★ Best Bet This Game</div>
-            <div class="bb-play" style='color:#777'>Pass — near coin flip</div>
-            <div class="bb-sub" style='color:var(--muted)'>If forced: either team at BetOnline / LowVig for lowest vig</div>
-            <div class="bb-stats">
-              <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">50% / 50%</div></div>
-              <div class="bbs"><div class="bbs-label">Best Minnesota Twins price</div><div class="bbs-val">-107 @ BetOnline.ag</div></div>
-              <div class="bbs"><div class="bbs-label">Best Chicago White Sox price</div><div class="bbs-val">-102 @ BetUS</div></div>
-              <div class="bbs"><div class="bbs-label">Edge Signal</div><div class="bbs-val c-muted">None</div></div>
-            </div>
-          </div>
-          </div>
-        </div>
-        <div class="game-block " onclick="toggleGame(this)">
-          <div class="game-header">
-            <div>
-              <div class="game-teams">Minnesota Twins @ Chicago White Sox</div>
-              <div class="game-time">2:11 PM ET</div>
-            </div>
-            <div class="game-right"><span class="badge b-fire" style="font-size:9px">🔥 SPLIT MARKET</span><span class="toggle">▼</span></div>
-          </div>
-          <div class="game-body">
-            <table class="otable">
-              <thead><tr><th>Book</th><th>Minnesota Twins</th><th>Implied%</th><th>Chicago White Sox</th><th>Implied%</th><th>Total O/U</th></tr></thead>
-              <tbody><tr>
-              <td class="book">FanDuel</td>
-              <td class="pc">-102</td>
-              <td class="prob">50.5%</td>
-              <td class="pc">-116</td>
-              <td class="prob">53.7%</td>
-              <td class="prob c-muted">O7.5 -110</td>
-            </tr><tr>
-              <td class="book">MyBookie.ag</td>
-              <td class="pc">-103</td>
-              <td class="prob">50.7%</td>
-              <td class="pb">-114 ★</td>
-              <td class="prob">53.3%</td>
-              <td class="prob c-muted">O7.5 -117</td>
-            </tr><tr>
-              <td class="book">DraftKings</td>
-              <td class="pc">-104</td>
-              <td class="prob">51.0%</td>
-              <td class="pc">-115</td>
-              <td class="prob">53.5%</td>
-              <td class="prob c-muted">O7.5 -113</td>
-            </tr><tr>
-              <td class="book">Bovada</td>
-              <td class="pb">+100 ★</td>
-              <td class="prob">50.0%</td>
-              <td class="pw">-120 ✗</td>
-              <td class="prob">54.5%</td>
-              <td class="prob c-muted">O8.0 -105</td>
-            </tr><tr>
-              <td class="book">BetRivers</td>
-              <td class="pw">-108 ✗</td>
-              <td class="prob">51.9%</td>
-              <td class="pc">-115</td>
-              <td class="prob">53.5%</td>
-              <td class="prob c-muted">O7.5 -117</td>
-            </tr></tbody>
-            </table>
-            <div class="claude-box">
-              <div class="cb-header">📊 Calculated True Odds (vig removed)</div>
-              <div class="cb-grid">
-                <div class="cb-team">
-                  <div class="cb-name">Minnesota Twins</div>
-                  <div class="cb-pct ">49%</div>
-                  <div class="cb-line">Fair: +106</div>
-                </div>
-                <div class="cb-vs">vs</div>
-                <div class="cb-team">
-                  <div class="cb-name">Chicago White Sox</div>
-                  <div class="cb-pct fav">51%</div>
-                  <div class="cb-line">Fair: -106</div>
-                </div>
-              </div>
-              <div class="cb-method">Implied probability extracted from each book, vig removed via normalization, averaged across all non-outlier books.</div>
-            </div>
-            
-          <div class="best-bet pass">
-            <div class="bb-header" style='color:var(--muted)'>★ Best Bet This Game</div>
-            <div class="bb-play" style='color:#777'>Pass — near coin flip</div>
-            <div class="bb-sub" style='color:var(--muted)'>If forced: either team at BetOnline / LowVig for lowest vig</div>
-            <div class="bb-stats">
-              <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">49% / 51%</div></div>
-              <div class="bbs"><div class="bbs-label">Best Minnesota Twins price</div><div class="bbs-val">+100 @ Bovada</div></div>
-              <div class="bbs"><div class="bbs-label">Best Chicago White Sox price</div><div class="bbs-val">-114 @ MyBookie.ag</div></div>
-              <div class="bbs"><div class="bbs-label">Edge Signal</div><div class="bbs-val c-muted">None</div></div>
-            </div>
-          </div>
-          </div>
-        </div>
-        <div class="game-block " onclick="toggleGame(this)">
-          <div class="game-header">
-            <div>
-              <div class="game-teams">Tampa Bay Rays @ Baltimore Orioles</div>
-              <div class="game-time">6:37 PM ET</div>
-            </div>
-            <div class="game-right"><span class="toggle">▼</span></div>
-          </div>
-          <div class="game-body">
-            <table class="otable">
-              <thead><tr><th>Book</th><th>Tampa Bay Rays</th><th>Implied%</th><th>Baltimore Orioles</th><th>Implied%</th><th>Total O/U</th></tr></thead>
-              <tbody><tr>
-              <td class="book">DraftKings</td>
-              <td class="pc">+1440</td>
-              <td class="prob">6.5%</td>
-              <td class="pw">-10000 ✗</td>
-              <td class="prob">99.0%</td>
-              <td class="prob c-muted">O11.5 -101</td>
-            </tr><tr>
-              <td class="book">MyBookie.ag</td>
-              <td class="pw">+1100 ✗</td>
-              <td class="prob">8.3%</td>
-              <td class="pb">-5000 ★</td>
-              <td class="prob">98.0%</td>
-              <td class="prob c-muted">O12.0 -111</td>
-            </tr><tr>
-              <td class="book">BetMGM</td>
-              <td class="pb">+1700 ★</td>
-              <td class="prob">5.6%</td>
-              <td class="pc">-10000</td>
-              <td class="prob">99.0%</td>
-              <td class="prob c-muted">O10.5 -145</td>
-            </tr><tr>
-              <td class="book">FanDuel</td>
-              <td class="pc">+1500</td>
-              <td class="prob">6.2%</td>
-              <td class="pc">-7000</td>
-              <td class="prob">98.6%</td>
-              <td class="prob c-muted">O10.5 -136</td>
-            </tr><tr>
-              <td class="book">Bovada</td>
-              <td class="pc">+1400</td>
-              <td class="prob">6.7%</td>
-              <td class="pc">-5000</td>
-              <td class="prob">98.0%</td>
-              <td class="prob c-muted">O11.0 -115</td>
-            </tr></tbody>
-            </table>
-            <div class="claude-box">
-              <div class="cb-header">📊 Calculated True Odds (vig removed)</div>
-              <div class="cb-grid">
-                <div class="cb-team">
-                  <div class="cb-name">Tampa Bay Rays</div>
-                  <div class="cb-pct ">6%</div>
-                  <div class="cb-line">Fair: +1481</div>
-                </div>
-                <div class="cb-vs">vs</div>
-                <div class="cb-team">
-                  <div class="cb-name">Baltimore Orioles</div>
-                  <div class="cb-pct fav">94%</div>
-                  <div class="cb-line">Fair: -1481</div>
-                </div>
-              </div>
-              <div class="cb-method">Implied probability extracted from each book, vig removed via normalization, averaged across all non-outlier books.</div>
-            </div>
-            
-          <div class="best-bet">
-            <div class="bb-header" >★ Best Bet This Game</div>
-            <div class="bb-play" >Baltimore Orioles Moneyline</div>
-            <div class="bb-sub" >-5000 at MyBookie.ag</div>
-            <div class="bb-stats">
-              <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">6% / 94%</div></div>
-              <div class="bbs"><div class="bbs-label">Best Tampa Bay Rays price</div><div class="bbs-val">+1700 @ BetMGM</div></div>
-              <div class="bbs"><div class="bbs-label">Best Baltimore Orioles price</div><div class="bbs-val">-5000 @ MyBookie.ag</div></div>
-              <div class="bbs"><div class="bbs-label">Edge Signal</div><div class="bbs-val green">Fair</div></div>
-            </div>
-          </div>
-          </div>
-        </div>
-        <div class="game-block " onclick="toggleGame(this)">
-          <div class="game-header">
-            <div>
-              <div class="game-teams">Los Angeles Angels @ Detroit Tigers</div>
-              <div class="game-time">6:41 PM ET</div>
-            </div>
-            <div class="game-right"><span class="toggle">▼</span></div>
-          </div>
-          <div class="game-body">
-            <table class="otable">
-              <thead><tr><th>Book</th><th>Los Angeles Angels</th><th>Implied%</th><th>Detroit Tigers</th><th>Implied%</th><th>Total O/U</th></tr></thead>
-              <tbody><tr>
-              <td class="book">FanDuel</td>
-              <td class="pc">+390</td>
-              <td class="prob">20.4%</td>
-              <td class="pc">-590</td>
-              <td class="prob">85.5%</td>
-              <td class="prob c-muted">O6.5 +108</td>
-            </tr><tr>
-              <td class="book">DraftKings</td>
-              <td class="pb">+434 ★</td>
-              <td class="prob">18.7%</td>
-              <td class="pw">-710 ✗</td>
-              <td class="prob">87.7%</td>
-              <td class="prob c-muted">O6.5 +108</td>
-            </tr><tr>
-              <td class="book">MyBookie.ag</td>
-              <td class="pw">+280 ✗</td>
-              <td class="prob">26.3%</td>
-              <td class="pb">-400 ★</td>
-              <td class="prob">80.0%</td>
-              <td class="prob c-muted">O6.5 -118</td>
-            </tr><tr>
-              <td class="book">BetMGM</td>
-              <td class="pc">+425</td>
-              <td class="prob">19.0%</td>
-              <td class="pc">-625</td>
-              <td class="prob">86.2%</td>
-              <td class="prob c-muted">O6.5 +110</td>
-            </tr><tr>
-              <td class="book">BetRivers</td>
-              <td class="pc">+350</td>
-              <td class="prob">22.2%</td>
-              <td class="pc">-590</td>
-              <td class="prob">85.5%</td>
-              <td class="prob c-muted">O6.0 -130</td>
-            </tr><tr>
-              <td class="book">Bovada</td>
-              <td class="pc">+375</td>
-              <td class="prob">21.1%</td>
-              <td class="pc">-600</td>
-              <td class="prob">85.7%</td>
-              <td class="prob c-muted">O6.0 -120</td>
-            </tr></tbody>
-            </table>
-            <div class="claude-box">
-              <div class="cb-header">📊 Calculated True Odds (vig removed)</div>
-              <div class="cb-grid">
-                <div class="cb-team">
-                  <div class="cb-name">Los Angeles Angels</div>
-                  <div class="cb-pct ">20%</div>
-                  <div class="cb-line">Fair: +400</div>
-                </div>
-                <div class="cb-vs">vs</div>
-                <div class="cb-team">
-                  <div class="cb-name">Detroit Tigers</div>
-                  <div class="cb-pct fav">80%</div>
-                  <div class="cb-line">Fair: -400</div>
-                </div>
-              </div>
-              <div class="cb-method">Implied probability extracted from each book, vig removed via normalization, averaged across all non-outlier books.</div>
-            </div>
-            
-          <div class="best-bet">
-            <div class="bb-header" >★ Best Bet This Game</div>
-            <div class="bb-play" >Detroit Tigers Moneyline</div>
-            <div class="bb-sub" >-400 at MyBookie.ag</div>
-            <div class="bb-stats">
-              <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">20% / 80%</div></div>
-              <div class="bbs"><div class="bbs-label">Best Los Angeles Angels price</div><div class="bbs-val">+434 @ DraftKings</div></div>
-              <div class="bbs"><div class="bbs-label">Best Detroit Tigers price</div><div class="bbs-val">-400 @ MyBookie.ag</div></div>
-              <div class="bbs"><div class="bbs-label">Edge Signal</div><div class="bbs-val green">Slight</div></div>
-            </div>
-          </div>
-          </div>
-        </div>
-        <div class="game-block " onclick="toggleGame(this)">
-          <div class="game-header">
-            <div>
-              <div class="game-teams">Cincinnati Reds @ New York Mets</div>
-              <div class="game-time">7:11 PM ET</div>
-            </div>
-            <div class="game-right"><span class="toggle">▼</span></div>
-          </div>
-          <div class="game-body">
-            <table class="otable">
-              <thead><tr><th>Book</th><th>Cincinnati Reds</th><th>Implied%</th><th>New York Mets</th><th>Implied%</th><th>Total O/U</th></tr></thead>
-              <tbody><tr>
-              <td class="book">FanDuel</td>
-              <td class="pb">+196 ★</td>
-              <td class="prob">33.8%</td>
-              <td class="pw">-260 ✗</td>
-              <td class="prob">72.2%</td>
-              <td class="prob c-muted">O7.5 -110</td>
-            </tr><tr>
-              <td class="book">MyBookie.ag</td>
-              <td class="pw">+155 ✗</td>
-              <td class="prob">39.2%</td>
-              <td class="pb">-200 ★</td>
-              <td class="prob">66.7%</td>
-              <td class="prob c-muted">O8.5 -111</td>
-            </tr><tr>
-              <td class="book">BetRivers</td>
-              <td class="pc">+180</td>
-              <td class="prob">35.7%</td>
-              <td class="pc">-250</td>
-              <td class="prob">71.4%</td>
-              <td class="prob c-muted">O7.5 -115</td>
-            </tr><tr>
-              <td class="book">Bovada</td>
-              <td class="pc">+190</td>
-              <td class="prob">34.5%</td>
-              <td class="pc">-260</td>
-              <td class="prob">72.2%</td>
-              <td class="prob c-muted">O7.5 -115</td>
-            </tr><tr>
-              <td class="book">DraftKings</td>
-              <td class="pc">+173</td>
-              <td class="prob">36.6%</td>
-              <td class="pc">-231</td>
-              <td class="prob">69.8%</td>
-              <td class="prob c-muted">O7.5 -124</td>
-            </tr><tr>
-              <td class="book">BetMGM</td>
-              <td class="pc">+195</td>
-              <td class="prob">33.9%</td>
-              <td class="pc">-250</td>
-              <td class="prob">71.4%</td>
-              <td class="prob c-muted">O7.5 -110</td>
-            </tr></tbody>
-            </table>
-            <div class="claude-box">
-              <div class="cb-header">📊 Calculated True Odds (vig removed)</div>
-              <div class="cb-grid">
-                <div class="cb-team">
-                  <div class="cb-name">Cincinnati Reds</div>
-                  <div class="cb-pct ">34%</div>
-                  <div class="cb-line">Fair: +198</div>
-                </div>
-                <div class="cb-vs">vs</div>
-                <div class="cb-team">
-                  <div class="cb-name">New York Mets</div>
-                  <div class="cb-pct fav">66%</div>
-                  <div class="cb-line">Fair: -198</div>
-                </div>
-              </div>
-              <div class="cb-method">Implied probability extracted from each book, vig removed via normalization, averaged across all non-outlier books.</div>
-            </div>
-            
-          <div class="best-bet">
-            <div class="bb-header" >★ Best Bet This Game</div>
-            <div class="bb-play" >New York Mets Moneyline</div>
-            <div class="bb-sub" >-200 at MyBookie.ag</div>
-            <div class="bb-stats">
-              <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">34% / 66%</div></div>
-              <div class="bbs"><div class="bbs-label">Best Cincinnati Reds price</div><div class="bbs-val">+196 @ FanDuel</div></div>
-              <div class="bbs"><div class="bbs-label">Best New York Mets price</div><div class="bbs-val">-200 @ MyBookie.ag</div></div>
-              <div class="bbs"><div class="bbs-label">Edge Signal</div><div class="bbs-val green">Slight</div></div>
-            </div>
-          </div>
-          </div>
-        </div>
-        <div class="game-block " onclick="toggleGame(this)">
-          <div class="game-header">
-            <div>
-              <div class="game-teams">New York Yankees @ Kansas City Royals</div>
-              <div class="game-time">7:41 PM ET</div>
-            </div>
-            <div class="game-right"><span class="toggle">▼</span></div>
-          </div>
-          <div class="game-body">
-            <table class="otable">
-              <thead><tr><th>Book</th><th>New York Yankees</th><th>Implied%</th><th>Kansas City Royals</th><th>Implied%</th><th>Total O/U</th></tr></thead>
-              <tbody><tr>
-              <td class="book">FanDuel</td>
-              <td class="pc">-156</td>
-              <td class="prob">60.9%</td>
-              <td class="pc">+132</td>
-              <td class="prob">43.1%</td>
-              <td class="prob c-muted">O8.5 -118</td>
-            </tr><tr>
-              <td class="book">BetOnline.ag</td>
-              <td class="pc">-150</td>
-              <td class="prob">60.0%</td>
-              <td class="pc">+136</td>
-              <td class="prob">42.4%</td>
-              <td class="prob c-muted">O8.5 -116</td>
-            </tr><tr>
-              <td class="book">LowVig.ag</td>
-              <td class="pc">-153</td>
-              <td class="prob">60.5%</td>
-              <td class="pb">+139 ★</td>
-              <td class="prob">41.8%</td>
-              <td class="prob c-muted">O8.5 -114</td>
-            </tr><tr>
-              <td class="book">DraftKings</td>
-              <td class="pc">-156</td>
-              <td class="prob">60.9%</td>
-              <td class="pc">+129</td>
-              <td class="prob">43.7%</td>
-              <td class="prob c-muted">O8.5 -120</td>
-            </tr><tr>
-              <td class="book">BetMGM</td>
-              <td class="pc">-165</td>
-              <td class="prob">62.3%</td>
-              <td class="pc">+135</td>
-              <td class="prob">42.6%</td>
-              <td class="prob c-muted">O8.5 -118</td>
-            </tr><tr>
-              <td class="book">MyBookie.ag</td>
-              <td class="pc">-158</td>
-              <td class="prob">61.2%</td>
-              <td class="pc">+133</td>
-              <td class="prob">42.9%</td>
-              <td class="prob c-muted">O8.5 -119</td>
-            </tr><tr>
-              <td class="book">BetRivers</td>
-              <td class="pw">-167 ✗</td>
-              <td class="prob">62.5%</td>
-              <td class="pc">+135</td>
-              <td class="prob">42.6%</td>
-              <td class="prob c-muted">O8.5 -121</td>
-            </tr><tr>
-              <td class="book">BetUS</td>
-              <td class="pc">-153</td>
-              <td class="prob">60.5%</td>
-              <td class="pc">+137</td>
-              <td class="prob">42.2%</td>
-              <td class="prob c-muted">O9.0 +105</td>
-            </tr><tr>
-              <td class="book">Bovada</td>
-              <td class="pb">-149 ★</td>
-              <td class="prob">59.8%</td>
-              <td class="pw">+125 ✗</td>
-              <td class="prob">44.4%</td>
-              <td class="prob c-muted">O8.5 -110</td>
-            </tr></tbody>
-            </table>
-            <div class="claude-box">
-              <div class="cb-header">📊 Calculated True Odds (vig removed)</div>
-              <div class="cb-grid">
-                <div class="cb-team">
-                  <div class="cb-name">New York Yankees</div>
-                  <div class="cb-pct fav">59%</div>
-                  <div class="cb-line">Fair: -142</div>
-                </div>
-                <div class="cb-vs">vs</div>
-                <div class="cb-team">
-                  <div class="cb-name">Kansas City Royals</div>
-                  <div class="cb-pct ">41%</div>
-                  <div class="cb-line">Fair: +142</div>
-                </div>
-              </div>
-              <div class="cb-method">Implied probability extracted from each book, vig removed via normalization, averaged across all non-outlier books.</div>
-            </div>
-            
-          <div class="best-bet">
-            <div class="bb-header" >★ Best Bet This Game</div>
-            <div class="bb-play" >New York Yankees Moneyline</div>
-            <div class="bb-sub" >-149 at Bovada</div>
-            <div class="bb-stats">
-              <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">59% / 41%</div></div>
-              <div class="bbs"><div class="bbs-label">Best New York Yankees price</div><div class="bbs-val">-149 @ Bovada</div></div>
-              <div class="bbs"><div class="bbs-label">Best Kansas City Royals price</div><div class="bbs-val">+139 @ LowVig.ag</div></div>
-              <div class="bbs"><div class="bbs-label">Edge Signal</div><div class="bbs-val green">Slight</div></div>
-            </div>
-          </div>
-          </div>
-        </div>
-        <div class="game-block " onclick="toggleGame(this)">
-          <div class="game-header">
-            <div>
-              <div class="game-teams">Houston Astros @ Texas Rangers</div>
-              <div class="game-time">8:06 PM ET</div>
-            </div>
-            <div class="game-right"><span class="toggle">▼</span></div>
-          </div>
-          <div class="game-body">
-            <table class="otable">
-              <thead><tr><th>Book</th><th>Houston Astros</th><th>Implied%</th><th>Texas Rangers</th><th>Implied%</th><th>Total O/U</th></tr></thead>
-              <tbody><tr>
-              <td class="book">FanDuel</td>
-              <td class="pc">+124</td>
-              <td class="prob">44.6%</td>
-              <td class="pc">-146</td>
-              <td class="prob">59.3%</td>
-              <td class="prob c-muted">O7.5 +108</td>
-            </tr><tr>
-              <td class="book">BetOnline.ag</td>
-              <td class="pc">+122</td>
-              <td class="prob">45.0%</td>
-              <td class="pb">-135 ★</td>
-              <td class="prob">57.4%</td>
-              <td class="prob c-muted">O7.0 -118</td>
-            </tr><tr>
-              <td class="book">LowVig.ag</td>
-              <td class="pc">+122</td>
-              <td class="prob">45.0%</td>
-              <td class="pc">-135</td>
-              <td class="prob">57.4%</td>
-              <td class="prob c-muted">O7.0 -116</td>
-            </tr><tr>
-              <td class="book">DraftKings</td>
-              <td class="pc">+124</td>
-              <td class="prob">44.6%</td>
-              <td class="pc">-149</td>
-              <td class="prob">59.8%</td>
-              <td class="prob c-muted">O7.0 -118</td>
-            </tr><tr>
-              <td class="book">BetMGM</td>
-              <td class="pw">+120 ✗</td>
-              <td class="prob">45.5%</td>
-              <td class="pc">-145</td>
-              <td class="prob">59.2%</td>
-              <td class="prob c-muted">O7.0 -120</td>
-            </tr><tr>
-              <td class="book">BetRivers</td>
-              <td class="pb">+125 ★</td>
-              <td class="prob">44.4%</td>
-              <td class="pw">-157 ✗</td>
-              <td class="prob">61.1%</td>
-              <td class="prob c-muted">O7.0 -127</td>
-            </tr><tr>
-              <td class="book">MyBookie.ag</td>
-              <td class="pc">+124</td>
-              <td class="prob">44.6%</td>
-              <td class="pc">-146</td>
-              <td class="prob">59.3%</td>
-              <td class="prob c-muted">O7.0 -114</td>
-            </tr><tr>
-              <td class="book">BetUS</td>
-              <td class="pc">+124</td>
-              <td class="prob">44.6%</td>
-              <td class="pc">-137</td>
-              <td class="prob">57.8%</td>
-              <td class="prob c-muted">O7.0 -125</td>
-            </tr><tr>
-              <td class="book">Bovada</td>
-              <td class="pc">+121</td>
-              <td class="prob">45.2%</td>
-              <td class="pc">-144</td>
-              <td class="prob">59.0%</td>
-              <td class="prob c-muted">O7.0 -125</td>
-            </tr></tbody>
-            </table>
-            <div class="claude-box">
-              <div class="cb-header">📊 Calculated True Odds (vig removed)</div>
-              <div class="cb-grid">
-                <div class="cb-team">
-                  <div class="cb-name">Houston Astros</div>
-                  <div class="cb-pct ">43%</div>
-                  <div class="cb-line">Fair: +131</div>
-                </div>
-                <div class="cb-vs">vs</div>
-                <div class="cb-team">
-                  <div class="cb-name">Texas Rangers</div>
-                  <div class="cb-pct fav">57%</div>
-                  <div class="cb-line">Fair: -131</div>
-                </div>
-              </div>
-              <div class="cb-method">Implied probability extracted from each book, vig removed via normalization, averaged across all non-outlier books.</div>
-            </div>
-            
-          <div class="best-bet">
-            <div class="bb-header" >★ Best Bet This Game</div>
-            <div class="bb-play" >Texas Rangers Moneyline</div>
-            <div class="bb-sub" >-135 at BetOnline.ag</div>
-            <div class="bb-stats">
-              <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">43% / 57%</div></div>
-              <div class="bbs"><div class="bbs-label">Best Houston Astros price</div><div class="bbs-val">+125 @ BetRivers</div></div>
-              <div class="bbs"><div class="bbs-label">Best Texas Rangers price</div><div class="bbs-val">-135 @ BetOnline.ag</div></div>
-              <div class="bbs"><div class="bbs-label">Edge Signal</div><div class="bbs-val green">Slight</div></div>
-            </div>
-          </div>
-          </div>
-        </div>
-        <div class="game-block " onclick="toggleGame(this)">
           <div class="game-header">
             <div>
               <div class="game-teams">Colorado Rockies @ Los Angeles Dodgers</div>
@@ -1120,98 +340,161 @@ footer{margin-left:var(--sidebar);background:var(--bg2);border-top:1px solid var
               <thead><tr><th>Book</th><th>Colorado Rockies</th><th>Implied%</th><th>Los Angeles Dodgers</th><th>Implied%</th><th>Total O/U</th></tr></thead>
               <tbody><tr>
               <td class="book">FanDuel</td>
-              <td class="pc">+330</td>
+              <td class="pw">+330 ✗</td>
               <td class="prob">23.3%</td>
               <td class="pc">-420</td>
               <td class="prob">80.8%</td>
-              <td class="prob c-muted">O8.0 -110</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.0</strong> <span style="color:var(--accent)">-110</span></td>
             </tr><tr>
               <td class="book">BetOnline.ag</td>
-              <td class="pb">+342 ★</td>
-              <td class="prob">22.6%</td>
-              <td class="pb">-395 ★</td>
-              <td class="prob">79.8%</td>
-              <td class="prob c-muted">O8.0 -109</td>
+              <td class="pb">+346 ★</td>
+              <td class="prob">22.4%</td>
+              <td class="pb">-400 ★</td>
+              <td class="prob">80.0%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.0</strong> <span style="color:var(--accent)">-113</span></td>
             </tr><tr>
               <td class="book">LowVig.ag</td>
-              <td class="pc">+342</td>
-              <td class="prob">22.6%</td>
-              <td class="pc">-395</td>
-              <td class="prob">79.8%</td>
-              <td class="prob c-muted">O8.0 -106</td>
+              <td class="pc">+346</td>
+              <td class="prob">22.4%</td>
+              <td class="pc">-400</td>
+              <td class="prob">80.0%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.0</strong> <span style="color:var(--accent)">-110</span></td>
             </tr><tr>
               <td class="book">DraftKings</td>
-              <td class="pc">+336</td>
-              <td class="prob">22.9%</td>
-              <td class="pc">-443</td>
-              <td class="prob">81.6%</td>
-              <td class="prob c-muted">O8.0 -110</td>
+              <td class="pc">+335</td>
+              <td class="prob">23.0%</td>
+              <td class="pc">-441</td>
+              <td class="prob">81.5%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.0</strong> <span style="color:var(--accent)">-112</span></td>
             </tr><tr>
               <td class="book">BetMGM</td>
               <td class="pc">+333</td>
               <td class="prob">23.1%</td>
               <td class="pc">-450</td>
               <td class="prob">81.8%</td>
-              <td class="prob c-muted">O8.0 -110</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.0</strong> <span style="color:var(--accent)">-110</span></td>
             </tr><tr>
               <td class="book">BetRivers</td>
-              <td class="pc">+330</td>
-              <td class="prob">23.3%</td>
-              <td class="pw">-455 ✗</td>
-              <td class="prob">82.0%</td>
-              <td class="prob c-muted">O8.0 -109</td>
+              <td class="pc">+335</td>
+              <td class="prob">23.0%</td>
+              <td class="pw">-480 ✗</td>
+              <td class="prob">82.8%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.0</strong> <span style="color:var(--accent)">-110</span></td>
             </tr><tr>
               <td class="book">MyBookie.ag</td>
               <td class="pc">+340</td>
               <td class="prob">22.7%</td>
               <td class="pc">-429</td>
               <td class="prob">81.1%</td>
-              <td class="prob c-muted">O8.0 -107</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.0</strong> <span style="color:var(--accent)">-108</span></td>
             </tr><tr>
               <td class="book">BetUS</td>
-              <td class="pc">+342</td>
-              <td class="prob">22.6%</td>
-              <td class="pc">-410</td>
-              <td class="prob">80.4%</td>
-              <td class="prob c-muted">O8.0 -115</td>
+              <td class="pc">+346</td>
+              <td class="prob">22.4%</td>
+              <td class="pc">-415</td>
+              <td class="prob">80.6%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.0</strong> <span style="color:var(--accent)">-115</span></td>
             </tr><tr>
               <td class="book">Bovada</td>
-              <td class="pw">+325 ✗</td>
-              <td class="prob">23.5%</td>
-              <td class="pc">-435</td>
-              <td class="prob">81.3%</td>
-              <td class="prob c-muted">O8.0 -110</td>
+              <td class="pc">+335</td>
+              <td class="prob">23.0%</td>
+              <td class="pc">-450</td>
+              <td class="prob">81.8%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.0</strong> <span style="color:var(--accent)">-105</span></td>
             </tr></tbody>
             </table>
             <div class="claude-box">
-              <div class="cb-header">📊 Calculated True Odds (vig removed)</div>
+              <div class="cb-header">📊 True Odds (vig removed &amp; averaged)</div>
               <div class="cb-grid">
-                <div class="cb-team">
-                  <div class="cb-name">Colorado Rockies</div>
-                  <div class="cb-pct ">22%</div>
-                  <div class="cb-line">Fair: +353</div>
-                </div>
+                <div class="cb-team"><div class="cb-name">Colorado Rockies</div><div class="cb-pct ">22%</div><div class="cb-line">Fair: +356</div></div>
                 <div class="cb-vs">vs</div>
-                <div class="cb-team">
-                  <div class="cb-name">Los Angeles Dodgers</div>
-                  <div class="cb-pct fav">78%</div>
-                  <div class="cb-line">Fair: -353</div>
-                </div>
+                <div class="cb-team"><div class="cb-name">Los Angeles Dodgers</div><div class="cb-pct fav">78%</div><div class="cb-line">Fair: -356</div></div>
               </div>
-              <div class="cb-method">Implied probability extracted from each book, vig removed via normalization, averaged across all non-outlier books.</div>
+              <div class="cb-method">Vig removed from each book via normalization, averaged across all non-outlier books.</div>
             </div>
-            
-          <div class="best-bet">
-            <div class="bb-header" >★ Best Bet This Game</div>
-            <div class="bb-play" >Los Angeles Dodgers Moneyline</div>
-            <div class="bb-sub" >-395 at BetOnline.ag</div>
+            <div class="best-bet">
+            <div class="bb-header">★ Best Bet This Game</div>
+            <div class="bb-play">Los Angeles Dodgers Moneyline</div>
+            <div class="bb-sub">-400 at BetOnline.ag</div>
             <div class="bb-stats">
               <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">22% / 78%</div></div>
-              <div class="bbs"><div class="bbs-label">Best Colorado Rockies price</div><div class="bbs-val">+342 @ BetOnline.ag</div></div>
-              <div class="bbs"><div class="bbs-label">Best Los Angeles Dodgers price</div><div class="bbs-val">-395 @ BetOnline.ag</div></div>
-              <div class="bbs"><div class="bbs-label">Edge Signal</div><div class="bbs-val green">Slight</div></div>
+              <div class="bbs"><div class="bbs-label">Best Colorado Ro</div><div class="bbs-val">+346 @ BetOnline.ag</div></div>
+              <div class="bbs"><div class="bbs-label">Best Los Angeles</div><div class="bbs-val">-400 @ BetOnline.ag</div></div>
+              <div class="bbs"><div class="bbs-label">Edge</div><div class="bbs-val green">Slight</div></div>
             </div>
           </div>
+            
+          </div>
+        </div><div class="day-header"><span class="day-label">Thursday, May 28</span></div>
+        <div class="game-block open" onclick="toggleGame(this)">
+          <div class="game-header">
+            <div>
+              <div class="game-teams">Minnesota Twins @ Chicago White Sox</div>
+              <div class="game-time">2:10 PM ET</div>
+            </div>
+            <div class="game-right"><span class="badge b-fire" style="font-size:9px">🔥 SPLIT MARKET</span><span class="toggle">▼</span></div>
+          </div>
+          <div class="game-body">
+            <table class="otable">
+              <thead><tr><th>Book</th><th>Minnesota Twins</th><th>Implied%</th><th>Chicago White Sox</th><th>Implied%</th><th>Total O/U</th></tr></thead>
+              <tbody><tr>
+              <td class="book">FanDuel</td>
+              <td class="pb">+106 ★</td>
+              <td class="prob">48.5%</td>
+              <td class="pw">-124 ✗</td>
+              <td class="prob">55.4%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-120</span></td>
+            </tr><tr>
+              <td class="book">MyBookie.ag</td>
+              <td class="pc">+100</td>
+              <td class="prob">50.0%</td>
+              <td class="pc">-118</td>
+              <td class="prob">54.1%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-117</span></td>
+            </tr><tr>
+              <td class="book">DraftKings</td>
+              <td class="pc">-102</td>
+              <td class="prob">50.5%</td>
+              <td class="pc">-119</td>
+              <td class="prob">54.3%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-115</span></td>
+            </tr><tr>
+              <td class="book">Bovada</td>
+              <td class="pc">+100</td>
+              <td class="prob">50.0%</td>
+              <td class="pc">-120</td>
+              <td class="prob">54.5%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.0</strong> <span style="color:var(--accent)">-105</span></td>
+            </tr><tr>
+              <td class="book">BetRivers</td>
+              <td class="pw">-108 ✗</td>
+              <td class="prob">51.9%</td>
+              <td class="pb">-115 ★</td>
+              <td class="prob">53.5%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-117</span></td>
+            </tr></tbody>
+            </table>
+            <div class="claude-box">
+              <div class="cb-header">📊 True Odds (vig removed &amp; averaged)</div>
+              <div class="cb-grid">
+                <div class="cb-team"><div class="cb-name">Minnesota Twins</div><div class="cb-pct ">48%</div><div class="cb-line">Fair: +108</div></div>
+                <div class="cb-vs">vs</div>
+                <div class="cb-team"><div class="cb-name">Chicago White Sox</div><div class="cb-pct fav">52%</div><div class="cb-line">Fair: -108</div></div>
+              </div>
+              <div class="cb-method">Vig removed from each book via normalization, averaged across all non-outlier books.</div>
+            </div>
+            <div class="best-bet">
+            <div class="bb-header">★ Best Bet This Game</div>
+            <div class="bb-play">Chicago White Sox Moneyline</div>
+            <div class="bb-sub">-115 at BetRivers</div>
+            <div class="bb-stats">
+              <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">48% / 52%</div></div>
+              <div class="bbs"><div class="bbs-label">Best Minnesota T</div><div class="bbs-val">+106 @ FanDuel</div></div>
+              <div class="bbs"><div class="bbs-label">Best Chicago Whi</div><div class="bbs-val">-115 @ BetRivers</div></div>
+              <div class="bbs"><div class="bbs-label">Edge</div><div class="bbs-val green">Slight</div></div>
+            </div>
+          </div>
+            
           </div>
         </div>
         <div class="game-block " onclick="toggleGame(this)">
@@ -1231,87 +514,86 @@ footer{margin-left:var(--sidebar);background:var(--bg2);border-top:1px solid var
               <td class="prob">47.6%</td>
               <td class="pc">-130</td>
               <td class="prob">56.5%</td>
-              <td class="prob c-muted">O9.0 -110</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">9.0</strong> <span style="color:var(--accent)">-110</span></td>
             </tr><tr>
               <td class="book">LowVig.ag</td>
-              <td class="pb">+113 ★</td>
+              <td class="pc">+113</td>
               <td class="prob">46.9%</td>
               <td class="pb">-125 ★</td>
               <td class="prob">55.6%</td>
-              <td class="prob c-muted">O9.0 -107</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">9.0</strong> <span style="color:var(--accent)">-107</span></td>
             </tr><tr>
               <td class="book">BetOnline.ag</td>
               <td class="pc">+113</td>
               <td class="prob">46.9%</td>
               <td class="pc">-125</td>
               <td class="prob">55.6%</td>
-              <td class="prob c-muted">O9.0 -110</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">9.0</strong> <span style="color:var(--accent)">-110</span></td>
             </tr><tr>
               <td class="book">MyBookie.ag</td>
               <td class="pc">+110</td>
               <td class="prob">47.6%</td>
               <td class="pc">-129</td>
               <td class="prob">56.3%</td>
-              <td class="prob c-muted">O9.0 -102</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">9.0</strong> <span style="color:var(--accent)">-104</span></td>
             </tr><tr>
               <td class="book">DraftKings</td>
               <td class="pc">+109</td>
               <td class="prob">47.8%</td>
               <td class="pc">-131</td>
               <td class="prob">56.7%</td>
-              <td class="prob c-muted">O9.0 -103</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">9.0</strong> <span style="color:var(--accent)">-106</span></td>
             </tr><tr>
               <td class="book">BetMGM</td>
               <td class="pc">+110</td>
               <td class="prob">47.6%</td>
               <td class="pw">-135 ✗</td>
               <td class="prob">57.4%</td>
-              <td class="prob c-muted">O9.0 -110</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">9.0</strong> <span style="color:var(--accent)">-105</span></td>
             </tr><tr>
               <td class="book">Bovada</td>
               <td class="pc">+111</td>
               <td class="prob">47.4%</td>
               <td class="pc">-133</td>
               <td class="prob">57.1%</td>
-              <td class="prob c-muted">O9.0 -105</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">9.0</strong> <span style="color:var(--accent)">-105</span></td>
             </tr><tr>
               <td class="book">BetRivers</td>
               <td class="pw">+108 ✗</td>
               <td class="prob">48.1%</td>
               <td class="pc">-134</td>
               <td class="prob">57.3%</td>
-              <td class="prob c-muted">O9.0 -106</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">9.0</strong> <span style="color:var(--accent)">-106</span></td>
+            </tr><tr>
+              <td class="book">BetUS</td>
+              <td class="pb">+114 ★</td>
+              <td class="prob">46.7%</td>
+              <td class="pc">-125</td>
+              <td class="prob">55.6%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">9.0</strong> <span style="color:var(--accent)">-110</span></td>
             </tr></tbody>
             </table>
             <div class="claude-box">
-              <div class="cb-header">📊 Calculated True Odds (vig removed)</div>
+              <div class="cb-header">📊 True Odds (vig removed &amp; averaged)</div>
               <div class="cb-grid">
-                <div class="cb-team">
-                  <div class="cb-name">Los Angeles Angels</div>
-                  <div class="cb-pct ">46%</div>
-                  <div class="cb-line">Fair: +119</div>
-                </div>
+                <div class="cb-team"><div class="cb-name">Los Angeles Angels</div><div class="cb-pct ">46%</div><div class="cb-line">Fair: +119</div></div>
                 <div class="cb-vs">vs</div>
-                <div class="cb-team">
-                  <div class="cb-name">Detroit Tigers</div>
-                  <div class="cb-pct fav">54%</div>
-                  <div class="cb-line">Fair: -119</div>
-                </div>
+                <div class="cb-team"><div class="cb-name">Detroit Tigers</div><div class="cb-pct fav">54%</div><div class="cb-line">Fair: -119</div></div>
               </div>
-              <div class="cb-method">Implied probability extracted from each book, vig removed via normalization, averaged across all non-outlier books.</div>
+              <div class="cb-method">Vig removed from each book via normalization, averaged across all non-outlier books.</div>
             </div>
-            
-          <div class="best-bet">
-            <div class="bb-header" >★ Best Bet This Game</div>
-            <div class="bb-play" >Detroit Tigers Moneyline</div>
-            <div class="bb-sub" >-125 at LowVig.ag</div>
+            <div class="best-bet">
+            <div class="bb-header">★ Best Bet This Game</div>
+            <div class="bb-play">Detroit Tigers Moneyline</div>
+            <div class="bb-sub">-125 at LowVig.ag</div>
             <div class="bb-stats">
               <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">46% / 54%</div></div>
-              <div class="bbs"><div class="bbs-label">Best Los Angeles Angels price</div><div class="bbs-val">+113 @ LowVig.ag</div></div>
-              <div class="bbs"><div class="bbs-label">Best Detroit Tigers price</div><div class="bbs-val">-125 @ LowVig.ag</div></div>
-              <div class="bbs"><div class="bbs-label">Edge Signal</div><div class="bbs-val green">Slight</div></div>
+              <div class="bbs"><div class="bbs-label">Best Los Angeles</div><div class="bbs-val">+114 @ BetUS</div></div>
+              <div class="bbs"><div class="bbs-label">Best Detroit Tig</div><div class="bbs-val">-125 @ LowVig.ag</div></div>
+              <div class="bbs"><div class="bbs-label">Edge</div><div class="bbs-val green">Slight</div></div>
             </div>
           </div>
+            
           </div>
         </div>
         <div class="game-block " onclick="toggleGame(this)">
@@ -1331,66 +613,86 @@ footer{margin-left:var(--sidebar);background:var(--bg2);border-top:1px solid var
               <td class="prob">58.0%</td>
               <td class="pb">+118 ★</td>
               <td class="prob">45.9%</td>
-              <td class="prob c-muted">O7.5 +100</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">+100</span></td>
             </tr><tr>
               <td class="book">DraftKings</td>
-              <td class="pb">-136 ★</td>
-              <td class="prob">57.6%</td>
+              <td class="pc">-137</td>
+              <td class="prob">57.8%</td>
               <td class="pw">+113 ✗</td>
               <td class="prob">46.9%</td>
-              <td class="prob c-muted">O7.0 -125</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-102</span></td>
             </tr><tr>
               <td class="book">MyBookie.ag</td>
-              <td class="pc">-136</td>
-              <td class="prob">57.6%</td>
-              <td class="pc">+116</td>
-              <td class="prob">46.3%</td>
-              <td class="prob c-muted">O7.0 -122</td>
+              <td class="pc">-138</td>
+              <td class="prob">58.0%</td>
+              <td class="pc">+117</td>
+              <td class="prob">46.1%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-101</span></td>
             </tr><tr>
               <td class="book">Bovada</td>
               <td class="pc">-140</td>
               <td class="prob">58.3%</td>
               <td class="pc">+117</td>
               <td class="prob">46.1%</td>
-              <td class="prob c-muted">O7.5 +100</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">+100</span></td>
             </tr><tr>
               <td class="book">BetRivers</td>
               <td class="pw">-141 ✗</td>
               <td class="prob">58.5%</td>
               <td class="pc">+114</td>
               <td class="prob">46.7%</td>
-              <td class="prob c-muted">O7.5 -103</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-103</span></td>
+            </tr><tr>
+              <td class="book">BetOnline.ag</td>
+              <td class="pb">-130 ★</td>
+              <td class="prob">56.5%</td>
+              <td class="pc">+118</td>
+              <td class="prob">45.9%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">+100</span></td>
+            </tr><tr>
+              <td class="book">LowVig.ag</td>
+              <td class="pc">-130</td>
+              <td class="prob">56.5%</td>
+              <td class="pc">+118</td>
+              <td class="prob">45.9%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">+103</span></td>
+            </tr><tr>
+              <td class="book">BetUS</td>
+              <td class="pc">-130</td>
+              <td class="prob">56.5%</td>
+              <td class="pc">+118</td>
+              <td class="prob">45.9%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">+100</span></td>
+            </tr><tr>
+              <td class="book">BetMGM</td>
+              <td class="pc">-140</td>
+              <td class="prob">58.3%</td>
+              <td class="pc">+115</td>
+              <td class="prob">46.5%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-102</span></td>
             </tr></tbody>
             </table>
             <div class="claude-box">
-              <div class="cb-header">📊 Calculated True Odds (vig removed)</div>
+              <div class="cb-header">📊 True Odds (vig removed &amp; averaged)</div>
               <div class="cb-grid">
-                <div class="cb-team">
-                  <div class="cb-name">Atlanta Braves</div>
-                  <div class="cb-pct fav">56%</div>
-                  <div class="cb-line">Fair: -125</div>
-                </div>
+                <div class="cb-team"><div class="cb-name">Atlanta Braves</div><div class="cb-pct fav">55%</div><div class="cb-line">Fair: -125</div></div>
                 <div class="cb-vs">vs</div>
-                <div class="cb-team">
-                  <div class="cb-name">Boston Red Sox</div>
-                  <div class="cb-pct ">44%</div>
-                  <div class="cb-line">Fair: +125</div>
-                </div>
+                <div class="cb-team"><div class="cb-name">Boston Red Sox</div><div class="cb-pct ">45%</div><div class="cb-line">Fair: +125</div></div>
               </div>
-              <div class="cb-method">Implied probability extracted from each book, vig removed via normalization, averaged across all non-outlier books.</div>
+              <div class="cb-method">Vig removed from each book via normalization, averaged across all non-outlier books.</div>
             </div>
-            
-          <div class="best-bet">
-            <div class="bb-header" >★ Best Bet This Game</div>
-            <div class="bb-play" >Atlanta Braves Moneyline</div>
-            <div class="bb-sub" >-136 at DraftKings</div>
+            <div class="best-bet">
+            <div class="bb-header">★ Best Bet This Game</div>
+            <div class="bb-play">Atlanta Braves Moneyline</div>
+            <div class="bb-sub">-130 at BetOnline.ag</div>
             <div class="bb-stats">
-              <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">56% / 44%</div></div>
-              <div class="bbs"><div class="bbs-label">Best Atlanta Braves price</div><div class="bbs-val">-136 @ DraftKings</div></div>
-              <div class="bbs"><div class="bbs-label">Best Boston Red Sox price</div><div class="bbs-val">+118 @ FanDuel</div></div>
-              <div class="bbs"><div class="bbs-label">Edge Signal</div><div class="bbs-val green">Fair</div></div>
+              <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">55% / 45%</div></div>
+              <div class="bbs"><div class="bbs-label">Best Atlanta Bra</div><div class="bbs-val">-130 @ BetOnline.ag</div></div>
+              <div class="bbs"><div class="bbs-label">Best Boston Red </div><div class="bbs-val">+118 @ FanDuel</div></div>
+              <div class="bbs"><div class="bbs-label">Edge</div><div class="bbs-val green">Slight</div></div>
             </div>
           </div>
+            
           </div>
         </div>
         <div class="game-block " onclick="toggleGame(this)">
@@ -1410,66 +712,86 @@ footer{margin-left:var(--sidebar);background:var(--bg2);border-top:1px solid var
               <td class="prob">48.1%</td>
               <td class="pb">-126 ★</td>
               <td class="prob">55.8%</td>
-              <td class="prob c-muted">O8.5 -115</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.5</strong> <span style="color:var(--accent)">-115</span></td>
             </tr><tr>
               <td class="book">DraftKings</td>
-              <td class="pc">+109</td>
-              <td class="prob">47.8%</td>
-              <td class="pc">-131</td>
-              <td class="prob">56.7%</td>
-              <td class="prob c-muted">O8.5 -110</td>
+              <td class="pc">+113</td>
+              <td class="prob">46.9%</td>
+              <td class="pw">-136 ✗</td>
+              <td class="prob">57.6%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.5</strong> <span style="color:var(--accent)">-114</span></td>
             </tr><tr>
               <td class="book">Bovada</td>
-              <td class="pb">+111 ★</td>
+              <td class="pc">+111</td>
               <td class="prob">47.4%</td>
               <td class="pc">-133</td>
               <td class="prob">57.1%</td>
-              <td class="prob c-muted">O8.5 -110</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.5</strong> <span style="color:var(--accent)">-120</span></td>
             </tr><tr>
               <td class="book">MyBookie.ag</td>
-              <td class="pc">+110</td>
-              <td class="prob">47.6%</td>
-              <td class="pc">-130</td>
-              <td class="prob">56.5%</td>
-              <td class="prob c-muted">O8.5 -111</td>
+              <td class="pc">+112</td>
+              <td class="prob">47.2%</td>
+              <td class="pc">-132</td>
+              <td class="prob">56.9%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.5</strong> <span style="color:var(--accent)">-115</span></td>
             </tr><tr>
               <td class="book">BetRivers</td>
               <td class="pc">+108</td>
               <td class="prob">48.1%</td>
-              <td class="pw">-136 ✗</td>
+              <td class="pc">-136</td>
               <td class="prob">57.6%</td>
-              <td class="prob c-muted">O8.5 -113</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.5</strong> <span style="color:var(--accent)">-113</span></td>
+            </tr><tr>
+              <td class="book">BetOnline.ag</td>
+              <td class="pc">+115</td>
+              <td class="prob">46.5%</td>
+              <td class="pc">-127</td>
+              <td class="prob">55.9%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.5</strong> <span style="color:var(--accent)">-110</span></td>
+            </tr><tr>
+              <td class="book">LowVig.ag</td>
+              <td class="pc">+115</td>
+              <td class="prob">46.5%</td>
+              <td class="pc">-127</td>
+              <td class="prob">55.9%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.5</strong> <span style="color:var(--accent)">-107</span></td>
+            </tr><tr>
+              <td class="book">BetUS</td>
+              <td class="pb">+116 ★</td>
+              <td class="prob">46.3%</td>
+              <td class="pc">-127</td>
+              <td class="prob">55.9%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.5</strong> <span style="color:var(--accent)">-110</span></td>
+            </tr><tr>
+              <td class="book">BetMGM</td>
+              <td class="pc">+110</td>
+              <td class="prob">47.6%</td>
+              <td class="pc">-135</td>
+              <td class="prob">57.4%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.5</strong> <span style="color:var(--accent)">-115</span></td>
             </tr></tbody>
             </table>
             <div class="claude-box">
-              <div class="cb-header">📊 Calculated True Odds (vig removed)</div>
+              <div class="cb-header">📊 True Odds (vig removed &amp; averaged)</div>
               <div class="cb-grid">
-                <div class="cb-team">
-                  <div class="cb-name">Toronto Blue Jays</div>
-                  <div class="cb-pct ">46%</div>
-                  <div class="cb-line">Fair: +119</div>
-                </div>
+                <div class="cb-team"><div class="cb-name">Toronto Blue Jays</div><div class="cb-pct ">45%</div><div class="cb-line">Fair: +120</div></div>
                 <div class="cb-vs">vs</div>
-                <div class="cb-team">
-                  <div class="cb-name">Baltimore Orioles</div>
-                  <div class="cb-pct fav">54%</div>
-                  <div class="cb-line">Fair: -119</div>
-                </div>
+                <div class="cb-team"><div class="cb-name">Baltimore Orioles</div><div class="cb-pct fav">55%</div><div class="cb-line">Fair: -120</div></div>
               </div>
-              <div class="cb-method">Implied probability extracted from each book, vig removed via normalization, averaged across all non-outlier books.</div>
+              <div class="cb-method">Vig removed from each book via normalization, averaged across all non-outlier books.</div>
             </div>
-            
-          <div class="best-bet">
-            <div class="bb-header" >★ Best Bet This Game</div>
-            <div class="bb-play" >Baltimore Orioles Moneyline</div>
-            <div class="bb-sub" >-126 at FanDuel</div>
+            <div class="best-bet">
+            <div class="bb-header">★ Best Bet This Game</div>
+            <div class="bb-play">Baltimore Orioles Moneyline</div>
+            <div class="bb-sub">-126 at FanDuel</div>
             <div class="bb-stats">
-              <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">46% / 54%</div></div>
-              <div class="bbs"><div class="bbs-label">Best Toronto Blue Jays price</div><div class="bbs-val">+111 @ Bovada</div></div>
-              <div class="bbs"><div class="bbs-label">Best Baltimore Orioles price</div><div class="bbs-val">-126 @ FanDuel</div></div>
-              <div class="bbs"><div class="bbs-label">Edge Signal</div><div class="bbs-val green">Slight</div></div>
+              <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">45% / 55%</div></div>
+              <div class="bbs"><div class="bbs-label">Best Toronto Blu</div><div class="bbs-val">+116 @ BetUS</div></div>
+              <div class="bbs"><div class="bbs-label">Best Baltimore O</div><div class="bbs-val">-126 @ FanDuel</div></div>
+              <div class="bbs"><div class="bbs-label">Edge</div><div class="bbs-val green">Slight</div></div>
             </div>
           </div>
+            
           </div>
         </div>
         <div class="game-block " onclick="toggleGame(this)">
@@ -1489,87 +811,86 @@ footer{margin-left:var(--sidebar);background:var(--bg2);border-top:1px solid var
               <td class="prob">40.7%</td>
               <td class="pc">-174</td>
               <td class="prob">63.5%</td>
-              <td class="prob c-muted">O7.5 -112</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-112</span></td>
             </tr><tr>
               <td class="book">BetOnline.ag</td>
               <td class="pb">+149 ★</td>
               <td class="prob">40.2%</td>
               <td class="pb">-165 ★</td>
               <td class="prob">62.3%</td>
-              <td class="prob c-muted">O7.5 -105</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-105</span></td>
             </tr><tr>
               <td class="book">LowVig.ag</td>
               <td class="pc">+149</td>
               <td class="prob">40.2%</td>
               <td class="pc">-165</td>
               <td class="prob">62.3%</td>
-              <td class="prob c-muted">O7.5 -102</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-102</span></td>
             </tr><tr>
               <td class="book">DraftKings</td>
-              <td class="pc">+141</td>
-              <td class="prob">41.5%</td>
-              <td class="pc">-171</td>
-              <td class="prob">63.1%</td>
-              <td class="prob c-muted">O7.5 -104</td>
+              <td class="pc">+144</td>
+              <td class="prob">41.0%</td>
+              <td class="pc">-175</td>
+              <td class="prob">63.6%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-107</span></td>
             </tr><tr>
               <td class="book">BetMGM</td>
-              <td class="pc">+140</td>
-              <td class="prob">41.7%</td>
-              <td class="pc">-170</td>
-              <td class="prob">63.0%</td>
-              <td class="prob c-muted">O7.5 -105</td>
+              <td class="pc">+145</td>
+              <td class="prob">40.8%</td>
+              <td class="pw">-180 ✗</td>
+              <td class="prob">64.3%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-105</span></td>
             </tr><tr>
               <td class="book">Bovada</td>
               <td class="pc">+143</td>
               <td class="prob">41.2%</td>
               <td class="pc">-174</td>
               <td class="prob">63.5%</td>
-              <td class="prob c-muted">O7.5 -105</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-105</span></td>
             </tr><tr>
               <td class="book">MyBookie.ag</td>
               <td class="pc">+144</td>
               <td class="prob">41.0%</td>
               <td class="pc">-170</td>
               <td class="prob">63.0%</td>
-              <td class="prob c-muted">O7.5 -104</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-106</span></td>
             </tr><tr>
               <td class="book">BetRivers</td>
               <td class="pw">+138 ✗</td>
               <td class="prob">42.0%</td>
-              <td class="pw">-175 ✗</td>
+              <td class="pc">-175</td>
               <td class="prob">63.6%</td>
-              <td class="prob c-muted">O7.5 -110</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-110</span></td>
+            </tr><tr>
+              <td class="book">BetUS</td>
+              <td class="pc">+146</td>
+              <td class="prob">40.7%</td>
+              <td class="pc">-165</td>
+              <td class="prob">62.3%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-105</span></td>
             </tr></tbody>
             </table>
             <div class="claude-box">
-              <div class="cb-header">📊 Calculated True Odds (vig removed)</div>
+              <div class="cb-header">📊 True Odds (vig removed &amp; averaged)</div>
               <div class="cb-grid">
-                <div class="cb-team">
-                  <div class="cb-name">Chicago Cubs</div>
-                  <div class="cb-pct ">39%</div>
-                  <div class="cb-line">Fair: +154</div>
-                </div>
+                <div class="cb-team"><div class="cb-name">Chicago Cubs</div><div class="cb-pct ">39%</div><div class="cb-line">Fair: +155</div></div>
                 <div class="cb-vs">vs</div>
-                <div class="cb-team">
-                  <div class="cb-name">Pittsburgh Pirates</div>
-                  <div class="cb-pct fav">61%</div>
-                  <div class="cb-line">Fair: -154</div>
-                </div>
+                <div class="cb-team"><div class="cb-name">Pittsburgh Pirates</div><div class="cb-pct fav">61%</div><div class="cb-line">Fair: -155</div></div>
               </div>
-              <div class="cb-method">Implied probability extracted from each book, vig removed via normalization, averaged across all non-outlier books.</div>
+              <div class="cb-method">Vig removed from each book via normalization, averaged across all non-outlier books.</div>
             </div>
-            
-          <div class="best-bet">
-            <div class="bb-header" >★ Best Bet This Game</div>
-            <div class="bb-play" >Pittsburgh Pirates Moneyline</div>
-            <div class="bb-sub" >-165 at BetOnline.ag</div>
+            <div class="best-bet">
+            <div class="bb-header">★ Best Bet This Game</div>
+            <div class="bb-play">Pittsburgh Pirates Moneyline</div>
+            <div class="bb-sub">-165 at BetOnline.ag</div>
             <div class="bb-stats">
               <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">39% / 61%</div></div>
-              <div class="bbs"><div class="bbs-label">Best Chicago Cubs price</div><div class="bbs-val">+149 @ BetOnline.ag</div></div>
-              <div class="bbs"><div class="bbs-label">Best Pittsburgh Pirates price</div><div class="bbs-val">-165 @ BetOnline.ag</div></div>
-              <div class="bbs"><div class="bbs-label">Edge Signal</div><div class="bbs-val green">Slight</div></div>
+              <div class="bbs"><div class="bbs-label">Best Chicago Cub</div><div class="bbs-val">+149 @ BetOnline.ag</div></div>
+              <div class="bbs"><div class="bbs-label">Best Pittsburgh </div><div class="bbs-val">-165 @ BetOnline.ag</div></div>
+              <div class="bbs"><div class="bbs-label">Edge</div><div class="bbs-val green">Slight</div></div>
             </div>
           </div>
+            
           </div>
         </div>
         <div class="game-block " onclick="toggleGame(this)">
@@ -1589,89 +910,118 @@ footer{margin-left:var(--sidebar);background:var(--bg2);border-top:1px solid var
               <td class="prob">43.9%</td>
               <td class="pc">-152</td>
               <td class="prob">60.3%</td>
-              <td class="prob c-muted">O7.5 -122</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-122</span></td>
             </tr><tr>
               <td class="book">BetOnline.ag</td>
               <td class="pb">+134 ★</td>
               <td class="prob">42.7%</td>
               <td class="pb">-148 ★</td>
               <td class="prob">59.7%</td>
-              <td class="prob c-muted">O8.0 +100</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.0</strong> <span style="color:var(--accent)">+100</span></td>
             </tr><tr>
               <td class="book">LowVig.ag</td>
               <td class="pc">+134</td>
               <td class="prob">42.7%</td>
               <td class="pc">-148</td>
               <td class="prob">59.7%</td>
-              <td class="prob c-muted">O8.0 +103</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.0</strong> <span style="color:var(--accent)">+103</span></td>
             </tr><tr>
               <td class="book">DraftKings</td>
               <td class="pc">+129</td>
               <td class="prob">43.7%</td>
               <td class="pc">-156</td>
               <td class="prob">60.9%</td>
-              <td class="prob c-muted">O7.5 -118</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-118</span></td>
             </tr><tr>
               <td class="book">BetMGM</td>
               <td class="pw">+125 ✗</td>
               <td class="prob">44.4%</td>
               <td class="pc">-155</td>
               <td class="prob">60.8%</td>
-              <td class="prob c-muted">O7.5 -120</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-118</span></td>
             </tr><tr>
               <td class="book">Bovada</td>
               <td class="pc">+129</td>
               <td class="prob">43.7%</td>
               <td class="pc">-154</td>
               <td class="prob">60.6%</td>
-              <td class="prob c-muted">O7.5 -120</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-115</span></td>
             </tr><tr>
               <td class="book">BetRivers</td>
               <td class="pc">+125</td>
               <td class="prob">44.4%</td>
               <td class="pw">-157 ✗</td>
               <td class="prob">61.1%</td>
-              <td class="prob c-muted">O7.5 -121</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-121</span></td>
+            </tr><tr>
+              <td class="book">BetUS</td>
+              <td class="pc">+133</td>
+              <td class="prob">42.9%</td>
+              <td class="pc">-148</td>
+              <td class="prob">59.7%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.0</strong> <span style="color:var(--accent)">+100</span></td>
+            </tr><tr>
+              <td class="book">MyBookie.ag</td>
+              <td class="pc">+129</td>
+              <td class="prob">43.7%</td>
+              <td class="pc">-153</td>
+              <td class="prob">60.5%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-116</span></td>
             </tr></tbody>
             </table>
             <div class="claude-box">
-              <div class="cb-header">📊 Calculated True Odds (vig removed)</div>
+              <div class="cb-header">📊 True Odds (vig removed &amp; averaged)</div>
               <div class="cb-grid">
-                <div class="cb-team">
-                  <div class="cb-name">Houston Astros</div>
-                  <div class="cb-pct ">42%</div>
-                  <div class="cb-line">Fair: +138</div>
-                </div>
+                <div class="cb-team"><div class="cb-name">Houston Astros</div><div class="cb-pct ">42%</div><div class="cb-line">Fair: +139</div></div>
                 <div class="cb-vs">vs</div>
-                <div class="cb-team">
-                  <div class="cb-name">Texas Rangers</div>
-                  <div class="cb-pct fav">58%</div>
-                  <div class="cb-line">Fair: -138</div>
-                </div>
+                <div class="cb-team"><div class="cb-name">Texas Rangers</div><div class="cb-pct fav">58%</div><div class="cb-line">Fair: -139</div></div>
               </div>
-              <div class="cb-method">Implied probability extracted from each book, vig removed via normalization, averaged across all non-outlier books.</div>
+              <div class="cb-method">Vig removed from each book via normalization, averaged across all non-outlier books.</div>
             </div>
-            
-          <div class="best-bet">
-            <div class="bb-header" >★ Best Bet This Game</div>
-            <div class="bb-play" >Texas Rangers Moneyline</div>
-            <div class="bb-sub" >-148 at BetOnline.ag</div>
+            <div class="best-bet">
+            <div class="bb-header">★ Best Bet This Game</div>
+            <div class="bb-play">Texas Rangers Moneyline</div>
+            <div class="bb-sub">-148 at BetOnline.ag</div>
             <div class="bb-stats">
               <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">42% / 58%</div></div>
-              <div class="bbs"><div class="bbs-label">Best Houston Astros price</div><div class="bbs-val">+134 @ BetOnline.ag</div></div>
-              <div class="bbs"><div class="bbs-label">Best Texas Rangers price</div><div class="bbs-val">-148 @ BetOnline.ag</div></div>
-              <div class="bbs"><div class="bbs-label">Edge Signal</div><div class="bbs-val green">Slight</div></div>
+              <div class="bbs"><div class="bbs-label">Best Houston Ast</div><div class="bbs-val">+134 @ BetOnline.ag</div></div>
+              <div class="bbs"><div class="bbs-label">Best Texas Range</div><div class="bbs-val">-148 @ BetOnline.ag</div></div>
+              <div class="bbs"><div class="bbs-label">Edge</div><div class="bbs-val green">Slight</div></div>
             </div>
           </div>
+            
           </div>
         </div>
   </div></div>
 </div>
-</div>
-<footer>MLB Sharp Lines · May 27, 2026 · Auto-updated daily via GitHub Actions · The Odds API · 100% free · Gamble responsibly</footer>
+
+<footer>
+  MLB Sharp Lines &nbsp;·&nbsp; May 27, 2026 &nbsp;·&nbsp; Pre-game lines only &nbsp;·&nbsp; Auto-updated daily &nbsp;·&nbsp; Gamble responsibly
+</footer>
+
 <script>
-function showPage(name,el){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById('page-'+name).classList.add('active');if(el)el.classList.add('active');const t={home:'Home',plays:'Top Value Plays',games:'All Games'};document.getElementById('topbar-title').textContent=t[name]||name;window.scrollTo(0,0);}
-function toggleGame(el){el.classList.toggle('open');}
+  function showPage(name, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    if (el) el.classList.add('active');
+    const titles = {home:'Home', plays:'Top Value Plays', games:'All Games'};
+    document.getElementById('topbar-title').textContent = titles[name] || name;
+    window.scrollTo(0, 0);
+    closeSidebar();
+  }
+
+  function toggleGame(el) { el.classList.toggle('open'); }
+
+  function openSidebar() {
+    document.getElementById('sidebar').classList.add('mobile-open');
+    document.getElementById('overlay').classList.add('show');
+  }
+
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('mobile-open');
+    document.getElementById('overlay').classList.remove('show');
+  }
 </script>
 </body>
 </html>
