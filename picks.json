@@ -19,6 +19,22 @@
       "signal": "watch"
     },
     {
+      "game": "Chicago Cubs @ Pittsburgh Pirates",
+      "away": "Chicago Cubs",
+      "home": "Pittsburgh Pirates",
+      "away_id": 112,
+      "home_id": 134,
+      "play": "Under 7.5 Runs",
+      "price": "-110",
+      "book": "BetMGM",
+      "type": "total",
+      "pick_team": null,
+      "side": "Under",
+      "total_line": 7.5,
+      "edge": "+2.4%",
+      "signal": "watch"
+    },
+    {
       "game": "San Diego Padres @ Washington Nationals",
       "away": "San Diego Padres",
       "home": "Washington Nationals",
