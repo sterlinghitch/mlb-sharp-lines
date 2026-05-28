@@ -513,15 +513,28 @@ def fetch_weather_for_games(games_raw):
 def build_matchup_data(odds_games, date_str):
     print("Fetching matchup data...")
     mlb_sched = mlb_get("/schedule",{"sportId":1,"date":date_str,"hydrate":"probablePitcher,lineups,team"})
+    # Include ALL game states so we can still get probable pitchers for today's games
     mlb_games = [] if not mlb_sched else [
         g for db in mlb_sched.get("dates",[]) for g in db.get("games",[])
-        if g.get("status",{}).get("abstractGameState","") not in ("Final","Live")
     ]
     mlb_lookup = {}
     for g in mlb_games:
         aid = g.get("teams",{}).get("away",{}).get("team",{}).get("id")
         hid = g.get("teams",{}).get("home",{}).get("team",{}).get("id")
         if aid and hid: mlb_lookup[(aid,hid)] = g
+
+    # Also fetch tomorrow's games in case some are listed there
+    from datetime import datetime, timedelta
+    from zoneinfo import ZoneInfo
+    tomorrow_str = (datetime.strptime(date_str,"%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
+    tmw_sched = mlb_get("/schedule",{"sportId":1,"date":tomorrow_str,"hydrate":"probablePitcher,lineups,team"})
+    if tmw_sched:
+        for db in tmw_sched.get("dates",[]):
+            for g in db.get("games",[]):
+                aid = g.get("teams",{}).get("away",{}).get("team",{}).get("id")
+                hid = g.get("teams",{}).get("home",{}).get("team",{}).get("id")
+                if aid and hid and (aid,hid) not in mlb_lookup:
+                    mlb_lookup[(aid,hid)] = g
 
     matchups = []
     for og in odds_games:
@@ -896,8 +909,45 @@ def analyze_game(game, context):
     try:
         t = datetime.fromisoformat(game.get("commence_time","").replace("Z","+00:00")).astimezone(EASTERN)
         time_display=t.strftime("%-I:%M %p ET"); date_et=t.strftime("%A, %B %d"); date_sort=t.strftime("%Y-%m-%d")
+        commence_iso = game.get("commence_time","")
     except Exception:
-        time_display=""; date_et="Today"; date_sort="9999-99-99"
+        time_display=""; date_et="Today"; date_sort="9999-99-99"; commence_iso=""
+    # Counts how many independent signals all point the same direction
+    conf = 0
+    if best_bet_edge_val >= 2.5: conf += 1
+    if best_bet_edge_val >= 5.0: conf += 1
+    if signal in ("fire","value","sharp"): conf += 1
+    if line_movement and line_movement.get("significant"): conf += 1
+    # Adjustments stacking — if 2+ adjustments all push same direction
+    if len([a for a in adjustments if a[1] > 0]) >= 2 or len([a for a in adjustments if a[1] < 0]) >= 2:
+        conf += 1
+    confidence = min(conf, 5)
+
+    # ── KELLY CRITERION ───────────────────────────────────
+    # Quarter-Kelly bet sizing: conservative standard for sports betting
+    # Kelly % = (bp - q) / b  where b=decimal odds-1, p=true prob, q=1-p
+    kelly_pct = None
+    kelly_units = None
+    if not bet_is_pass and candidates:
+        best_c_k = max(candidates, key=lambda c: c["edge_val"])
+        try:
+            price_str = best_c_k["best_price"]
+            price_val = float(price_str.replace("+",""))
+            if price_val > 0:
+                decimal_odds = price_val/100 + 1
+            else:
+                decimal_odds = 100/abs(price_val) + 1
+            b = decimal_odds - 1
+            # Use true probability from the best candidate
+            tp_str = best_c_k["true_pct"].replace("%","")
+            p = float(tp_str) / 100
+            q = 1 - p
+            full_kelly = (b*p - q) / b
+            quarter_kelly = max(0, full_kelly / 4)
+            kelly_pct   = round(quarter_kelly * 100, 1)
+            kelly_units = round(quarter_kelly * 100, 1)   # units per 100 bankroll
+        except Exception:
+            pass
 
     return {
         "game":f"{away} @ {home}","game_id":game.get("id",""),
@@ -913,6 +963,8 @@ def analyze_game(game, context):
         "best_away":best_away,"best_home":best_home,
         "worst_away":worst_away,"worst_home":worst_home,
         "away_gap":away_gap,"home_gap":home_gap,"props":[],
+        "confidence":confidence,"kelly_pct":kelly_pct,
+        "commence_iso":commence_iso,
         "away_pitcher":context.get("away_pitcher",{}),
         "home_pitcher":context.get("home_pitcher",{}),
         "away_injuries":context.get("away_injuries",[]),
@@ -968,7 +1020,70 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
     total=len(analyzed_games)
     books=max((len(g["book_data"]) for g in analyzed_games),default=0)
 
-    def alert_cards():
+    def parlay_legs_html(plays):
+        if not plays:
+            return '<div style="color:var(--muted);font-size:13px">No value plays available today to add as legs.</div>'
+        rows = ""
+        for p in plays[:10]:
+            play  = p.get("play_label", p.get("team","") + " ML")
+            price = p.get("best_price","?")
+            tp    = p.get("true_pct",0)
+            game  = p.get("game","")
+            edge  = p.get("edge",0)
+            ec    = "var(--green)" if edge>0 else "var(--muted)"
+            rows += (f'<div style="display:flex;align-items:center;gap:10px;background:var(--bg2);'
+                     f'border:1px solid var(--border);border-radius:8px;padding:8px 12px">'
+                     f'<div style="flex:1">'
+                     f'<div style="font-size:13px;font-weight:700;color:var(--text)">{play}</div>'
+                     f'<div style="font-size:11px;color:var(--muted)">{game}</div>'
+                     f'</div>'
+                     f'<span style="font-family:monospace;color:var(--accent)">{price}</span>'
+                     f'<span style="font-family:monospace;font-size:11px;color:{ec}">'
+                     f'{("+" if edge>0 else "")}{edge}%</span>'
+                     f'<button onclick="addParlayLeg(\'{game.replace(chr(39),"")}\',\'{play.replace(chr(39),"")}\',\'{price}\',\'{tp}\')" '
+                     f'style="background:var(--green-bg);border:1px solid var(--green-border);color:var(--green);'
+                     f'border-radius:4px;padding:3px 10px;cursor:pointer;font-size:12px;font-weight:700">+</button>'
+                     f'</div>')
+        return rows
+
+    def best_bet_of_day():
+        if not all_plays:
+            return ""
+        # Best play = highest edge with positive value
+        positive = [p for p in all_plays if (p.get("edge") or 0) > 0]
+        if not positive:
+            return ""
+        best = positive[0]  # already sorted by edge descending
+        sig  = best.get("signal","watch")
+        sig_col = {"fire":"var(--red)","sharp":"var(--blue)","value":"var(--green)","watch":"var(--amber)"}.get(sig,"var(--amber)")
+        play  = best.get("play_label", best.get("team","") + " ML")
+        price = best.get("best_price","?")
+        book  = best.get("best_book","?")
+        edge  = best.get("edge",0)
+        tp    = best.get("true_pct",0)
+        ip    = best.get("implied_pct",0)
+        reason= best.get("reasoning","")
+        return (
+            f'<div style="background:linear-gradient(135deg,rgba(163,230,53,0.08),rgba(163,230,53,0.02));'
+            f'border:2px solid rgba(163,230,53,0.3);border-radius:16px;padding:1.5rem;margin-bottom:2rem;position:relative;overflow:hidden">'
+            f'<div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,{sig_col},var(--accent))"></div>'
+            f'<div style="font-size:10px;font-family:monospace;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:8px">Best Bet of the Day</div>'
+            f'<div style="font-size:22px;font-weight:700;color:#fff;margin-bottom:4px">{play}</div>'
+            f'<div style="font-size:15px;color:var(--accent);font-family:monospace;margin-bottom:12px">{price} at {book}</div>'
+            f'<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px">'
+            f'<div style="background:rgba(0,0,0,0.3);border-radius:6px;padding:6px 12px;text-align:center">'
+            f'<div style="font-size:10px;color:var(--muted)">EDGE</div>'
+            f'<div style="font-family:monospace;font-size:18px;font-weight:700;color:var(--green)">+{edge}%</div></div>'
+            f'<div style="background:rgba(0,0,0,0.3);border-radius:6px;padding:6px 12px;text-align:center">'
+            f'<div style="font-size:10px;color:var(--muted)">TRUE PROB</div>'
+            f'<div style="font-family:monospace;font-size:18px;font-weight:700;color:var(--text)">{tp}%</div></div>'
+            f'<div style="background:rgba(0,0,0,0.3);border-radius:6px;padding:6px 12px;text-align:center">'
+            f'<div style="font-size:10px;color:var(--muted)">IMPLIED</div>'
+            f'<div style="font-family:monospace;font-size:18px;font-weight:700;color:var(--muted)">{ip}%</div></div>'
+            f'</div>'
+            f'<div style="font-size:12px;color:#888;line-height:1.6">{reason}</div>'
+            f'</div>'
+        )
         top=[p for p in all_plays if p["signal"] in ("fire","sharp","value") or abs(p.get("edge",0))>=2.5][:6]
         if not top: return '<p style="color:var(--muted);font-size:13px;padding:1rem 0">No sharp alerts today.</p>'
         html='<div class="alert-grid">'
@@ -1045,8 +1160,25 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
             open_cls="open" if i<2 else ""
             sig_badge=(f'<span class="badge {bc}" style="font-size:9px">{g["signal_label"]}</span>'
                        if g["signal_label"] else "")
+            # Confidence meter (filled/empty stars)
+            conf = g.get("confidence",0)
+            conf_stars = "".join(
+                f'<span style="color:{"var(--accent)" if i<conf else "var(--border2)"}">●</span>'
+                for i in range(5)
+            )
+            conf_badge = f'<span style="font-size:10px;letter-spacing:1px;font-family:monospace" title="Confidence: {conf}/5">{conf_stars}</span>'
+            # Countdown timer uses commence_iso stored on each game
+            commence_iso = g.get("commence_iso","")
+            countdown_id = f'cd_{g["game"].replace(" ","_").replace("@","at")[:20]}'
+            countdown_html = (f'<span id="{countdown_id}" data-commence="{commence_iso}" '
+                              f'style="font-size:10px;color:var(--muted);font-family:monospace;margin-left:6px"></span>'
+                              if commence_iso else "")
             away_fav="fav" if g["away_true"]>g["home_true"] else ""
             home_fav="fav" if g["home_true"]>g["away_true"] else ""
+            at = g["away_true"]; ht = g["home_true"]
+            away_bar_w = at; home_bar_w = ht
+            away_bar_col = "var(--accent)" if g["away_true"]>g["home_true"] else "var(--muted)"
+            home_bar_col = "var(--accent)" if g["home_true"]>g["away_true"] else "var(--muted)"
             day_header=""
             if i==0 or g["date_et"]!=analyzed_games[i-1]["date_et"]:
                 day_header=f'<div class="day-header"><span class="day-label">{g["date_et"]}</span></div>'
@@ -1159,18 +1291,24 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
             bb_cls="best-bet pass" if g["bet_is_pass"] else "best-bet"
             up_to      = g.get("bet_up_to","N/A")
             up_to_lbl  = g.get("bet_up_to_label","Bet up to")
+            kelly      = g.get("kelly_pct")
             up_to_note = ""
             if not g["bet_is_pass"] and up_to not in ("N/A","—"):
+                kelly_str = f"{kelly}% of bankroll" if kelly and kelly>0 else "N/A"
                 up_to_note = (
                     f'<div style="margin-top:9px;padding:8px 12px;background:rgba(0,0,0,0.25);'
-                    f'border-radius:6px;display:flex;align-items:center;justify-content:space-between">'
-                    f'<span style="font-size:11px;color:var(--muted);font-family:monospace;text-transform:uppercase;letter-spacing:0.5px">'
-                    f'{up_to_lbl}</span>'
-                    f'<span style="font-family:\'IBM Plex Mono\',monospace;font-size:18px;font-weight:700;color:var(--amber)">'
-                    f'{up_to}</span>'
-                    f'<span style="font-size:11px;color:var(--muted);max-width:180px;text-align:right;line-height:1.4">'
-                    f'{"Worse than this = paying above true value" if "-" in str(up_to) else "Better than this = you have edge"}'
-                    f'</span></div>'
+                    f'border-radius:6px;display:grid;grid-template-columns:1fr 1fr;gap:8px">'
+                    f'<div>'
+                    f'<div style="font-size:10px;color:var(--muted);font-family:monospace;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px">{up_to_lbl}</div>'
+                    f'<div style="font-family:\'IBM Plex Mono\',monospace;font-size:20px;font-weight:700;color:var(--amber)">{up_to}</div>'
+                    f'<div style="font-size:10px;color:var(--muted)">{"Worse = overpaying" if "-" in str(up_to) else "Better = value"}</div>'
+                    f'</div>'
+                    f'<div>'
+                    f'<div style="font-size:10px;color:var(--muted);font-family:monospace;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px">Kelly Bet Size</div>'
+                    f'<div style="font-family:\'IBM Plex Mono\',monospace;font-size:20px;font-weight:700;color:var(--blue)">{kelly_str}</div>'
+                    f'<div style="font-size:10px;color:var(--muted)">Quarter-Kelly (conservative)</div>'
+                    f'</div>'
+                    f'</div>'
                 )
             best_bet=(f'<div class="{bb_cls}">'
                       f'<div class="bb-header">Best Bet This Game</div>'
@@ -1190,8 +1328,8 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                    f'<div class="game-block {open_cls}" onclick="toggleGame(this)">'
                    f'<div class="game-header">'
                    f'<div><div class="game-teams">{g["away"]} @ {g["home"]}</div>'
-                   f'<div class="game-time">{g["time"]}</div></div>'
-                   f'<div class="game-right">{sig_badge}<span class="toggle">v</span></div>'
+                   f'<div class="game-time">{g["time"]}{countdown_html}</div></div>'
+                   f'<div class="game-right">{conf_badge}{sig_badge}<span class="toggle">v</span></div>'
                    f'</div>'
                    f'<div class="game-body">'
                    f'{pitcher_strip}{ump_strip}{lm_strip}{inj_row}{adj_row}{adj_note}'
@@ -1204,10 +1342,14 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                    f'<div class="cb-grid">'
                    f'<div class="cb-team"><div class="cb-name">{g["away"]}</div>'
                    f'<div class="cb-pct {away_fav}">{g["away_true"]}%</div>'
+                   f'<div style="height:4px;background:var(--border2);border-radius:2px;margin:4px 0">'
+                   f'<div style="height:4px;width:{away_bar_w}%;background:{away_bar_col};border-radius:2px"></div></div>'
                    f'<div class="cb-line">Fair: {g["away_fair"]}</div></div>'
                    f'<div class="cb-vs">vs</div>'
                    f'<div class="cb-team"><div class="cb-name">{g["home"]}</div>'
                    f'<div class="cb-pct {home_fav}">{g["home_true"]}%</div>'
+                   f'<div style="height:4px;background:var(--border2);border-radius:2px;margin:4px 0">'
+                   f'<div style="height:4px;width:{home_bar_w}%;background:{home_bar_col};border-radius:2px"></div></div>'
                    f'<div class="cb-line">Fair: {g["home_fair"]}</div></div>'
                    f'</div>'
                    f'<div class="cb-method">Adjusted for: SP ERA/WHIP, bullpen fatigue, injuries, park factor, umpire zone, wind.</div>'
@@ -1780,12 +1922,43 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
             f'<code style="color:var(--accent)">results.json</code> in your GitHub repo.</div>'
         )
 
+        roi_rows = "".join(
+            f'<tr class="roi-bet-row" data-result="{b.get("result","")}" data-price="{b.get("price","")}">'
+            f'<td>{b.get("date","")}</td>'
+            f'<td>{b.get("game","")}</td>'
+            f'<td class="mono">{b.get("play","")}</td>'
+            f'<td class="mono">{b.get("price","")}</td>'
+            f'<td>{res_badge(b.get("result","?"))}</td>'
+            f'</tr>'
+            for b in all_bets if b.get("result") in ("W","L","P")
+        )
+        roi_section = (
+            f'<div class="sec-header"><h2>ROI Tracker</h2><div class="sec-line"></div></div>'
+            f'<div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.25rem;margin-bottom:2rem">'
+            f'<div style="display:flex;align-items:center;gap:12px;margin-bottom:1rem;flex-wrap:wrap">'
+            f'<div style="font-size:13px;color:var(--muted)">Unit size ($):</div>'
+            f'<input id="roi-unit" type="number" value="100" min="1" '
+            f'style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;'
+            f'padding:6px 10px;color:var(--text);font-family:monospace;width:100px"/>'
+            f'<button onclick="calcROI()" style="background:var(--accent);color:#000;border:none;'
+            f'border-radius:6px;padding:6px 16px;font-weight:700;font-family:monospace;cursor:pointer">Calculate</button>'
+            f'<span style="font-family:monospace;font-size:20px;font-weight:700" id="roi-total">--</span>'
+            f'<span style="font-family:monospace;font-size:13px;color:var(--muted)" id="roi-units"></span>'
+            f'</div>'
+            f'<div id="roi-chart" style="margin-bottom:10px"></div>'
+            f'<table class="dtable">'
+            f'<thead><tr><th>Date</th><th>Game</th><th>Play</th><th>Price</th><th>Result</th></tr></thead>'
+            f'<tbody>{roi_rows}</tbody></table>'
+            f'</div>'
+        )
+
         return (
             circles
             + hint
             + calib_section
             + clv_section
             + stats_table
+            + roi_section
             + f'<div class="sec-header"><h2>Wins vs Losses</h2><div class="sec-line"></div></div>'
             + all_bets_section
             + f'<div class="sec-header"><h2>Results by Day</h2><div class="sec-line"></div></div>'
@@ -1920,9 +2093,16 @@ html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-fam
 .pitcher-role{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-bottom:4px}
 .pitcher-name{font-size:17px;font-weight:700;color:#fff;margin-bottom:2px}.pitcher-team{font-size:12px;color:var(--muted)}
 footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 2rem;font-size:11px;color:var(--muted);text-align:center;line-height:1.8;margin-left:var(--sidebar)}
+.mobile-bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:400;padding:6px 0 8px}
+.mbn-item{display:flex;flex-direction:column;align-items:center;flex:1;cursor:pointer;padding:4px 0;color:var(--muted);transition:color 0.15s}
+.mbn-item.active{color:var(--accent)}
+.mbn-icon{font-size:18px;margin-bottom:2px}
+.mbn-label{font-size:9px;font-family:monospace;text-transform:uppercase;letter-spacing:0.5px}
 @media(max-width:768px){
   .sidebar{transform:translateX(-100%)}.sidebar.mobile-open{transform:translateX(0)}
   .main{margin-left:0}footer{margin-left:0}.hamburger{display:flex}.topbar-meta{display:none}
+  .mobile-bottom-nav{display:flex}
+  .main{padding-bottom:65px}
   .metrics-grid{grid-template-columns:repeat(2,1fr)}.alert-grid{grid-template-columns:1fr}
   .home-grid{grid-template-columns:1fr 1fr}.bb-stats{grid-template-columns:1fr 1fr}
   .alert-stats{grid-template-columns:1fr 1fr}.page-inner{padding:1rem}
@@ -1955,6 +2135,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
   <div class="nav-item" onclick="showPage('games',this)"><span class="nav-icon">&#9918;</span><span class="nav-label">All Games</span><span class="nav-count">{tot}</span></div>
   <div class="nav-item" onclick="showPage('matchups',this)"><span class="nav-icon">&#9889;</span><span class="nav-label">Pitcher / Batter</span><span class="nav-count">{lm}</span></div>
   <div class="nav-item" onclick="showPage('weather',this)"><span class="nav-icon">&#127780;</span><span class="nav-label">Weather</span><span class="nav-count">{lw}</span></div>
+  <div class="nav-item" onclick="showPage('parlay',this)"><span class="nav-icon">&#127922;</span><span class="nav-label">Parlay Analyzer</span></div>
   <div class="nav-item" onclick="showPage('accuracy',this)"><span class="nav-icon">&#127919;</span><span class="nav-label">Model Accuracy</span></div>
   <div class="sidebar-section" style="margin-top:8px">Today</div>
   <div class="sidebar-stats">
@@ -1974,6 +2155,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
   </div>
 
   <div class="page active" id="page-home"><div class="page-inner">
+    {best_bet_of_day()}
     <div class="hero">
       <div class="hero-eyebrow">MLB Sharp Lines Tracker</div>
       <div class="hero-title">Welcome to the <span>Gambling Cave</span></div>
@@ -2057,23 +2239,171 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
   <div class="page" id="page-accuracy"><div class="page-inner">
     {accuracy_page(results_data)}
   </div></div>
+
+  <div class="page" id="page-parlay"><div class="page-inner">
+    <div style="margin-bottom:1.5rem">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;color:#fff;margin-bottom:6px">&#127922; Parlay Analyzer</div>
+      <div style="font-size:13px;color:var(--muted)">Select up to 4 legs from today's plays. The analyzer calculates true parlay probability vs book price and shows whether the parlay has positive or negative EV.</div>
+    </div>
+    <div id="parlay-legs" style="display:flex;flex-direction:column;gap:8px;margin-bottom:1rem"></div>
+    <div style="display:flex;gap:8px;margin-bottom:1.5rem">
+      <input id="parlay-odds" type="text" placeholder="Parlay price (e.g. +600)" style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;color:var(--text);font-family:monospace;font-size:14px;flex:1"/>
+      <button onclick="calcParlay()" style="background:var(--accent);color:#000;border:none;border-radius:8px;padding:8px 18px;font-weight:700;font-family:monospace;cursor:pointer">Calculate</button>
+    </div>
+    <div id="parlay-result" style="display:none;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.25rem"></div>
+    <div class="sec-header"><h2>Add Legs from Today</h2><div class="sec-line"></div></div>
+    <div id="parlay-available" style="display:flex;flex-direction:column;gap:6px">{parlay_legs_html(all_plays)}</div>
+  </div></div>
 </div>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mobile-bottom-nav">
+  <div class="mbn-item" onclick="showPage('home',null);updateBottomNav('home')">
+    <div class="mbn-icon">&#127968;</div><div class="mbn-label">Home</div>
+  </div>
+  <div class="mbn-item" onclick="showPage('plays',null);updateBottomNav('plays')">
+    <div class="mbn-icon">&#128293;</div><div class="mbn-label">Plays</div>
+  </div>
+  <div class="mbn-item" onclick="showPage('games',null);updateBottomNav('games')">
+    <div class="mbn-icon">&#9918;</div><div class="mbn-label">Games</div>
+  </div>
+  <div class="mbn-item" onclick="showPage('matchups',null);updateBottomNav('matchups')">
+    <div class="mbn-icon">&#9889;</div><div class="mbn-label">Matchups</div>
+  </div>
+  <div class="mbn-item" onclick="showPage('accuracy',null);updateBottomNav('accuracy')">
+    <div class="mbn-icon">&#127919;</div><div class="mbn-label">Record</div>
+  </div>
+</nav>
 
 <footer>MLB Sharp Lines - The Gambling Cave - {date_str} - Enhanced model: SP quality, bullpen fatigue, injuries, park factors, umpire zone, wind - Gamble responsibly</footer>
 
 <script>
+  // ── PAGE NAVIGATION ──
   function showPage(name,el){{
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
     document.getElementById('page-'+name).classList.add('active');
     if(el)el.classList.add('active');
-    const t={{home:'Home',plays:'Top Value Plays',games:'All Games',matchups:'Pitcher / Batter',weather:'Weather & Wind',accuracy:'Model Accuracy'}};
+    const t={{home:'Home',plays:'Top Value Plays',games:'All Games',matchups:'Pitcher / Batter',weather:'Weather & Wind',parlay:'Parlay Analyzer',accuracy:'Model Accuracy'}};
     document.getElementById('topbar-title').textContent=t[name]||name;
     window.scrollTo(0,0);closeSidebar();
+  }}
+  function updateBottomNav(name){{
+    document.querySelectorAll('.mbn-item').forEach(i=>i.classList.remove('active'));
+    const items=document.querySelectorAll('.mbn-item');
+    const map={{home:0,plays:1,games:2,matchups:3,accuracy:4}};
+    if(map[name]!==undefined) items[map[name]].classList.add('active');
   }}
   function toggleGame(el){{el.classList.toggle('open');}}
   function openSidebar(){{document.getElementById('sidebar').classList.add('mobile-open');document.getElementById('overlay').classList.add('show');}}
   function closeSidebar(){{document.getElementById('sidebar').classList.remove('mobile-open');document.getElementById('overlay').classList.remove('show');}}
+
+  // ── COUNTDOWN TIMERS ──
+  function updateCountdowns(){{
+    document.querySelectorAll('[data-commence]').forEach(el=>{{
+      const iso=el.getAttribute('data-commence');
+      if(!iso) return;
+      const diff=new Date(iso)-new Date();
+      if(diff<=0){{el.textContent=''; return;}}
+      const h=Math.floor(diff/3600000);
+      const m=Math.floor((diff%3600000)/60000);
+      el.textContent=h>0?`in ${{h}}h ${{m}}m`:`in ${{m}}m`;
+    }});
+  }}
+  updateCountdowns();
+  setInterval(updateCountdowns,60000);
+
+  // ── PARLAY ANALYZER ──
+  let parlayLegs=[];
+  function addParlayLeg(game,play,price,truePct){{
+    if(parlayLegs.length>=4){{alert('Max 4 legs');return;}}
+    if(parlayLegs.find(l=>l.game===game)){{alert('Already added');return;}}
+    parlayLegs.push({{game,play,price,truePct:parseFloat(truePct)}});
+    renderParlayLegs();
+  }}
+  function removeLeg(i){{parlayLegs.splice(i,1);renderParlayLegs();}}
+  function renderParlayLegs(){{
+    const el=document.getElementById('parlay-legs');
+    if(!parlayLegs.length){{el.innerHTML='<div style="color:var(--muted);font-size:13px">No legs added yet. Click + on any play below.</div>';return;}}
+    el.innerHTML=parlayLegs.map((l,i)=>
+      `<div style="display:flex;align-items:center;gap:10px;background:var(--bg3);border-radius:8px;padding:8px 12px">
+        <span style="font-size:12px;flex:1"><strong style="color:var(--text)">${{l.play}}</strong> <span style="color:var(--muted)">${{l.game}}</span></span>
+        <span style="font-family:monospace;color:var(--accent)">${{l.price}}</span>
+        <span style="font-family:monospace;color:var(--muted);font-size:11px">${{l.truePct}}% true</span>
+        <button onclick="removeLeg(${{i}})" style="background:var(--red-bg);border:1px solid var(--red-border);color:var(--red);border-radius:4px;padding:2px 8px;cursor:pointer;font-size:11px">✕</button>
+      </div>`
+    ).join('');
+  }}
+  function calcParlay(){{
+    if(!parlayLegs.length){{alert('Add at least 1 leg');return;}}
+    const bookOddsStr=document.getElementById('parlay-odds').value.trim();
+    // True probability = product of all legs' true probabilities
+    const trueProb=parlayLegs.reduce((acc,l)=>acc*(l.truePct/100),1);
+    const truePct=Math.round(trueProb*10000)/100;
+    // Fair parlay odds
+    const fairDecimal=1/trueProb;
+    const fairAmerican=fairDecimal>=2?`+${{Math.round((fairDecimal-1)*100)}}`:`-${{Math.round(100/(fairDecimal-1))}}`;
+    let evHtml='';
+    if(bookOddsStr){{
+      const bookOddsNum=parseFloat(bookOddsStr.replace('+',''));
+      const bookImp=bookOddsNum>0?100/(bookOddsNum+100):Math.abs(bookOddsNum)/(Math.abs(bookOddsNum)+100);
+      const ev=((trueProb-bookImp)*100).toFixed(1);
+      const evCol=parseFloat(ev)>0?'var(--green)':'var(--red)';
+      evHtml=`<div style="margin-top:10px;padding:10px;background:rgba(0,0,0,0.3);border-radius:6px">
+        <span style="font-size:11px;color:var(--muted)">Book implied: </span><span style="font-family:monospace">${{(bookImp*100).toFixed(1)}}%</span>
+        <span style="font-size:11px;color:var(--muted);margin-left:12px">EV: </span>
+        <span style="font-family:monospace;color:${{evCol}};font-weight:700">${{parseFloat(ev)>0?'+':''}}${{ev}}%</span>
+        <span style="font-size:11px;color:var(--muted);margin-left:8px">(${{parseFloat(ev)>0?'POSITIVE EV - TAKE IT':'NEGATIVE EV - PASS'}})</span>
+      </div>`;
+    }}
+    document.getElementById('parlay-result').style.display='block';
+    document.getElementById('parlay-result').innerHTML=`
+      <div style="font-family:monospace;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px">${{parlayLegs.length}}-Leg Parlay Analysis</div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap">
+        <div class="metric-card" style="min-width:110px;text-align:center"><div class="metric-label">True Prob</div><div class="metric-val" style="font-size:20px">${{truePct}}%</div></div>
+        <div class="metric-card" style="min-width:110px;text-align:center"><div class="metric-label">Fair Odds</div><div class="metric-val" style="font-size:20px;color:var(--accent)">${{fairAmerican}}</div></div>
+        <div class="metric-card" style="min-width:110px;text-align:center"><div class="metric-label">Legs</div><div class="metric-val" style="font-size:20px">${{parlayLegs.length}}</div></div>
+      </div>
+      ${{evHtml}}
+    `;
+  }}
+
+  // ── ROI TRACKER ──
+  function calcROI(){{
+    const unit=parseFloat(document.getElementById('roi-unit').value)||100;
+    const rows=document.querySelectorAll('.roi-bet-row');
+    let profit=0; let history=[0];
+    rows.forEach(row=>{{
+      const res=row.getAttribute('data-result');
+      const priceStr=row.getAttribute('data-price');
+      if(!priceStr||res==='P') return;
+      const price=parseFloat(priceStr.replace('+',''));
+      const winAmt=price>0?(price/100)*unit:unit*(100/Math.abs(price));
+      if(res==='W') profit+=winAmt;
+      else profit-=unit;
+      history.push(Math.round(profit*100)/100);
+    }});
+    document.getElementById('roi-total').textContent=(profit>=0?'+':'')+profit.toFixed(2);
+    document.getElementById('roi-total').style.color=profit>=0?'var(--green)':'var(--red)';
+    document.getElementById('roi-units').textContent=(profit/unit>=0?'+':'')+(profit/unit).toFixed(1)+' units';
+    // Simple sparkline
+    if(history.length>1){{
+      const max=Math.max(...history); const min=Math.min(...history);
+      const range=max-min||1;
+      const w=300; const h=60;
+      const pts=history.map((v,i)=>{{
+        const x=i*(w/(history.length-1));
+        const y=h-((v-min)/range*h);
+        return `${{x}},${{y}}`;
+      }}).join(' ');
+      document.getElementById('roi-chart').innerHTML=
+        `<svg viewBox="0 0 ${{w}} ${{h}}" width="100%" height="60" xmlns="http://www.w3.org/2000/svg">
+          <polyline points="${{pts}}" fill="none" stroke="${{profit>=0?'#4ade80':'#f87171'}}" stroke-width="2" stroke-linejoin="round"/>
+        </svg>`;
+    }}
+  }}
+
+  renderParlayLegs();
 </script>
 </body>
 </html>"""
