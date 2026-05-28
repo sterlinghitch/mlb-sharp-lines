@@ -169,7 +169,61 @@ def fetch_roster(team_id):
     return players
 
 
-def fetch_batter_vs_pitcher(batter_id, pitcher_id):
+def fetch_last_five_record(team_id):
+    """Fetch a team's last 5 game results from the MLB Stats API."""
+    try:
+        data = mlb_get(f"/teams/{team_id}/roster", {"rosterType": "active"})  # lightweight ping
+        # Use the schedule endpoint to get recent games
+        now_str  = datetime.now(EASTERN).strftime("%Y-%m-%d")
+        # Look back 14 days to ensure we get 5 games
+        from datetime import timedelta
+        start_str = (datetime.now(EASTERN) - timedelta(days=14)).strftime("%Y-%m-%d")
+        sched = mlb_get("/schedule", {
+            "sportId":  1,
+            "teamId":   team_id,
+            "startDate":start_str,
+            "endDate":  now_str,
+            "hydrate":  "decisions,linescore",
+            "gameType": "R",   # regular season only
+        })
+        if not sched:
+            return None
+
+        results = []
+        for date_block in sched.get("dates", []):
+            for g in date_block.get("games", []):
+                state = g.get("status", {}).get("abstractGameState", "")
+                if state != "Final":
+                    continue
+                teams   = g.get("teams", {})
+                away_d  = teams.get("away", {})
+                home_d  = teams.get("home", {})
+                is_home = home_d.get("team", {}).get("id") == team_id
+                my_side = home_d if is_home else away_d
+                op_side = away_d if is_home else home_d
+                my_runs = my_side.get("score", 0)
+                op_runs = op_side.get("score", 0)
+                won     = my_runs > op_runs
+                opp     = op_side.get("team", {}).get("abbreviation", "?")
+                results.append({
+                    "won":     won,
+                    "my_runs": my_runs,
+                    "op_runs": op_runs,
+                    "opp":     opp,
+                    "home":    is_home,
+                })
+
+        # Return last 5
+        last5 = results[-5:] if len(results) >= 5 else results
+        wins  = sum(1 for r in last5 if r["won"])
+        losses= len(last5) - wins
+        return {"games": last5, "wins": wins, "losses": losses, "played": len(last5)}
+    except Exception as e:
+        print(f"    Last-5 fetch error for team {team_id}: {e}")
+        return None
+
+
+
     """Career stats for one batter against one pitcher."""
     data = mlb_get(f"/people/{batter_id}/stats", {
         "stats":            "vsPlayer",
@@ -304,16 +358,22 @@ def build_matchup_data(odds_games, date_str):
         away_vs_home_p = get_matchup_stats(away_batters, home_pitcher.get("id"))
         home_vs_away_p = get_matchup_stats(home_batters, away_pitcher.get("id"))
 
+        # Last 5 game records for each team
+        away_last5 = fetch_last_five_record(away_id)
+        home_last5 = fetch_last_five_record(home_id)
+
         matchups.append({
             "game":          f"{away_name} @ {home_name}",
             "away":          away_name,
             "home":          home_name,
             "away_pitcher":  away_pitcher,
             "home_pitcher":  home_pitcher,
-            "away_batters":  away_vs_home_p,   # away batters vs home pitcher
-            "home_batters":  home_vs_away_p,   # home batters vs away pitcher
+            "away_batters":  away_vs_home_p,
+            "home_batters":  home_vs_away_p,
             "away_source":   away_source,
             "home_source":   home_source,
+            "away_last5":    away_last5,
+            "home_last5":    home_last5,
         })
 
     print(f"  Matchup data ready for {len(matchups)} games")
@@ -356,8 +416,13 @@ def analyze_game(game):
     home  = game["home_team"]
     books = game.get("bookmakers", [])
 
+    # Books to exclude — too noisy / too far off market consistently
+    EXCLUDED_BOOKS = {"betrivers", "lowvig", "bovada"}
+
     book_data = []
     for b in books:
+        if b.get("key","").lower() in EXCLUDED_BOOKS:
+            continue
         h2h   = next((m for m in b.get("markets",[]) if m["key"]=="h2h"),    None)
         total = next((m for m in b.get("markets",[]) if m["key"]=="totals"), None)
         if not h2h: continue
@@ -931,6 +996,24 @@ def build_html(analyzed_games, matchups, weather, date_str, time_str):
             except Exception:
                 return ""
 
+        def last5_html(record, team_name):
+            if not record or not record.get("games"):
+                return '<div style="font-size:12px;color:var(--muted);margin-bottom:10px">Last 5 record unavailable</div>'
+            w = record["wins"]; l = record["losses"]
+            wl_color = "var(--green)" if w > l else ("var(--red)" if l > w else "var(--amber)")
+            dots = ""
+            for r in record["games"]:
+                loc  = "vs" if r["home"] else "@"
+                tip  = f'{loc} {r["opp"]} {r["my_runs"]}-{r["op_runs"]}'
+                col  = "var(--green)" if r["won"] else "var(--red)"
+                lbl  = "W" if r["won"] else "L"
+                dots += f'<span title="{tip}" style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:{col};color:#000;font-size:10px;font-weight:700;font-family:monospace;cursor:default">{lbl}</span>'
+            return f'''<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;background:var(--bg3);border-radius:8px;padding:8px 12px">
+              <span style="font-size:11px;color:var(--muted);font-family:monospace;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap">Last 5:</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:700;color:{wl_color}">{w}–{l}</span>
+              <div style="display:flex;gap:4px">{dots}</div>
+            </div>'''
+
         def batter_table(batters, pitcher, batting_team, source):
             if not batters:
                 source_note = "Official lineup" if source == "lineup" else "Roster-based (lineup not posted)"
@@ -982,6 +1065,7 @@ def build_html(analyzed_games, matchups, weather, date_str, time_str):
                   <div class="pitcher-name">{ap["name"]}</div>
                   <div class="pitcher-team">{m["away"]} &nbsp;·&nbsp; {ap_era}</div>
                 </div>
+                {last5_html(m.get("away_last5"), m["away"])}
                 <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px">
                   {m["home"]} Batters vs {ap["name"]}
                 </div>
@@ -994,6 +1078,7 @@ def build_html(analyzed_games, matchups, weather, date_str, time_str):
                   <div class="pitcher-name">{hp["name"]}</div>
                   <div class="pitcher-team">{m["home"]} &nbsp;·&nbsp; {hp_era}</div>
                 </div>
+                {last5_html(m.get("home_last5"), m["home"])}
                 <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px">
                   {m["away"]} Batters vs {hp["name"]}
                 </div>
@@ -1369,14 +1454,13 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
   <div class="page active" id="page-home"><div class="page-inner">
     <div class="hero">
       <div class="hero-eyebrow">MLB Sharp Lines Tracker</div>
-      <div class="hero-title">Find the <span>edge</span><br>before the market does.</div>
-      <div class="hero-sub">Pre-game odds from major US bookmakers. Vig-removed true probabilities, cross-book discrepancies, best bet per game, and historical pitcher/batter matchup data — auto-updated daily.</div>
+      <div class="hero-title">Welcome to the <span>Gambling Cave</span></div>
+      <div class="hero-sub">Pre-game odds from major US bookmakers. Vig-removed true probabilities, cross-book discrepancies, best bet per game, pitcher/batter matchups, and stadium weather — auto-updated daily.</div>
       <div class="hero-badges">
         <div class="hero-badge"><strong>{total}</strong> games today</div>
         <div class="hero-badge"><strong>{sharp_ct}</strong> 🔥 sharp alerts</div>
         <div class="hero-badge"><strong>{value_ct}</strong> value plays</div>
         <div class="hero-badge">Updated <strong>{time_str}</strong></div>
-        <div class="hero-badge">Cost: <strong>$0.00</strong></div>
       </div>
     </div>
     <div class="home-grid">
@@ -1401,9 +1485,9 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
         <div class="home-card-stat blue">{len(weather)} parks</div>
       </div>
       <div class="home-card">
-        <div class="home-card-icon">🧮</div><div class="home-card-title">True Odds</div>
-        <div class="home-card-desc">Vig stripped from every book, averaged for real win probability.</div>
-        <div class="home-card-stat green">Free</div>
+        <div class="home-card-icon">🧮</div><div class="home-card-title">True Odds Engine</div>
+        <div class="home-card-desc">Vig stripped from every book, averaged across the market to find real win probability.</div>
+        <div class="home-card-stat accent">{books} books</div>
       </div>
     </div>
   </div></div>
@@ -1415,7 +1499,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
       <div class="metric-card"><div class="metric-label">Books</div><div class="metric-val">{books}</div></div>
       <div class="metric-card"><div class="metric-label">Sharp Alerts</div><div class="metric-val amber">{sharp_ct}</div></div>
       <div class="metric-card"><div class="metric-label">Value Plays</div><div class="metric-val green">{value_ct}</div></div>
-      <div class="metric-card"><div class="metric-label">Cost</div><div class="metric-val" style="font-size:16px">$0/mo</div></div>
+      <div class="metric-card"><div class="metric-label">Updated</div><div class="metric-val" style="font-size:14px">{time_str}</div></div>
     </div>
     <div class="sec-header"><h2>🔥 Sharp Alerts</h2><div class="sec-line"></div></div>
     {alert_cards()}
