@@ -1013,7 +1013,7 @@ def main():
         analyzed.append(result)
 
     # Sort by date first, then by signal urgency within each day
-    signal_order = {{"fire": 0, "sharp": 1, "value": 2, "watch": 3, "pass": 4}}
+    signal_order = {"fire": 0, "sharp": 1, "value": 2, "watch": 3, "pass": 4}
     analyzed.sort(key=lambda x: (x["date_sort"], signal_order.get(x["signal"], 3)))
 
     html = build_html(analyzed, date_str, time_str)
