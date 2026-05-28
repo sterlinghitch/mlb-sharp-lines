@@ -1092,12 +1092,13 @@ def build_html(analyzed_games, matchups, weather, results_data, date_str, time_s
                 icon = "🔥" if sig else "📈"
                 oa   = fmt(lm.get("open_away",0)); oh = fmt(lm.get("open_home",0))
                 direction = "toward" if mc>0 else "away from"
+                sharp_badge = '<span style="color:var(--red);margin-left:8px;font-weight:700"> SHARP SIGNAL</span>' if sig else ""
                 lm_strip = (
                     f'<div style="font-size:11px;margin-top:6px;padding:6px 10px;'
                     f'background:var(--bg3);border-radius:6px;border-left:3px solid {col};font-family:monospace">'
                     f'<span style="color:{col};font-weight:700">{icon} Line moved {abs(mc):.0f}c {direction} {team}</span>'
                     f'<span style="color:var(--muted);margin-left:10px">Open: {g["away"][:8]} {oa} / {g["home"][:8]} {oh}</span>'
-                    f'{"<span style=\"color:var(--red);margin-left:8px;font-weight:700\"> SHARP SIGNAL</span>" if sig else ""}'
+                    f'{sharp_badge}'
                     f'</div>'
                 )
 
