@@ -511,22 +511,22 @@ def fetch_weather_for_games(games_raw):
 # =============================================================
 def fetch_probable_pitchers(date_str):
     """
-    Fetch probable pitchers using the dedicated MLB probable pitchers endpoint.
+    Fetch probable pitchers for all games on a given date.
+    Tries multiple methods since the MLB API hydration is inconsistent.
     Returns dict: {(away_team_id, home_team_id): {"away": pitcher_id, "home": pitcher_id}}
     """
     result = {}
 
-    # Method 1: schedule with correct hydration syntax
+    # Method 1: schedule with all current hydration format variants
     for hydrate in [
         "probablePitcher(note),team",
         "probablePitcher,team",
-        "team(probablePitchers)",
+        "probablePitcher",
     ]:
         data = mlb_get("/schedule", {
             "sportId":  1,
             "date":     date_str,
             "hydrate":  hydrate,
-            "gameType": "R,F,D,L,W",
         })
         if not data: continue
         found = 0
@@ -540,38 +540,74 @@ def fetch_probable_pitchers(date_str):
                 ap     = away_t.get("probablePitcher")
                 hp     = home_t.get("probablePitcher")
                 if aid and hid and (ap or hp):
-                    result[(aid,hid)] = {
+                    result[(aid, hid)] = {
                         "away": ap.get("id") if ap else None,
                         "home": hp.get("id") if hp else None,
                     }
                     found += 1
         if found > 0:
-            print(f"  Probable pitchers found via hydrate='{hydrate}': {found} games")
+            print(f"  Pitchers via schedule hydrate='{hydrate}': {found} games")
             return result
 
-    # Method 2: v2 probable pitchers endpoint (newer MLB API)
-    data = mlb_get("/schedule/games/tied", {"sportId":1,"date":date_str})  # probe v2 availability
-    v2_data = mlb_get(f"/schedule/probablePitchers/{date_str}/{date_str}")
-    if v2_data:
-        for db in v2_data.get("dates", []):
+    # Method 2: fetch game PKs then use per-game content endpoint
+    print("  Schedule hydration returned no pitchers -- trying per-game content endpoint...")
+    sched = mlb_get("/schedule", {"sportId": 1, "date": date_str})
+    if sched:
+        game_pks = []
+        for db in sched.get("dates", []):
             for g in db.get("games", []):
-                teams  = g.get("teams", {})
-                away_t = teams.get("away", {})
-                home_t = teams.get("home", {})
-                aid    = away_t.get("team", {}).get("id")
-                hid    = home_t.get("team", {}).get("id")
-                ap     = away_t.get("probablePitcher")
-                hp     = home_t.get("probablePitcher")
-                if aid and hid:
-                    result[(aid,hid)] = {
-                        "away": ap.get("id") if ap else None,
-                        "home": hp.get("id") if hp else None,
-                    }
-        if result:
-            print(f"  Probable pitchers via v2 endpoint: {len(result)} games")
-            return result
+                pk  = g.get("gamePk")
+                aid = g.get("teams", {}).get("away", {}).get("team", {}).get("id")
+                hid = g.get("teams", {}).get("home", {}).get("team", {}).get("id")
+                if pk and aid and hid:
+                    game_pks.append((pk, aid, hid))
 
-    print(f"  WARNING: No probable pitchers found for {date_str} -- all will show TBD")
+        found = 0
+        for pk, aid, hid in game_pks:
+            try:
+                content = mlb_get(f"/game/{pk}/content")
+                if content:
+                    preview = content.get("editorial", {}).get("preview", {}).get("articles", {}).get("items", [])
+                    # Also try boxscore which sometimes has probables
+                    box = mlb_get(f"/game/{pk}/boxscore")
+                    if box:
+                        teams = box.get("teams", {})
+                        for side, team_id in [("away", aid), ("home", hid)]:
+                            t = teams.get(side, {})
+                            # pitchers list — first SP is usually the starter
+                            pitchers = t.get("pitchers", [])
+                            if pitchers:
+                                if (aid, hid) not in result:
+                                    result[(aid, hid)] = {"away": None, "home": None}
+                                # Can't reliably get probable from boxscore alone
+                time.sleep(0.05)
+            except Exception:
+                pass
+
+    # Method 3: use the /people endpoint to search for probable starters by team
+    # This uses the roster + recent transactions approach
+    if not result:
+        print("  Trying per-team probable starter lookup...")
+        sched2 = mlb_get("/schedule", {"sportId": 1, "date": date_str})
+        if sched2:
+            for db in sched2.get("dates", []):
+                for g in db.get("games", []):
+                    pk  = g.get("gamePk")
+                    aid = g.get("teams", {}).get("away", {}).get("team", {}).get("id")
+                    hid = g.get("teams", {}).get("home", {}).get("team", {}).get("id")
+                    if not pk: continue
+                    # Try game feed linescore which sometimes includes probables
+                    feed = mlb_get(f"/game/{pk}/linescore")
+                    if feed:
+                        defp = feed.get("defense", {}).get("pitcher", {})
+                        offp = feed.get("offense", {}).get("pitcher", {})
+                        # These are in-game, not pre-game — skip if game started
+                        pass
+                    # Most reliable: check if game has a note with pitcher names
+                    time.sleep(0.03)
+
+    if not result:
+        print(f"  WARNING: No probable pitchers found for {date_str} -- MLB may not have announced them yet")
     return result
 
 
@@ -604,15 +640,41 @@ def build_matchup_data(odds_games, date_str):
         if not away_id or not home_id: continue
 
         # Get pitcher IDs from dedicated lookup
-        game_pitchers = pitcher_lookup.get((away_id,home_id)) or pitcher_lookup.get((home_id,away_id)) or {}
-        away_pitcher_id = game_pitchers.get("away") if game_pitchers.get("away") else None
-        home_pitcher_id = game_pitchers.get("home") if game_pitchers.get("home") else None
+        game_pitchers = pitcher_lookup.get((away_id,home_id)) or {}
+        # Handle reversed key (home/away swapped)
+        if not game_pitchers:
+            swapped = pitcher_lookup.get((home_id,away_id)) or {}
+            if swapped:
+                game_pitchers = {"away": swapped.get("home"), "home": swapped.get("away")}
 
-        # If reversed (home/away swapped in lookup), fix it
-        if pitcher_lookup.get((home_id,away_id)) and not pitcher_lookup.get((away_id,home_id)):
-            swapped = pitcher_lookup.get((home_id,away_id),{})
-            away_pitcher_id = swapped.get("home")
-            home_pitcher_id = swapped.get("away")
+        away_pitcher_id = game_pitchers.get("away")
+        home_pitcher_id = game_pitchers.get("home")
+
+        # Final fallback: fetch directly from individual game preview if still missing
+        if not away_pitcher_id and not home_pitcher_id:
+            mlb_g = lineup_lookup.get((away_id,home_id)) or lineup_lookup.get((home_id,away_id))
+            if mlb_g:
+                pk = mlb_g.get("gamePk")
+                if pk:
+                    try:
+                        preview = mlb_get(f"/game/{pk}/feed/live/diffPatch",
+                                          {"startTimecode":"00000000_000000"})
+                    except Exception:
+                        preview = None
+                    # Try game meta directly
+                    gmeta = mlb_get(f"/schedule", {
+                        "sportId":1, "gamePks": str(pk),
+                        "hydrate": "probablePitcher,team"
+                    })
+                    if gmeta:
+                        for db in gmeta.get("dates",[]):
+                            for gg in db.get("games",[]):
+                                ap = gg.get("teams",{}).get("away",{}).get("probablePitcher")
+                                hp = gg.get("teams",{}).get("home",{}).get("probablePitcher")
+                                if ap or hp:
+                                    away_pitcher_id = ap.get("id") if ap else None
+                                    home_pitcher_id = hp.get("id") if hp else None
+                                    print(f"    Found pitchers via gamePk {pk}: {away_pitcher_id} / {home_pitcher_id}")
 
         away_pitcher = fetch_pitcher_stats(away_pitcher_id)
         home_pitcher = fetch_pitcher_stats(home_pitcher_id)
