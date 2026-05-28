@@ -673,6 +673,27 @@ def analyze_game(game, context):
             "reasoning":   " ".join(reason_parts),
         }
 
+    # ── BET UP TO ────────────────────────────────────────
+    # The price where your edge hits exactly 0% = the fair line.
+    # For favorites: maximum price you should accept (e.g. "bet up to -134")
+    # For underdogs: minimum price you should accept (e.g. "only if +118 or better")
+    # For totals: the fair O/U price at which edge = 0%
+    bet_up_to = "N/A"
+    bet_up_to_label = "Bet up to"
+    if not bet_is_pass and candidates:
+        best_c = max(candidates, key=lambda c: c["edge_val"])
+        fair = best_c.get("fair_line", "N/A")
+        if fair not in ("N/A", "—", None):
+            bet_up_to = fair
+            try:
+                price_val = int(fair.replace("+",""))
+                if price_val < 0:
+                    bet_up_to_label = "Bet up to"
+                else:
+                    bet_up_to_label = "Only at"
+            except Exception:
+                pass
+
     try:
         t = datetime.fromisoformat(game.get("commence_time","").replace("Z","+00:00")).astimezone(EASTERN)
         time_display=t.strftime("%-I:%M %p ET"); date_et=t.strftime("%A, %B %d"); date_sort=t.strftime("%Y-%m-%d")
@@ -689,6 +710,7 @@ def analyze_game(game, context):
         "book_data":book_data,"discrepancies":discs,"value_play":value_play,
         "bet_play":bet_play,"bet_sub":bet_sub,"bet_edge":bet_edge,
         "bet_fair":bet_fair,"bet_true":bet_true,"bet_is_pass":bet_is_pass,
+        "bet_up_to":bet_up_to,"bet_up_to_label":bet_up_to_label,
         "best_away":best_away,"best_home":best_home,
         "worst_away":worst_away,"worst_home":worst_home,
         "away_gap":away_gap,"home_gap":home_gap,"props":[],
@@ -907,6 +929,21 @@ def build_html(analyzed_games, matchups, weather, results_data, date_str, time_s
                             f'<td class="prob">{total_str}</td></tr>')
 
             bb_cls="best-bet pass" if g["bet_is_pass"] else "best-bet"
+            up_to      = g.get("bet_up_to","N/A")
+            up_to_lbl  = g.get("bet_up_to_label","Bet up to")
+            up_to_note = ""
+            if not g["bet_is_pass"] and up_to not in ("N/A","—"):
+                up_to_note = (
+                    f'<div style="margin-top:9px;padding:8px 12px;background:rgba(0,0,0,0.25);'
+                    f'border-radius:6px;display:flex;align-items:center;justify-content:space-between">'
+                    f'<span style="font-size:11px;color:var(--muted);font-family:monospace;text-transform:uppercase;letter-spacing:0.5px">'
+                    f'{up_to_lbl}</span>'
+                    f'<span style="font-family:\'IBM Plex Mono\',monospace;font-size:18px;font-weight:700;color:var(--amber)">'
+                    f'{up_to}</span>'
+                    f'<span style="font-size:11px;color:var(--muted);max-width:180px;text-align:right;line-height:1.4">'
+                    f'{"Worse than this = paying above true value" if "-" in str(up_to) else "Better than this = you have edge"}'
+                    f'</span></div>'
+                )
             best_bet=(f'<div class="{bb_cls}">'
                       f'<div class="bb-header">Best Bet This Game</div>'
                       f'<div class="bb-play">{g["bet_play"]}</div>'
@@ -917,7 +954,9 @@ def build_html(analyzed_games, matchups, weather, results_data, date_str, time_s
                       f'<div class="bbs"><div class="bbs-label">Away/Home</div><div class="bbs-val">{g["away_true"]}%/{g["home_true"]}%</div></div>'
                       f'<div class="bbs"><div class="bbs-label">Edge</div>'
                       f'<div class="bbs-val {"green" if not g["bet_is_pass"] else "c-muted"}">{g["bet_edge"]}</div></div>'
-                      f'</div></div>')
+                      f'</div>'
+                      f'{up_to_note}'
+                      f'</div>')
 
             html+=(day_header+
                    f'<div class="game-block {open_cls}" onclick="toggleGame(this)">'
