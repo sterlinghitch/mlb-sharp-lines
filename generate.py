@@ -968,7 +968,7 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
     books=max((len(g["book_data"]) for g in analyzed_games),default=0)
 
     def alert_cards():
-        top=[p for p in all_plays if p["signal"] in ("fire","sharp","value") or abs(p.get("edge",0))>=2.5][:4]
+        top=[p for p in all_plays if p["signal"] in ("fire","sharp","value") or abs(p.get("edge",0))>=2.5][:6]
         if not top: return '<p style="color:var(--muted);font-size:13px;padding:1rem 0">No sharp alerts today.</p>'
         html='<div class="alert-grid">'
         for p in top:
@@ -2213,12 +2213,20 @@ def main():
         "bets": []
     }
     # Also save full analysis for ALL games (including passes) for tracking cards
-    noon_analysis = {
-        "date": mlb_date,
-        "games": {}
-    }
+    # MERGE with existing file so 4pm run preserves noon data for games now in progress
+    noon_analysis = {"date": mlb_date, "games": {}}
+    if os.path.exists("noon_analysis.json"):
+        try:
+            with open("noon_analysis.json") as f:
+                existing_na = json.load(f)
+            # Only keep data from today (discard yesterday's stale data)
+            if existing_na.get("date") == mlb_date:
+                noon_analysis["games"] = existing_na.get("games", {})
+        except Exception:
+            pass
+
     for g in analyzed:
-        # Full analysis for tracking cards (all games)
+        # Always write/overwrite with fresh data for pre-game games
         noon_analysis["games"][g["game"]] = {
             "play":        g["bet_play"],
             "price":       g["bet_sub"].split(" at ")[0] if " at " in g["bet_sub"] else g["bet_sub"],
