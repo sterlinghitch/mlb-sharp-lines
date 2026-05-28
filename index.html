@@ -193,14 +193,14 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
   <div class="nav-item active" onclick="showPage('home',this)"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></div>
   <div class="nav-item" onclick="showPage('plays',this)"><span class="nav-icon">🔥</span><span class="nav-label">Top Value Plays</span><span class="nav-count">0</span></div>
   <div class="nav-item" onclick="showPage('games',this)"><span class="nav-icon">⚾</span><span class="nav-label">All Games</span><span class="nav-count">6</span></div>
-  <div class="nav-item" onclick="showPage('matchups',this)"><span class="nav-icon">⚡</span><span class="nav-label">Pitcher / Batter</span><span class="nav-count">6</span></div>
+  <div class="nav-item" onclick="showPage('matchups',this)"><span class="nav-icon">⚡</span><span class="nav-label">Pitcher / Batter</span><span class="nav-count">0</span></div>
   <div class="nav-item" onclick="showPage('weather',this)"><span class="nav-icon">🌤️</span><span class="nav-label">Weather</span><span class="nav-count">6</span></div>
   <div class="sidebar-section" style="margin-top:8px">Today</div>
   <div class="sidebar-stats">
     <div class="sidebar-stat"><span class="sidebar-stat-label">Games</span><span class="sidebar-stat-val">6</span></div>
     <div class="sidebar-stat"><span class="sidebar-stat-label">Sharp alerts</span><span class="sidebar-stat-val amber">0</span></div>
     <div class="sidebar-stat"><span class="sidebar-stat-label">Value plays</span><span class="sidebar-stat-val green">0</span></div>
-    <div class="sidebar-stat"><span class="sidebar-stat-label">Updated</span><span class="sidebar-stat-val">12:54 AM ET</span></div>
+    <div class="sidebar-stat"><span class="sidebar-stat-label">Updated</span><span class="sidebar-stat-val">1:10 AM ET</span></div>
   </div>
 </div>
 <div class="main">
@@ -218,14 +218,13 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
   <div class="page active" id="page-home"><div class="page-inner">
     <div class="hero">
       <div class="hero-eyebrow">MLB Sharp Lines Tracker</div>
-      <div class="hero-title">Find the <span>edge</span><br>before the market does.</div>
-      <div class="hero-sub">Pre-game odds from major US bookmakers. Vig-removed true probabilities, cross-book discrepancies, best bet per game, and historical pitcher/batter matchup data — auto-updated daily.</div>
+      <div class="hero-title">Welcome to the <span>Gambling Cave</span></div>
+      <div class="hero-sub">Pre-game odds from major US bookmakers. Vig-removed true probabilities, cross-book discrepancies, best bet per game, pitcher/batter matchups, and stadium weather — auto-updated daily.</div>
       <div class="hero-badges">
         <div class="hero-badge"><strong>6</strong> games today</div>
         <div class="hero-badge"><strong>0</strong> 🔥 sharp alerts</div>
         <div class="hero-badge"><strong>0</strong> value plays</div>
-        <div class="hero-badge">Updated <strong>12:54 AM ET</strong></div>
-        <div class="hero-badge">Cost: <strong>$0.00</strong></div>
+        <div class="hero-badge">Updated <strong>1:10 AM ET</strong></div>
       </div>
     </div>
     <div class="home-grid">
@@ -242,7 +241,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
       <div class="home-card" onclick="showPage('matchups',document.querySelectorAll('.nav-item')[3])">
         <div class="home-card-icon">⚡</div><div class="home-card-title">Pitcher / Batter</div>
         <div class="home-card-desc">Career BA, HR, K for every batter against today's probable starters.</div>
-        <div class="home-card-stat blue">6 games</div>
+        <div class="home-card-stat blue">0 games</div>
       </div>
       <div class="home-card" onclick="showPage('weather',document.querySelectorAll('.nav-item')[4])">
         <div class="home-card-icon">🌤️</div><div class="home-card-title">Weather</div>
@@ -250,9 +249,9 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
         <div class="home-card-stat blue">6 parks</div>
       </div>
       <div class="home-card">
-        <div class="home-card-icon">🧮</div><div class="home-card-title">True Odds</div>
-        <div class="home-card-desc">Vig stripped from every book, averaged for real win probability.</div>
-        <div class="home-card-stat green">Free</div>
+        <div class="home-card-icon">🧮</div><div class="home-card-title">True Odds Engine</div>
+        <div class="home-card-desc">Vig stripped from every book, averaged across the market to find real win probability.</div>
+        <div class="home-card-stat accent">6 books</div>
       </div>
     </div>
   </div></div>
@@ -261,10 +260,10 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
   <div class="page" id="page-plays"><div class="page-inner">
     <div class="metrics-grid">
       <div class="metric-card"><div class="metric-label">Games</div><div class="metric-val">6</div></div>
-      <div class="metric-card"><div class="metric-label">Books</div><div class="metric-val">9</div></div>
+      <div class="metric-card"><div class="metric-label">Books</div><div class="metric-val">6</div></div>
       <div class="metric-card"><div class="metric-label">Sharp Alerts</div><div class="metric-val amber">0</div></div>
       <div class="metric-card"><div class="metric-label">Value Plays</div><div class="metric-val green">0</div></div>
-      <div class="metric-card"><div class="metric-label">Cost</div><div class="metric-val" style="font-size:16px">$0/mo</div></div>
+      <div class="metric-card"><div class="metric-label">Updated</div><div class="metric-val" style="font-size:14px">1:10 AM ET</div></div>
     </div>
     <div class="sec-header"><h2>🔥 Sharp Alerts</h2><div class="sec-line"></div></div>
     <p style="color:var(--muted);font-size:13px;padding:1rem 0">No sharp alerts today.</p>
@@ -293,17 +292,10 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
               <td class="prob">56.5%</td>
               <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">9.0</strong> <span style="color:var(--accent)">-106</span></td>
             </tr><tr>
-              <td class="book">LowVig.ag</td>
-              <td class="pc">+113</td>
-              <td class="prob">46.9%</td>
-              <td class="pb">-125 ★</td>
-              <td class="prob">55.6%</td>
-              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">9.0</strong> <span style="color:var(--accent)">+107</span></td>
-            </tr><tr>
               <td class="book">BetOnline.ag</td>
               <td class="pc">+113</td>
               <td class="prob">46.9%</td>
-              <td class="pc">-125</td>
+              <td class="pb">-125 ★</td>
               <td class="prob">55.6%</td>
               <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">9.0</strong> <span style="color:var(--accent)">+105</span></td>
             </tr><tr>
@@ -324,23 +316,9 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
               <td class="book">BetMGM</td>
               <td class="pc">+110</td>
               <td class="prob">47.6%</td>
-              <td class="pc">-135</td>
+              <td class="pw">-135 ✗</td>
               <td class="prob">57.4%</td>
               <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">9.0</strong> <span style="color:var(--accent)">+100</span></td>
-            </tr><tr>
-              <td class="book">Bovada</td>
-              <td class="pc">+111</td>
-              <td class="prob">47.4%</td>
-              <td class="pc">-133</td>
-              <td class="prob">57.1%</td>
-              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">9.0</strong> <span style="color:var(--accent)">+100</span></td>
-            </tr><tr>
-              <td class="book">BetRivers</td>
-              <td class="pc">+112</td>
-              <td class="prob">47.2%</td>
-              <td class="pw">-139 ✗</td>
-              <td class="prob">58.2%</td>
-              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">9.0</strong> <span style="color:var(--accent)">-110</span></td>
             </tr><tr>
               <td class="book">BetUS</td>
               <td class="pb">+114 ★</td>
@@ -353,9 +331,9 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
             <div class="claude-box">
               <div class="cb-header">📊 True Odds (vig removed &amp; averaged)</div>
               <div class="cb-grid">
-                <div class="cb-team"><div class="cb-name">Los Angeles Angels</div><div class="cb-pct ">46%</div><div class="cb-line">Fair: +120</div></div>
+                <div class="cb-team"><div class="cb-name">Los Angeles Angels</div><div class="cb-pct ">46%</div><div class="cb-line">Fair: +119</div></div>
                 <div class="cb-vs">vs</div>
-                <div class="cb-team"><div class="cb-name">Detroit Tigers</div><div class="cb-pct fav">54%</div><div class="cb-line">Fair: -120</div></div>
+                <div class="cb-team"><div class="cb-name">Detroit Tigers</div><div class="cb-pct fav">54%</div><div class="cb-line">Fair: -119</div></div>
               </div>
               <div class="cb-method">Vig removed from each book via normalization, averaged across non-outlier books.</div>
             </div>
@@ -381,7 +359,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
               <thead><tr><th>Book</th><th>Minnesota Twins</th><th>Implied%</th><th>Chicago White Sox</th><th>Implied%</th><th>Total O/U</th></tr></thead>
               <tbody><tr>
               <td class="book">FanDuel</td>
-              <td class="pc">+110</td>
+              <td class="pw">+110 ✗</td>
               <td class="prob">47.6%</td>
               <td class="pb">-130 ★</td>
               <td class="prob">56.5%</td>
@@ -392,28 +370,14 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
               <td class="prob">47.2%</td>
               <td class="pc">-132</td>
               <td class="prob">56.9%</td>
-              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-118</span></td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-120</span></td>
             </tr><tr>
               <td class="book">DraftKings</td>
               <td class="pc">+113</td>
               <td class="prob">46.9%</td>
               <td class="pc">-136</td>
               <td class="prob">57.6%</td>
-              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.0</strong> <span style="color:var(--accent)">-102</span></td>
-            </tr><tr>
-              <td class="book">Bovada</td>
-              <td class="pc">+110</td>
-              <td class="prob">47.6%</td>
-              <td class="pc">-132</td>
-              <td class="prob">56.9%</td>
               <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.0</strong> <span style="color:var(--accent)">-105</span></td>
-            </tr><tr>
-              <td class="book">BetRivers</td>
-              <td class="pw">+105 ✗</td>
-              <td class="prob">48.8%</td>
-              <td class="pc">-130</td>
-              <td class="prob">56.5%</td>
-              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-118</span></td>
             </tr><tr>
               <td class="book">BetOnline.ag</td>
               <td class="pb">+118 ★</td>
@@ -422,27 +386,27 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
               <td class="prob">56.5%</td>
               <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.0</strong> <span style="color:var(--accent)">-105</span></td>
             </tr><tr>
-              <td class="book">LowVig.ag</td>
-              <td class="pc">+118</td>
-              <td class="prob">45.9%</td>
-              <td class="pc">-130</td>
-              <td class="prob">56.5%</td>
-              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.0</strong> <span style="color:var(--accent)">-102</span></td>
-            </tr><tr>
               <td class="book">BetMGM</td>
               <td class="pc">+115</td>
               <td class="prob">46.5%</td>
               <td class="pw">-140 ✗</td>
               <td class="prob">58.3%</td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.0</strong> <span style="color:var(--accent)">-110</span></td>
+            </tr><tr>
+              <td class="book">BetUS</td>
+              <td class="pc">+118</td>
+              <td class="prob">45.9%</td>
+              <td class="pc">-130</td>
+              <td class="prob">56.5%</td>
               <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.0</strong> <span style="color:var(--accent)">-105</span></td>
             </tr></tbody>
             </table>
             <div class="claude-box">
               <div class="cb-header">📊 True Odds (vig removed &amp; averaged)</div>
               <div class="cb-grid">
-                <div class="cb-team"><div class="cb-name">Minnesota Twins</div><div class="cb-pct ">45%</div><div class="cb-line">Fair: +121</div></div>
+                <div class="cb-team"><div class="cb-name">Minnesota Twins</div><div class="cb-pct ">45%</div><div class="cb-line">Fair: +122</div></div>
                 <div class="cb-vs">vs</div>
-                <div class="cb-team"><div class="cb-name">Chicago White Sox</div><div class="cb-pct fav">55%</div><div class="cb-line">Fair: -121</div></div>
+                <div class="cb-team"><div class="cb-name">Chicago White Sox</div><div class="cb-pct fav">55%</div><div class="cb-line">Fair: -122</div></div>
               </div>
               <div class="cb-method">Vig removed from each book via normalization, averaged across non-outlier books.</div>
             </div>
@@ -454,7 +418,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
               <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">45% / 55%</div></div>
               <div class="bbs"><div class="bbs-label">True Win%</div><div class="bbs-val">51%</div></div>
               <div class="bbs"><div class="bbs-label">Fair Line</div><div class="bbs-val">-104</div></div>
-              <div class="bbs"><div class="bbs-label">Edge</div><div class="bbs-val green">+0.6%</div></div>
+              <div class="bbs"><div class="bbs-label">Edge</div><div class="bbs-val green">+0.5%</div></div>
             </div></div>
           </div>
         </div>
@@ -484,23 +448,9 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
               <td class="book">MyBookie.ag</td>
               <td class="pc">-138</td>
               <td class="prob">58.0%</td>
-              <td class="pc">+117</td>
+              <td class="pw">+117 ✗</td>
               <td class="prob">46.1%</td>
-              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.0</strong> <span style="color:var(--accent)">-119</span></td>
-            </tr><tr>
-              <td class="book">Bovada</td>
-              <td class="pc">-141</td>
-              <td class="prob">58.5%</td>
-              <td class="pc">+118</td>
-              <td class="prob">45.9%</td>
-              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.0</strong> <span style="color:var(--accent)">-120</span></td>
-            </tr><tr>
-              <td class="book">BetRivers</td>
-              <td class="pc">-141</td>
-              <td class="prob">58.5%</td>
-              <td class="pw">+112 ✗</td>
-              <td class="prob">47.2%</td>
-              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.0</strong> <span style="color:var(--accent)">-125</span></td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.0</strong> <span style="color:var(--accent)">-117</span></td>
             </tr><tr>
               <td class="book">BetOnline.ag</td>
               <td class="pc">-139</td>
@@ -508,13 +458,6 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
               <td class="pb">+126 ★</td>
               <td class="prob">44.2%</td>
               <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">+110</span></td>
-            </tr><tr>
-              <td class="book">LowVig.ag</td>
-              <td class="pc">-139</td>
-              <td class="prob">58.2%</td>
-              <td class="pc">+126</td>
-              <td class="prob">44.2%</td>
-              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">+112</span></td>
             </tr><tr>
               <td class="book">BetUS</td>
               <td class="pc">-139</td>
@@ -528,7 +471,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
               <td class="prob">59.2%</td>
               <td class="pc">+120</td>
               <td class="prob">45.5%</td>
-              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">+105</span></td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.0</strong> <span style="color:var(--accent)">-130</span></td>
             </tr></tbody>
             </table>
             <div class="claude-box">
@@ -543,12 +486,12 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
             <div class="best-bet">
             <div class="bb-header">★ Best Bet This Game</div>
             <div class="bb-play">Under 7.5 Runs</div>
-            <div class="bb-sub">+103 at DraftKings</div>
+            <div class="bb-sub">+105 at BetMGM</div>
             <div class="bb-stats">
               <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">56% / 44%</div></div>
               <div class="bbs"><div class="bbs-label">True Win%</div><div class="bbs-val">54%</div></div>
-              <div class="bbs"><div class="bbs-label">Fair Line</div><div class="bbs-val">-118</div></div>
-              <div class="bbs"><div class="bbs-label">Edge</div><div class="bbs-val green">+4.8%</div></div>
+              <div class="bbs"><div class="bbs-label">Fair Line</div><div class="bbs-val">-119</div></div>
+              <div class="bbs"><div class="bbs-label">Edge</div><div class="bbs-val green">+5.5%</div></div>
             </div></div>
           </div>
         </div>
@@ -575,13 +518,6 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
               <td class="prob">57.6%</td>
               <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.5</strong> <span style="color:var(--accent)">-118</span></td>
             </tr><tr>
-              <td class="book">Bovada</td>
-              <td class="pc">+109</td>
-              <td class="prob">47.8%</td>
-              <td class="pc">-131</td>
-              <td class="prob">56.7%</td>
-              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.5</strong> <span style="color:var(--accent)">-120</span></td>
-            </tr><tr>
               <td class="book">MyBookie.ag</td>
               <td class="pc">+112</td>
               <td class="prob">47.2%</td>
@@ -589,26 +525,12 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
               <td class="prob">56.9%</td>
               <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.5</strong> <span style="color:var(--accent)">-116</span></td>
             </tr><tr>
-              <td class="book">BetRivers</td>
-              <td class="pc">+107</td>
-              <td class="prob">48.3%</td>
-              <td class="pc">-134</td>
-              <td class="prob">57.3%</td>
-              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.5</strong> <span style="color:var(--accent)">-113</span></td>
-            </tr><tr>
               <td class="book">BetOnline.ag</td>
               <td class="pc">+116</td>
               <td class="prob">46.3%</td>
               <td class="pc">-128</td>
               <td class="prob">56.1%</td>
               <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.5</strong> <span style="color:var(--accent)">-118</span></td>
-            </tr><tr>
-              <td class="book">LowVig.ag</td>
-              <td class="pc">+116</td>
-              <td class="prob">46.3%</td>
-              <td class="pc">-128</td>
-              <td class="prob">56.1%</td>
-              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">8.5</strong> <span style="color:var(--accent)">-116</span></td>
             </tr><tr>
               <td class="book">BetUS</td>
               <td class="pb">+117 ★</td>
@@ -642,7 +564,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
               <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">45% / 55%</div></div>
               <div class="bbs"><div class="bbs-label">True Win%</div><div class="bbs-val">45%</div></div>
               <div class="bbs"><div class="bbs-label">Fair Line</div><div class="bbs-val">+120</div></div>
-              <div class="bbs"><div class="bbs-label">Edge</div><div class="bbs-val green">-0.6%</div></div>
+              <div class="bbs"><div class="bbs-label">Edge</div><div class="bbs-val green">-0.7%</div></div>
             </div></div>
           </div>
         </div>
@@ -669,17 +591,10 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
               <td class="prob">62.3%</td>
               <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-105</span></td>
             </tr><tr>
-              <td class="book">LowVig.ag</td>
-              <td class="pc">+149</td>
-              <td class="prob">40.2%</td>
-              <td class="pc">-165</td>
-              <td class="prob">62.3%</td>
-              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-102</span></td>
-            </tr><tr>
               <td class="book">DraftKings</td>
-              <td class="pc">+144</td>
+              <td class="pw">+144 ✗</td>
               <td class="prob">41.0%</td>
-              <td class="pc">-175</td>
+              <td class="pw">-175 ✗</td>
               <td class="prob">63.6%</td>
               <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-107</span></td>
             </tr><tr>
@@ -690,26 +605,12 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
               <td class="prob">63.6%</td>
               <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-105</span></td>
             </tr><tr>
-              <td class="book">Bovada</td>
-              <td class="pw">+139 ✗</td>
-              <td class="prob">41.8%</td>
-              <td class="pc">-165</td>
-              <td class="prob">62.3%</td>
-              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-105</span></td>
-            </tr><tr>
               <td class="book">MyBookie.ag</td>
               <td class="pc">+144</td>
               <td class="prob">41.0%</td>
               <td class="pc">-170</td>
               <td class="prob">63.0%</td>
               <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-106</span></td>
-            </tr><tr>
-              <td class="book">BetRivers</td>
-              <td class="pc">+143</td>
-              <td class="prob">41.2%</td>
-              <td class="pw">-180 ✗</td>
-              <td class="prob">64.3%</td>
-              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-113</span></td>
             </tr><tr>
               <td class="book">BetUS</td>
               <td class="pc">+146</td>
@@ -722,20 +623,20 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
             <div class="claude-box">
               <div class="cb-header">📊 True Odds (vig removed &amp; averaged)</div>
               <div class="cb-grid">
-                <div class="cb-team"><div class="cb-name">Chicago Cubs</div><div class="cb-pct ">39%</div><div class="cb-line">Fair: +154</div></div>
+                <div class="cb-team"><div class="cb-name">Chicago Cubs</div><div class="cb-pct ">39%</div><div class="cb-line">Fair: +155</div></div>
                 <div class="cb-vs">vs</div>
-                <div class="cb-team"><div class="cb-name">Pittsburgh Pirates</div><div class="cb-pct fav">61%</div><div class="cb-line">Fair: -154</div></div>
+                <div class="cb-team"><div class="cb-name">Pittsburgh Pirates</div><div class="cb-pct fav">61%</div><div class="cb-line">Fair: -155</div></div>
               </div>
               <div class="cb-method">Vig removed from each book via normalization, averaged across non-outlier books.</div>
             </div>
             <div class="best-bet">
             <div class="bb-header">★ Best Bet This Game</div>
-            <div class="bb-play">Chicago Cubs Moneyline</div>
-            <div class="bb-sub">+149 at BetOnline.ag</div>
+            <div class="bb-play">Under 7.5 Runs</div>
+            <div class="bb-sub">-108 at FanDuel</div>
             <div class="bb-stats">
               <div class="bbs"><div class="bbs-label">True Odds</div><div class="bbs-val">39% / 61%</div></div>
-              <div class="bbs"><div class="bbs-label">True Win%</div><div class="bbs-val">39%</div></div>
-              <div class="bbs"><div class="bbs-label">Fair Line</div><div class="bbs-val">+154</div></div>
+              <div class="bbs"><div class="bbs-label">True Win%</div><div class="bbs-val">51%</div></div>
+              <div class="bbs"><div class="bbs-label">Fair Line</div><div class="bbs-val">-104</div></div>
               <div class="bbs"><div class="bbs-label">Edge</div><div class="bbs-val green">-0.8%</div></div>
             </div></div>
           </div>
@@ -763,17 +664,10 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
               <td class="prob">59.8%</td>
               <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-110</span></td>
             </tr><tr>
-              <td class="book">LowVig.ag</td>
-              <td class="pc">+135</td>
-              <td class="prob">42.6%</td>
-              <td class="pc">-149</td>
-              <td class="prob">59.8%</td>
-              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-107</span></td>
-            </tr><tr>
               <td class="book">DraftKings</td>
               <td class="pc">+130</td>
               <td class="prob">43.5%</td>
-              <td class="pc">-157</td>
+              <td class="pw">-157 ✗</td>
               <td class="prob">61.1%</td>
               <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-112</span></td>
             </tr><tr>
@@ -783,20 +677,6 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
               <td class="pc">-155</td>
               <td class="prob">60.8%</td>
               <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-115</span></td>
-            </tr><tr>
-              <td class="book">Bovada</td>
-              <td class="pc">+125</td>
-              <td class="prob">44.4%</td>
-              <td class="pc">-149</td>
-              <td class="prob">59.8%</td>
-              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-115</span></td>
-            </tr><tr>
-              <td class="book">BetRivers</td>
-              <td class="pc">+130</td>
-              <td class="prob">43.5%</td>
-              <td class="pw">-162 ✗</td>
-              <td class="prob">61.8%</td>
-              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-110</span></td>
             </tr><tr>
               <td class="book">BetUS</td>
               <td class="pc">+134</td>
@@ -810,7 +690,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
               <td class="prob">43.7%</td>
               <td class="pc">-153</td>
               <td class="prob">60.5%</td>
-              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-113</span></td>
+              <td class="prob"><span style="color:var(--muted)">O/U</span> <strong style="color:var(--text)">7.5</strong> <span style="color:var(--accent)">-115</span></td>
             </tr></tbody>
             </table>
             <div class="claude-box">
@@ -842,1259 +722,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
       <div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;color:#fff;margin-bottom:6px">⚡ Pitcher / Batter Matchups</div>
       <div style="font-size:13px;color:var(--muted)">Career all-time stats for each batter vs today's probable starting pitcher. Min 3 AB shown. Color = how well the batter has historically hit this pitcher.</div>
     </div>
-    
-        <div class="game-block open" onclick="toggleGame(this)">
-          <div class="game-header">
-            <div>
-              <div class="game-teams">Los Angeles Angels @ Detroit Tigers</div>
-              <div class="game-time">Grayson Rodriguez vs Jack Flaherty</div>
-            </div>
-            <div class="game-right"><span class="toggle">▼</span></div>
-          </div>
-          <div class="game-body" style="padding:0 15px 20px">
-
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px">
-
-              <div>
-                <div class="pitcher-card">
-                  <div class="pitcher-role">AWAY STARTER</div>
-                  <div class="pitcher-name">Grayson Rodriguez</div>
-                  <div class="pitcher-team">Los Angeles Angels &nbsp;·&nbsp; ERA 10.61</div>
-                </div>
-                <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px">
-                  Detroit Tigers Batters vs Grayson Rodriguez
-                </div>
-                <div style="font-size:10px;color:var(--muted);margin-bottom:6px;font-family:monospace">📋 Roster (lineup not yet posted)</div>
-            <table class="dtable"><thead><tr><th>Batter</th><th>Pos</th><th>AB</th><th>H</th><th>HR</th><th>K</th><th>Career BA vs Pitcher</th></tr></thead>
-            <tbody><tr>
-                  <td class="book">Riley Greene</td>
-                  <td class="mono" style="color:var(--muted)">LF</td>
-                  <td class="mono">5</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">3</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.200</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/5)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:66%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Matt Vierling</td>
-                  <td class="mono" style="color:var(--muted)">CF</td>
-                  <td class="mono">4</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">3</td>
-                  <td>
-                    <span class="mono" style="color:#fbbf24;font-weight:700">.250</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/4)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:83%;background:#fbbf24;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Zach McKinstry</td>
-                  <td class="mono" style="color:var(--muted)">2B</td>
-                  <td class="mono">3</td>
-                  <td class="mono">2</td>
-                  <td class="mono">0</td>
-                  <td class="mono">1</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.667</span>
-                    <span style="color:var(--muted);font-size:11px"> (2/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr></tbody></table>
-              </div>
-
-              <div>
-                <div class="pitcher-card">
-                  <div class="pitcher-role">HOME STARTER</div>
-                  <div class="pitcher-name">Jack Flaherty</div>
-                  <div class="pitcher-team">Detroit Tigers &nbsp;·&nbsp; ERA 5.94</div>
-                </div>
-                <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px">
-                  Los Angeles Angels Batters vs Jack Flaherty
-                </div>
-                <div style="font-size:10px;color:var(--muted);margin-bottom:6px;font-family:monospace">📋 Roster (lineup not yet posted)</div>
-            <table class="dtable"><thead><tr><th>Batter</th><th>Pos</th><th>AB</th><th>H</th><th>HR</th><th>K</th><th>Career BA vs Pitcher</th></tr></thead>
-            <tbody><tr>
-                  <td class="book">Jorge Soler</td>
-                  <td class="mono" style="color:var(--muted)">DH</td>
-                  <td class="mono">11</td>
-                  <td class="mono">3</td>
-                  <td class="mono">0</td>
-                  <td class="mono">6</td>
-                  <td>
-                    <span class="mono" style="color:#fbbf24;font-weight:700">.273</span>
-                    <span style="color:var(--muted);font-size:11px"> (3/11)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:90%;background:#fbbf24;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Adam Frazier</td>
-                  <td class="mono" style="color:var(--muted)">2B</td>
-                  <td class="mono">8</td>
-                  <td class="mono">3</td>
-                  <td class="mono">0</td>
-                  <td class="mono">1</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.375</span>
-                    <span style="color:var(--muted);font-size:11px"> (3/8)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Nick Madrigal</td>
-                  <td class="mono" style="color:var(--muted)">3B</td>
-                  <td class="mono">5</td>
-                  <td class="mono">4</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.800</span>
-                    <span style="color:var(--muted);font-size:11px"> (4/5)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Logan O'Hoppe</td>
-                  <td class="mono" style="color:var(--muted)">C</td>
-                  <td class="mono">3</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">1</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.333</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr></tbody></table>
-              </div>
-
-            </div>
-
-            <div style="margin-top:10px;padding:8px 12px;background:var(--bg3);border-radius:6px;font-size:11px;color:var(--muted);line-height:1.6">
-              <span style="color:var(--green)">■</span> .300+ BA = batter has historically hit this pitcher well &nbsp;
-              <span style="color:var(--amber)">■</span> .250–.299 = moderate history &nbsp;
-              <span style="color:var(--red)">■</span> Under .250 = pitcher has the edge &nbsp;·&nbsp; Min 3 AB shown
-            </div>
-          </div>
-        </div>
-        <div class="game-block " onclick="toggleGame(this)">
-          <div class="game-header">
-            <div>
-              <div class="game-teams">Minnesota Twins @ Chicago White Sox</div>
-              <div class="game-time">Kendry Rojas vs Davis Martin</div>
-            </div>
-            <div class="game-right"><span class="toggle">▼</span></div>
-          </div>
-          <div class="game-body" style="padding:0 15px 20px">
-
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px">
-
-              <div>
-                <div class="pitcher-card">
-                  <div class="pitcher-role">AWAY STARTER</div>
-                  <div class="pitcher-name">Kendry Rojas</div>
-                  <div class="pitcher-team">Minnesota Twins &nbsp;·&nbsp; ERA 1.26</div>
-                </div>
-                <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px">
-                  Chicago White Sox Batters vs Kendry Rojas
-                </div>
-                <p style="color:var(--muted);font-size:12px;padding:8px 0">Roster-based (lineup not posted) — no batters with 3+ career AB vs Kendry Rojas.</p>
-              </div>
-
-              <div>
-                <div class="pitcher-card">
-                  <div class="pitcher-role">HOME STARTER</div>
-                  <div class="pitcher-name">Davis Martin</div>
-                  <div class="pitcher-team">Chicago White Sox &nbsp;·&nbsp; ERA 2.04</div>
-                </div>
-                <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px">
-                  Minnesota Twins Batters vs Davis Martin
-                </div>
-                <div style="font-size:10px;color:var(--muted);margin-bottom:6px;font-family:monospace">📋 Roster (lineup not yet posted)</div>
-            <table class="dtable"><thead><tr><th>Batter</th><th>Pos</th><th>AB</th><th>H</th><th>HR</th><th>K</th><th>Career BA vs Pitcher</th></tr></thead>
-            <tbody><tr>
-                  <td class="book">Byron Buxton</td>
-                  <td class="mono" style="color:var(--muted)">CF</td>
-                  <td class="mono">10</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">5</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.100</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/10)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:33%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Kody Clemens</td>
-                  <td class="mono" style="color:var(--muted)">1B</td>
-                  <td class="mono">7</td>
-                  <td class="mono">3</td>
-                  <td class="mono">1</td>
-                  <td class="mono">2</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.429</span>
-                    <span style="color:var(--muted);font-size:11px"> (3/7)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Victor Caratini</td>
-                  <td class="mono" style="color:var(--muted)">C</td>
-                  <td class="mono">5</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">1</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.200</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/5)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:66%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Luke Keaschall</td>
-                  <td class="mono" style="color:var(--muted)">2B</td>
-                  <td class="mono">4</td>
-                  <td class="mono">2</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.500</span>
-                    <span style="color:var(--muted);font-size:11px"> (2/4)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Ryan Kreidler</td>
-                  <td class="mono" style="color:var(--muted)">CF</td>
-                  <td class="mono">4</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td class="mono">2</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
-                    <span style="color:var(--muted);font-size:11px"> (0/4)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">James Outman</td>
-                  <td class="mono" style="color:var(--muted)">CF</td>
-                  <td class="mono">3</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td class="mono">1</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
-                    <span style="color:var(--muted);font-size:11px"> (0/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr></tbody></table>
-              </div>
-
-            </div>
-
-            <div style="margin-top:10px;padding:8px 12px;background:var(--bg3);border-radius:6px;font-size:11px;color:var(--muted);line-height:1.6">
-              <span style="color:var(--green)">■</span> .300+ BA = batter has historically hit this pitcher well &nbsp;
-              <span style="color:var(--amber)">■</span> .250–.299 = moderate history &nbsp;
-              <span style="color:var(--red)">■</span> Under .250 = pitcher has the edge &nbsp;·&nbsp; Min 3 AB shown
-            </div>
-          </div>
-        </div>
-        <div class="game-block " onclick="toggleGame(this)">
-          <div class="game-header">
-            <div>
-              <div class="game-teams">Atlanta Braves @ Boston Red Sox</div>
-              <div class="game-time">Chris Sale vs Payton Tolle</div>
-            </div>
-            <div class="game-right"><span class="toggle">▼</span></div>
-          </div>
-          <div class="game-body" style="padding:0 15px 20px">
-
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px">
-
-              <div>
-                <div class="pitcher-card">
-                  <div class="pitcher-role">AWAY STARTER</div>
-                  <div class="pitcher-name">Chris Sale</div>
-                  <div class="pitcher-team">Atlanta Braves &nbsp;·&nbsp; ERA 1.89</div>
-                </div>
-                <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px">
-                  Boston Red Sox Batters vs Chris Sale
-                </div>
-                <div style="font-size:10px;color:var(--muted);margin-bottom:6px;font-family:monospace">📋 Roster (lineup not yet posted)</div>
-            <table class="dtable"><thead><tr><th>Batter</th><th>Pos</th><th>AB</th><th>H</th><th>HR</th><th>K</th><th>Career BA vs Pitcher</th></tr></thead>
-            <tbody><tr>
-                  <td class="book">Willson Contreras</td>
-                  <td class="mono" style="color:var(--muted)">1B</td>
-                  <td class="mono">6</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">1</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.167</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/6)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:55%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Isiah Kiner-Falefa</td>
-                  <td class="mono" style="color:var(--muted)">2B</td>
-                  <td class="mono">5</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">2</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.200</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/5)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:66%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Jarren Duran</td>
-                  <td class="mono" style="color:var(--muted)">LF</td>
-                  <td class="mono">5</td>
-                  <td class="mono">3</td>
-                  <td class="mono">0</td>
-                  <td class="mono">2</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.600</span>
-                    <span style="color:var(--muted);font-size:11px"> (3/5)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Ceddanne Rafaela</td>
-                  <td class="mono" style="color:var(--muted)">CF</td>
-                  <td class="mono">4</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">2</td>
-                  <td>
-                    <span class="mono" style="color:#fbbf24;font-weight:700">.250</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/4)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:83%;background:#fbbf24;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Andruw Monasterio</td>
-                  <td class="mono" style="color:var(--muted)">SS</td>
-                  <td class="mono">3</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td class="mono">1</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
-                    <span style="color:var(--muted);font-size:11px"> (0/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Caleb Durbin</td>
-                  <td class="mono" style="color:var(--muted)">3B</td>
-                  <td class="mono">3</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
-                    <span style="color:var(--muted);font-size:11px"> (0/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Connor Wong</td>
-                  <td class="mono" style="color:var(--muted)">C</td>
-                  <td class="mono">3</td>
-                  <td class="mono">2</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.667</span>
-                    <span style="color:var(--muted);font-size:11px"> (2/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Nick Sogard</td>
-                  <td class="mono" style="color:var(--muted)">3B</td>
-                  <td class="mono">3</td>
-                  <td class="mono">2</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.667</span>
-                    <span style="color:var(--muted);font-size:11px"> (2/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr></tbody></table>
-              </div>
-
-              <div>
-                <div class="pitcher-card">
-                  <div class="pitcher-role">HOME STARTER</div>
-                  <div class="pitcher-name">Payton Tolle</div>
-                  <div class="pitcher-team">Boston Red Sox &nbsp;·&nbsp; ERA 2.45</div>
-                </div>
-                <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px">
-                  Atlanta Braves Batters vs Payton Tolle
-                </div>
-                <div style="font-size:10px;color:var(--muted);margin-bottom:6px;font-family:monospace">📋 Roster (lineup not yet posted)</div>
-            <table class="dtable"><thead><tr><th>Batter</th><th>Pos</th><th>AB</th><th>H</th><th>HR</th><th>K</th><th>Career BA vs Pitcher</th></tr></thead>
-            <tbody><tr>
-                  <td class="book">Austin Riley</td>
-                  <td class="mono" style="color:var(--muted)">3B</td>
-                  <td class="mono">3</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td class="mono">1</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
-                    <span style="color:var(--muted);font-size:11px"> (0/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Ha-Seong Kim</td>
-                  <td class="mono" style="color:var(--muted)">SS</td>
-                  <td class="mono">3</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td class="mono">2</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
-                    <span style="color:var(--muted);font-size:11px"> (0/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Matt Olson</td>
-                  <td class="mono" style="color:var(--muted)">1B</td>
-                  <td class="mono">3</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
-                    <span style="color:var(--muted);font-size:11px"> (0/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Mauricio Dubón</td>
-                  <td class="mono" style="color:var(--muted)">SS</td>
-                  <td class="mono">3</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
-                    <span style="color:var(--muted);font-size:11px"> (0/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Michael Harris II</td>
-                  <td class="mono" style="color:var(--muted)">CF</td>
-                  <td class="mono">3</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
-                    <span style="color:var(--muted);font-size:11px"> (0/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Ozzie Albies</td>
-                  <td class="mono" style="color:var(--muted)">2B</td>
-                  <td class="mono">3</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
-                    <span style="color:var(--muted);font-size:11px"> (0/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Sandy León</td>
-                  <td class="mono" style="color:var(--muted)">C</td>
-                  <td class="mono">3</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
-                    <span style="color:var(--muted);font-size:11px"> (0/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr></tbody></table>
-              </div>
-
-            </div>
-
-            <div style="margin-top:10px;padding:8px 12px;background:var(--bg3);border-radius:6px;font-size:11px;color:var(--muted);line-height:1.6">
-              <span style="color:var(--green)">■</span> .300+ BA = batter has historically hit this pitcher well &nbsp;
-              <span style="color:var(--amber)">■</span> .250–.299 = moderate history &nbsp;
-              <span style="color:var(--red)">■</span> Under .250 = pitcher has the edge &nbsp;·&nbsp; Min 3 AB shown
-            </div>
-          </div>
-        </div>
-        <div class="game-block " onclick="toggleGame(this)">
-          <div class="game-header">
-            <div>
-              <div class="game-teams">Toronto Blue Jays @ Baltimore Orioles</div>
-              <div class="game-time">Patrick Corbin vs Chris Bassitt</div>
-            </div>
-            <div class="game-right"><span class="toggle">▼</span></div>
-          </div>
-          <div class="game-body" style="padding:0 15px 20px">
-
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px">
-
-              <div>
-                <div class="pitcher-card">
-                  <div class="pitcher-role">AWAY STARTER</div>
-                  <div class="pitcher-name">Patrick Corbin</div>
-                  <div class="pitcher-team">Toronto Blue Jays &nbsp;·&nbsp; ERA 3.86</div>
-                </div>
-                <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px">
-                  Baltimore Orioles Batters vs Patrick Corbin
-                </div>
-                <div style="font-size:10px;color:var(--muted);margin-bottom:6px;font-family:monospace">📋 Roster (lineup not yet posted)</div>
-            <table class="dtable"><thead><tr><th>Batter</th><th>Pos</th><th>AB</th><th>H</th><th>HR</th><th>K</th><th>Career BA vs Pitcher</th></tr></thead>
-            <tbody><tr>
-                  <td class="book">Pete Alonso</td>
-                  <td class="mono" style="color:var(--muted)">1B</td>
-                  <td class="mono">52</td>
-                  <td class="mono">19</td>
-                  <td class="mono">5</td>
-                  <td class="mono">12</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.365</span>
-                    <span style="color:var(--muted);font-size:11px"> (19/52)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Colton Cowser</td>
-                  <td class="mono" style="color:var(--muted)">CF</td>
-                  <td class="mono">6</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">2</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.167</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/6)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:55%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Jackson Holliday</td>
-                  <td class="mono" style="color:var(--muted)">2B</td>
-                  <td class="mono">6</td>
-                  <td class="mono">3</td>
-                  <td class="mono">1</td>
-                  <td class="mono">2</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.500</span>
-                    <span style="color:var(--muted);font-size:11px"> (3/6)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Adley Rutschman</td>
-                  <td class="mono" style="color:var(--muted)">C</td>
-                  <td class="mono">5</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">2</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.200</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/5)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:66%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Blaze Alexander</td>
-                  <td class="mono" style="color:var(--muted)">3B</td>
-                  <td class="mono">5</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">4</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.200</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/5)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:66%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Coby Mayo</td>
-                  <td class="mono" style="color:var(--muted)">3B</td>
-                  <td class="mono">5</td>
-                  <td class="mono">2</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.400</span>
-                    <span style="color:var(--muted);font-size:11px"> (2/5)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Leody Taveras</td>
-                  <td class="mono" style="color:var(--muted)">CF</td>
-                  <td class="mono">3</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td class="mono">1</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
-                    <span style="color:var(--muted);font-size:11px"> (0/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Taylor Ward</td>
-                  <td class="mono" style="color:var(--muted)">LF</td>
-                  <td class="mono">3</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td class="mono">1</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
-                    <span style="color:var(--muted);font-size:11px"> (0/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Tyler O'Neill</td>
-                  <td class="mono" style="color:var(--muted)">RF</td>
-                  <td class="mono">3</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">2</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.333</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr></tbody></table>
-              </div>
-
-              <div>
-                <div class="pitcher-card">
-                  <div class="pitcher-role">HOME STARTER</div>
-                  <div class="pitcher-name">Chris Bassitt</div>
-                  <div class="pitcher-team">Baltimore Orioles &nbsp;·&nbsp; ERA 5.51</div>
-                </div>
-                <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px">
-                  Toronto Blue Jays Batters vs Chris Bassitt
-                </div>
-                <div style="font-size:10px;color:var(--muted);margin-bottom:6px;font-family:monospace">📋 Roster (lineup not yet posted)</div>
-            <table class="dtable"><thead><tr><th>Batter</th><th>Pos</th><th>AB</th><th>H</th><th>HR</th><th>K</th><th>Career BA vs Pitcher</th></tr></thead>
-            <tbody><tr>
-                  <td class="book">George Springer</td>
-                  <td class="mono" style="color:var(--muted)">DH</td>
-                  <td class="mono">17</td>
-                  <td class="mono">5</td>
-                  <td class="mono">2</td>
-                  <td class="mono">2</td>
-                  <td>
-                    <span class="mono" style="color:#fbbf24;font-weight:700">.294</span>
-                    <span style="color:var(--muted);font-size:11px"> (5/17)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:97%;background:#fbbf24;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Lenyn Sosa</td>
-                  <td class="mono" style="color:var(--muted)">2B</td>
-                  <td class="mono">7</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">1</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.143</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/7)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:47%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Jesús Sánchez</td>
-                  <td class="mono" style="color:var(--muted)">RF</td>
-                  <td class="mono">6</td>
-                  <td class="mono">1</td>
-                  <td class="mono">1</td>
-                  <td class="mono">2</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.167</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/6)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:55%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Vladimir Guerrero Jr.</td>
-                  <td class="mono" style="color:var(--muted)">1B</td>
-                  <td class="mono">6</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">2</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.167</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/6)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:55%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Andrés Giménez</td>
-                  <td class="mono" style="color:var(--muted)">SS</td>
-                  <td class="mono">5</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td class="mono">1</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
-                    <span style="color:var(--muted);font-size:11px"> (0/5)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Daulton Varsho</td>
-                  <td class="mono" style="color:var(--muted)">CF</td>
-                  <td class="mono">3</td>
-                  <td class="mono">1</td>
-                  <td class="mono">1</td>
-                  <td class="mono">2</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.333</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Ernie Clement</td>
-                  <td class="mono" style="color:var(--muted)">2B</td>
-                  <td class="mono">3</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td class="mono">1</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
-                    <span style="color:var(--muted);font-size:11px"> (0/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Myles Straw</td>
-                  <td class="mono" style="color:var(--muted)">RF</td>
-                  <td class="mono">3</td>
-                  <td class="mono">2</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.667</span>
-                    <span style="color:var(--muted);font-size:11px"> (2/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Tyler Heineman</td>
-                  <td class="mono" style="color:var(--muted)">C</td>
-                  <td class="mono">3</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.333</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr></tbody></table>
-              </div>
-
-            </div>
-
-            <div style="margin-top:10px;padding:8px 12px;background:var(--bg3);border-radius:6px;font-size:11px;color:var(--muted);line-height:1.6">
-              <span style="color:var(--green)">■</span> .300+ BA = batter has historically hit this pitcher well &nbsp;
-              <span style="color:var(--amber)">■</span> .250–.299 = moderate history &nbsp;
-              <span style="color:var(--red)">■</span> Under .250 = pitcher has the edge &nbsp;·&nbsp; Min 3 AB shown
-            </div>
-          </div>
-        </div>
-        <div class="game-block " onclick="toggleGame(this)">
-          <div class="game-header">
-            <div>
-              <div class="game-teams">Chicago Cubs @ Pittsburgh Pirates</div>
-              <div class="game-time">Colin Rea vs Paul Skenes</div>
-            </div>
-            <div class="game-right"><span class="toggle">▼</span></div>
-          </div>
-          <div class="game-body" style="padding:0 15px 20px">
-
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px">
-
-              <div>
-                <div class="pitcher-card">
-                  <div class="pitcher-role">AWAY STARTER</div>
-                  <div class="pitcher-name">Colin Rea</div>
-                  <div class="pitcher-team">Chicago Cubs &nbsp;·&nbsp; ERA 4.83</div>
-                </div>
-                <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px">
-                  Pittsburgh Pirates Batters vs Colin Rea
-                </div>
-                <div style="font-size:10px;color:var(--muted);margin-bottom:6px;font-family:monospace">📋 Roster (lineup not yet posted)</div>
-            <table class="dtable"><thead><tr><th>Batter</th><th>Pos</th><th>AB</th><th>H</th><th>HR</th><th>K</th><th>Career BA vs Pitcher</th></tr></thead>
-            <tbody><tr>
-                  <td class="book">Jared Triolo</td>
-                  <td class="mono" style="color:var(--muted)">3B</td>
-                  <td class="mono">15</td>
-                  <td class="mono">3</td>
-                  <td class="mono">0</td>
-                  <td class="mono">2</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.200</span>
-                    <span style="color:var(--muted);font-size:11px"> (3/15)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:66%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Nick Gonzales</td>
-                  <td class="mono" style="color:var(--muted)">3B</td>
-                  <td class="mono">12</td>
-                  <td class="mono">5</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.417</span>
-                    <span style="color:var(--muted);font-size:11px"> (5/12)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Oneil Cruz</td>
-                  <td class="mono" style="color:var(--muted)">CF</td>
-                  <td class="mono">8</td>
-                  <td class="mono">2</td>
-                  <td class="mono">0</td>
-                  <td class="mono">2</td>
-                  <td>
-                    <span class="mono" style="color:#fbbf24;font-weight:700">.250</span>
-                    <span style="color:var(--muted);font-size:11px"> (2/8)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:83%;background:#fbbf24;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Bryan Reynolds</td>
-                  <td class="mono" style="color:var(--muted)">LF</td>
-                  <td class="mono">6</td>
-                  <td class="mono">2</td>
-                  <td class="mono">0</td>
-                  <td class="mono">2</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.333</span>
-                    <span style="color:var(--muted);font-size:11px"> (2/6)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Henry Davis</td>
-                  <td class="mono" style="color:var(--muted)">C</td>
-                  <td class="mono">6</td>
-                  <td class="mono">3</td>
-                  <td class="mono">1</td>
-                  <td class="mono">2</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.500</span>
-                    <span style="color:var(--muted);font-size:11px"> (3/6)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Brandon Lowe</td>
-                  <td class="mono" style="color:var(--muted)">2B</td>
-                  <td class="mono">3</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">1</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.333</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Spencer Horwitz</td>
-                  <td class="mono" style="color:var(--muted)">1B</td>
-                  <td class="mono">3</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">1</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.333</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr></tbody></table>
-              </div>
-
-              <div>
-                <div class="pitcher-card">
-                  <div class="pitcher-role">HOME STARTER</div>
-                  <div class="pitcher-name">Paul Skenes</div>
-                  <div class="pitcher-team">Pittsburgh Pirates &nbsp;·&nbsp; ERA 3.00</div>
-                </div>
-                <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px">
-                  Chicago Cubs Batters vs Paul Skenes
-                </div>
-                <div style="font-size:10px;color:var(--muted);margin-bottom:6px;font-family:monospace">📋 Roster (lineup not yet posted)</div>
-            <table class="dtable"><thead><tr><th>Batter</th><th>Pos</th><th>AB</th><th>H</th><th>HR</th><th>K</th><th>Career BA vs Pitcher</th></tr></thead>
-            <tbody><tr>
-                  <td class="book">Michael Busch</td>
-                  <td class="mono" style="color:var(--muted)">1B</td>
-                  <td class="mono">14</td>
-                  <td class="mono">4</td>
-                  <td class="mono">1</td>
-                  <td class="mono">6</td>
-                  <td>
-                    <span class="mono" style="color:#fbbf24;font-weight:700">.286</span>
-                    <span style="color:var(--muted);font-size:11px"> (4/14)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:95%;background:#fbbf24;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Seiya Suzuki</td>
-                  <td class="mono" style="color:var(--muted)">RF</td>
-                  <td class="mono">13</td>
-                  <td class="mono">3</td>
-                  <td class="mono">1</td>
-                  <td class="mono">5</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.231</span>
-                    <span style="color:var(--muted);font-size:11px"> (3/13)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:76%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Ian Happ</td>
-                  <td class="mono" style="color:var(--muted)">LF</td>
-                  <td class="mono">12</td>
-                  <td class="mono">3</td>
-                  <td class="mono">0</td>
-                  <td class="mono">6</td>
-                  <td>
-                    <span class="mono" style="color:#fbbf24;font-weight:700">.250</span>
-                    <span style="color:var(--muted);font-size:11px"> (3/12)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:83%;background:#fbbf24;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Nico Hoerner</td>
-                  <td class="mono" style="color:var(--muted)">2B</td>
-                  <td class="mono">12</td>
-                  <td class="mono">4</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.333</span>
-                    <span style="color:var(--muted);font-size:11px"> (4/12)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Pete Crow-Armstrong</td>
-                  <td class="mono" style="color:var(--muted)">CF</td>
-                  <td class="mono">12</td>
-                  <td class="mono">3</td>
-                  <td class="mono">0</td>
-                  <td class="mono">4</td>
-                  <td>
-                    <span class="mono" style="color:#fbbf24;font-weight:700">.250</span>
-                    <span style="color:var(--muted);font-size:11px"> (3/12)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:83%;background:#fbbf24;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Dansby Swanson</td>
-                  <td class="mono" style="color:var(--muted)">SS</td>
-                  <td class="mono">8</td>
-                  <td class="mono">2</td>
-                  <td class="mono">1</td>
-                  <td class="mono">3</td>
-                  <td>
-                    <span class="mono" style="color:#fbbf24;font-weight:700">.250</span>
-                    <span style="color:var(--muted);font-size:11px"> (2/8)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:83%;background:#fbbf24;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Alex Bregman</td>
-                  <td class="mono" style="color:var(--muted)">3B</td>
-                  <td class="mono">6</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">2</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.167</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/6)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:55%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Michael Conforto</td>
-                  <td class="mono" style="color:var(--muted)">RF</td>
-                  <td class="mono">4</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td class="mono">4</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
-                    <span style="color:var(--muted);font-size:11px"> (0/4)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Miguel Amaya</td>
-                  <td class="mono" style="color:var(--muted)">C</td>
-                  <td class="mono">4</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td class="mono">1</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
-                    <span style="color:var(--muted);font-size:11px"> (0/4)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr></tbody></table>
-              </div>
-
-            </div>
-
-            <div style="margin-top:10px;padding:8px 12px;background:var(--bg3);border-radius:6px;font-size:11px;color:var(--muted);line-height:1.6">
-              <span style="color:var(--green)">■</span> .300+ BA = batter has historically hit this pitcher well &nbsp;
-              <span style="color:var(--amber)">■</span> .250–.299 = moderate history &nbsp;
-              <span style="color:var(--red)">■</span> Under .250 = pitcher has the edge &nbsp;·&nbsp; Min 3 AB shown
-            </div>
-          </div>
-        </div>
-        <div class="game-block " onclick="toggleGame(this)">
-          <div class="game-header">
-            <div>
-              <div class="game-teams">Houston Astros @ Texas Rangers</div>
-              <div class="game-time">Spencer Arrighetti vs Nathan Eovaldi</div>
-            </div>
-            <div class="game-right"><span class="toggle">▼</span></div>
-          </div>
-          <div class="game-body" style="padding:0 15px 20px">
-
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px">
-
-              <div>
-                <div class="pitcher-card">
-                  <div class="pitcher-role">AWAY STARTER</div>
-                  <div class="pitcher-name">Spencer Arrighetti</div>
-                  <div class="pitcher-team">Houston Astros &nbsp;·&nbsp; ERA 1.32</div>
-                </div>
-                <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px">
-                  Texas Rangers Batters vs Spencer Arrighetti
-                </div>
-                <div style="font-size:10px;color:var(--muted);margin-bottom:6px;font-family:monospace">📋 Roster (lineup not yet posted)</div>
-            <table class="dtable"><thead><tr><th>Batter</th><th>Pos</th><th>AB</th><th>H</th><th>HR</th><th>K</th><th>Career BA vs Pitcher</th></tr></thead>
-            <tbody><tr>
-                  <td class="book">Kyle Higashioka</td>
-                  <td class="mono" style="color:var(--muted)">C</td>
-                  <td class="mono">4</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
-                    <span style="color:var(--muted);font-size:11px"> (0/4)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Nicky Lopez</td>
-                  <td class="mono" style="color:var(--muted)">2B</td>
-                  <td class="mono">4</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">1</td>
-                  <td>
-                    <span class="mono" style="color:#fbbf24;font-weight:700">.250</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/4)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:83%;background:#fbbf24;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Danny Jansen</td>
-                  <td class="mono" style="color:var(--muted)">C</td>
-                  <td class="mono">3</td>
-                  <td class="mono">1</td>
-                  <td class="mono">1</td>
-                  <td class="mono">1</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.333</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Evan Carter</td>
-                  <td class="mono" style="color:var(--muted)">CF</td>
-                  <td class="mono">3</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
-                    <span style="color:var(--muted);font-size:11px"> (0/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Ezequiel Duran</td>
-                  <td class="mono" style="color:var(--muted)">2B</td>
-                  <td class="mono">3</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td class="mono">2</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
-                    <span style="color:var(--muted);font-size:11px"> (0/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Josh Jung</td>
-                  <td class="mono" style="color:var(--muted)">3B</td>
-                  <td class="mono">3</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
-                    <span style="color:var(--muted);font-size:11px"> (0/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Justin Foscue</td>
-                  <td class="mono" style="color:var(--muted)">2B</td>
-                  <td class="mono">3</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.333</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr></tbody></table>
-              </div>
-
-              <div>
-                <div class="pitcher-card">
-                  <div class="pitcher-role">HOME STARTER</div>
-                  <div class="pitcher-name">Nathan Eovaldi</div>
-                  <div class="pitcher-team">Texas Rangers &nbsp;·&nbsp; ERA 3.65</div>
-                </div>
-                <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px">
-                  Houston Astros Batters vs Nathan Eovaldi
-                </div>
-                <div style="font-size:10px;color:var(--muted);margin-bottom:6px;font-family:monospace">📋 Roster (lineup not yet posted)</div>
-            <table class="dtable"><thead><tr><th>Batter</th><th>Pos</th><th>AB</th><th>H</th><th>HR</th><th>K</th><th>Career BA vs Pitcher</th></tr></thead>
-            <tbody><tr>
-                  <td class="book">Yordan Alvarez</td>
-                  <td class="mono" style="color:var(--muted)">DH</td>
-                  <td class="mono">15</td>
-                  <td class="mono">6</td>
-                  <td class="mono">1</td>
-                  <td class="mono">4</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.400</span>
-                    <span style="color:var(--muted);font-size:11px"> (6/15)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Jeremy Peña</td>
-                  <td class="mono" style="color:var(--muted)">SS</td>
-                  <td class="mono">13</td>
-                  <td class="mono">4</td>
-                  <td class="mono">1</td>
-                  <td class="mono">4</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.308</span>
-                    <span style="color:var(--muted);font-size:11px"> (4/13)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Christian Walker</td>
-                  <td class="mono" style="color:var(--muted)">1B</td>
-                  <td class="mono">12</td>
-                  <td class="mono">5</td>
-                  <td class="mono">2</td>
-                  <td class="mono">4</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.417</span>
-                    <span style="color:var(--muted);font-size:11px"> (5/12)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Christian Vázquez</td>
-                  <td class="mono" style="color:var(--muted)">C</td>
-                  <td class="mono">9</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">1</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.111</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/9)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:36%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Jake Meyers</td>
-                  <td class="mono" style="color:var(--muted)">CF</td>
-                  <td class="mono">9</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">2</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.111</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/9)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:36%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Nick Allen</td>
-                  <td class="mono" style="color:var(--muted)">SS</td>
-                  <td class="mono">9</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">3</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.111</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/9)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:36%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Taylor Trammell</td>
-                  <td class="mono" style="color:var(--muted)">CF</td>
-                  <td class="mono">6</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">1</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.167</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/6)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:55%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Cam Smith</td>
-                  <td class="mono" style="color:var(--muted)">RF</td>
-                  <td class="mono">4</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td class="mono">2</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
-                    <span style="color:var(--muted);font-size:11px"> (0/4)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Braden Shewmake</td>
-                  <td class="mono" style="color:var(--muted)">SS</td>
-                  <td class="mono">3</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.333</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">Brice Matthews</td>
-                  <td class="mono" style="color:var(--muted)">CF</td>
-                  <td class="mono">3</td>
-                  <td class="mono">1</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td>
-                    <span class="mono" style="color:#f87171;font-weight:700">.333</span>
-                    <span style="color:var(--muted);font-size:11px"> (1/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:100%;background:#f87171;border-radius:2px"></div></div>
-                  </td>
-                </tr><tr>
-                  <td class="book">César Salazar</td>
-                  <td class="mono" style="color:var(--muted)">C</td>
-                  <td class="mono">3</td>
-                  <td class="mono">0</td>
-                  <td class="mono">0</td>
-                  <td class="mono">1</td>
-                  <td>
-                    <span class="mono" style="color:#4ade80;font-weight:700">.000</span>
-                    <span style="color:var(--muted);font-size:11px"> (0/3)</span>
-                    <div style="height:3px;background:var(--border);border-radius:2px;margin-top:3px"><div style="height:3px;width:0%;background:#4ade80;border-radius:2px"></div></div>
-                  </td>
-                </tr></tbody></table>
-              </div>
-
-            </div>
-
-            <div style="margin-top:10px;padding:8px 12px;background:var(--bg3);border-radius:6px;font-size:11px;color:var(--muted);line-height:1.6">
-              <span style="color:var(--green)">■</span> .300+ BA = batter has historically hit this pitcher well &nbsp;
-              <span style="color:var(--amber)">■</span> .250–.299 = moderate history &nbsp;
-              <span style="color:var(--red)">■</span> Under .250 = pitcher has the edge &nbsp;·&nbsp; Min 3 AB shown
-            </div>
-          </div>
-        </div>
+    <p style="color:var(--muted);font-size:13px;padding:2rem 0;text-align:center">Matchup data unavailable — probable pitchers may not be announced yet. Check back closer to game time.</p>
   </div></div>
 
   <!-- WEATHER -->
@@ -2229,7 +857,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
                 <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
                   <div class="stat-box"><div class="sl">Temp</div><div class="sv">68°F</div></div>
                   <div class="stat-box"><div class="sl">Wind</div><div class="sv">6 mph N</div></div>
-                  <div class="stat-box"><div class="sl">Humidity</div><div class="sv">61%</div></div>
+                  <div class="stat-box"><div class="sl">Humidity</div><div class="sv">57%</div></div>
                   <div class="stat-box"><div class="sl">Condition</div><div class="sv" style="font-size:11px">Mostly Cloudy</div></div>
                 </div>
                 <div style="background:var(--bg3);border-radius:8px;padding:12px 14px;border-left:3px solid var(--amber)">
