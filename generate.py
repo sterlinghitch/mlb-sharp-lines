@@ -1157,6 +1157,8 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
     def alert_cards():
         top=[p for p in all_plays if p["signal"] in ("fire","sharp","value") or abs(p.get("edge",0))>=2.5][:6]
         if not top: return '<p style="color:var(--muted);font-size:13px;padding:1rem 0">No sharp alerts today.</p>'
+        date_lookup = {g["game"]: g.get("date_et","Today") for g in analyzed_games}
+        time_lookup = {g["game"]: g.get("time","") for g in analyzed_games}
         html='<div class="alert-grid">'
         for p in top:
             sig=p["signal"]; ec="green" if (p.get("edge") or 0)>0 else "red"
@@ -1164,8 +1166,14 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
             at_str=str(p.get("true_pct","?")) + ("%" if "%" not in str(p.get("true_pct","?")) else "")
             ai_str=str(p.get("implied_pct","?")) + ("%" if "%" not in str(p.get("implied_pct","?")) else "")
             play_lbl=p.get("play_label",p.get("team","") + " ML")
+            game_date = date_lookup.get(p.get("game",""),"")
+            game_time = time_lookup.get(p.get("game",""),"")
+            date_str_display = f'{game_date}{(" · " + game_time) if game_time else ""}'
             html+=(f'<div class="alert-card {alert_cls.get(sig,"value")}">'
+                   f'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">'
                    f'<span class="badge {sig_cls.get(sig,"b-value")}">{sig.upper()}</span>'
+                   f'<span style="font-size:10px;color:var(--muted);font-family:monospace">{date_str_display}</span>'
+                   f'</div>'
                    f'<div class="alert-game">{p["game"]}</div>'
                    f'<div class="alert-rec">{play_lbl} -- {ap} @ {ab}</div>'
                    f'<div class="alert-stats">'
@@ -1308,17 +1316,38 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
 
     def plays_table():
         if not all_plays: return "<p style='color:var(--muted);font-size:13px;padding:1rem 0'>No value plays today.</p>"
-        rows=""
+        date_lookup = {g["game"]: g.get("date_et","Today") for g in analyzed_games}
+        time_lookup = {g["game"]: g.get("time","") for g in analyzed_games}
+
+        # Group by date
+        from collections import OrderedDict
+        grouped = OrderedDict()
         for p in all_plays:
-            ec="c-green" if (p.get("edge") or 0)>0 else "c-red"
-            rows+=(f'<tr><td>{p["game"]}</td><td class="mono">{p.get("play_label", p["team"] + " ML")}</td>'
-                   f'<td><span class="pill pill-n">{p["best_price"]}</span></td>'
-                   f'<td class="c-accent mono" style="font-size:11px">{p["best_book"]}</td>'
-                   f'<td class="mono">{p["implied_pct"]}%</td><td class="mono">{p["true_pct"]}%</td>'
-                   f'<td class="mono {ec}">{("+" if (p.get("edge") or 0)>0 else "")}{p.get("edge","N/A")}%</td>'
-                   f'<td><span class="badge {sig_cls.get(p["signal"],"b-watch")}" style="margin:0">{p["signal"].upper()}</span></td></tr>')
+            d = date_lookup.get(p.get("game",""),"Today")
+            grouped.setdefault(d,[]).append(p)
+
+        rows=""
+        for date_lbl, plays in grouped.items():
+            # Date separator row
+            rows+=(f'<tr><td colspan="9" style="background:var(--bg3);padding:6px 12px;'
+                   f'font-family:monospace;font-size:10px;font-weight:700;text-transform:uppercase;'
+                   f'letter-spacing:1.5px;color:var(--accent)">{date_lbl}</td></tr>')
+            for p in plays:
+                ec="c-green" if (p.get("edge") or 0)>0 else "c-red"
+                gtime = time_lookup.get(p.get("game",""),"")
+                rows+=(f'<tr>'
+                       f'<td style="font-size:10px;color:var(--muted);font-family:monospace;white-space:nowrap">{gtime}</td>'
+                       f'<td>{p["game"]}</td>'
+                       f'<td class="mono">{p.get("play_label", p["team"] + " ML")}</td>'
+                       f'<td><span class="pill pill-n">{p["best_price"]}</span></td>'
+                       f'<td class="c-accent mono" style="font-size:11px">{p["best_book"]}</td>'
+                       f'<td class="mono">{p["implied_pct"]}%</td>'
+                       f'<td class="mono">{p["true_pct"]}%</td>'
+                       f'<td class="mono {ec}">{("+" if (p.get("edge") or 0)>0 else "")}{p.get("edge","N/A")}%</td>'
+                       f'<td><span class="badge {sig_cls.get(p["signal"],"b-watch")}" style="margin:0">{p["signal"].upper()}</span></td>'
+                       f'</tr>')
         return (f'<div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.75rem">'
-                f'<table class="dtable"><thead><tr><th>Game</th><th>Play</th><th>Best Line</th><th>Best Book</th>'
+                f'<table class="dtable"><thead><tr><th>Time</th><th>Game</th><th>Play</th><th>Best Line</th><th>Best Book</th>'
                 f'<th>Implied%</th><th>Adj True%</th><th>Edge</th><th>Signal</th></tr></thead>'
                 f'<tbody>{rows}</tbody></table></div>')
 
