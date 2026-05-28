@@ -905,6 +905,9 @@ def build_html(analyzed_games, matchups, weather, date_str, time_str):
 
     # ── GAME BLOCKS ──────────────────────────────────────────
     def game_blocks():
+        # Build a quick lookup: "Away @ Home" -> matchup record
+        matchup_lookup = {m["game"]: m for m in matchups}
+
         html=""
         for i,g in enumerate(analyzed_games):
             sig=g["signal"]; bc=sig_cls.get(sig,"b-watch")
@@ -915,6 +918,33 @@ def build_html(analyzed_games, matchups, weather, date_str, time_str):
             day_header=""
             if i==0 or g["date_et"]!=analyzed_games[i-1]["date_et"]:
                 day_header=f'<div class="day-header"><span class="day-label">{g["date_et"]}</span></div>'
+
+            # Look up last-5 records for this game
+            m_data   = matchup_lookup.get(g["game"], {})
+            away_l5  = m_data.get("away_last5")
+            home_l5  = m_data.get("home_last5")
+
+            def render_l5(record, team):
+                if not record or not record.get("games"):
+                    return f'<div style="font-size:11px;color:var(--muted)">{team}: record unavailable</div>'
+                w = record["wins"]; l = record["losses"]
+                wl_col = "var(--green)" if w > l else ("var(--red)" if l > w else "var(--amber)")
+                dots = ""
+                for r in record["games"]:
+                    loc = "vs" if r["home"] else "@"
+                    tip = f'{loc} {r["opp"]} {r["my_runs"]}-{r["op_runs"]}'
+                    col = "var(--green)" if r["won"] else "var(--red)"
+                    lbl = "W" if r["won"] else "L"
+                    dots += f'<span title="{tip}" style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:{col};color:#000;font-size:10px;font-weight:700;font-family:monospace;cursor:default;flex-shrink:0">{lbl}</span>'
+                return f'<div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;color:var(--muted);font-family:monospace;min-width:90px;white-space:nowrap">{team[:14]}:</span><span style="font-family:\'IBM Plex Mono\',monospace;font-size:14px;font-weight:700;color:{wl_col};min-width:32px">{w}–{l}</span><div style="display:flex;gap:3px">{dots}</div></div>'
+
+            last5_section = ""
+            if away_l5 or home_l5:
+                last5_section = f"""<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-top:12px;display:flex;flex-direction:column;gap:7px">
+              <div style="font-size:10px;font-family:monospace;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:2px">Last 5 Games</div>
+              {render_l5(away_l5, g["away"])}
+              {render_l5(home_l5, g["home"])}
+            </div>"""
             book_rows=""
             for b in g["book_data"]:
                 def pc(price,is_best,is_worst,is_out):
@@ -968,6 +998,7 @@ def build_html(analyzed_games, matchups, weather, date_str, time_str):
               </div>
               <div class="cb-method">Vig removed from each book via normalization, averaged across non-outlier books.</div>
             </div>
+            {last5_section}
             {best_bet}
           </div>
         </div>"""
