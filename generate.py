@@ -509,79 +509,116 @@ def fetch_weather_for_games(games_raw):
 # =============================================================
 # MATCHUP DATA
 # =============================================================
+def fetch_probable_pitchers(date_str):
+    """
+    Fetch probable pitchers using the dedicated MLB probable pitchers endpoint.
+    Returns dict: {(away_team_id, home_team_id): {"away": pitcher_id, "home": pitcher_id}}
+    """
+    result = {}
+
+    # Method 1: schedule with correct hydration syntax
+    for hydrate in [
+        "probablePitcher(note),team",
+        "probablePitcher,team",
+        "team(probablePitchers)",
+    ]:
+        data = mlb_get("/schedule", {
+            "sportId":  1,
+            "date":     date_str,
+            "hydrate":  hydrate,
+            "gameType": "R,F,D,L,W",
+        })
+        if not data: continue
+        found = 0
+        for db in data.get("dates", []):
+            for g in db.get("games", []):
+                teams  = g.get("teams", {})
+                away_t = teams.get("away", {})
+                home_t = teams.get("home", {})
+                aid    = away_t.get("team", {}).get("id")
+                hid    = home_t.get("team", {}).get("id")
+                ap     = away_t.get("probablePitcher")
+                hp     = home_t.get("probablePitcher")
+                if aid and hid and (ap or hp):
+                    result[(aid,hid)] = {
+                        "away": ap.get("id") if ap else None,
+                        "home": hp.get("id") if hp else None,
+                    }
+                    found += 1
+        if found > 0:
+            print(f"  Probable pitchers found via hydrate='{hydrate}': {found} games")
+            return result
+
+    # Method 2: v2 probable pitchers endpoint (newer MLB API)
+    data = mlb_get("/schedule/games/tied", {"sportId":1,"date":date_str})  # probe v2 availability
+    v2_data = mlb_get(f"/schedule/probablePitchers/{date_str}/{date_str}")
+    if v2_data:
+        for db in v2_data.get("dates", []):
+            for g in db.get("games", []):
+                teams  = g.get("teams", {})
+                away_t = teams.get("away", {})
+                home_t = teams.get("home", {})
+                aid    = away_t.get("team", {}).get("id")
+                hid    = home_t.get("team", {}).get("id")
+                ap     = away_t.get("probablePitcher")
+                hp     = home_t.get("probablePitcher")
+                if aid and hid:
+                    result[(aid,hid)] = {
+                        "away": ap.get("id") if ap else None,
+                        "home": hp.get("id") if hp else None,
+                    }
+        if result:
+            print(f"  Probable pitchers via v2 endpoint: {len(result)} games")
+            return result
+
+    print(f"  WARNING: No probable pitchers found for {date_str} -- all will show TBD")
+    return result
+
+
 def build_matchup_data(odds_games, date_str):
     print("Fetching matchup data...")
-    mlb_sched = mlb_get("/schedule",{"sportId":1,"date":date_str,"hydrate":"probablePitcher,lineups,team"})
-    # Include ALL game states so we can still get probable pitchers for today's games
+
+    # Fetch probable pitchers using all available methods
+    pitcher_lookup = fetch_probable_pitchers(date_str)
+    # Also check tomorrow
+    from datetime import datetime as _dt2, timedelta as _td2
+    tomorrow_str = (_dt2.strptime(date_str,"%Y-%m-%d") + _td2(days=1)).strftime("%Y-%m-%d")
+    tmw_pitchers = fetch_probable_pitchers(tomorrow_str)
+    pitcher_lookup.update({k:v for k,v in tmw_pitchers.items() if k not in pitcher_lookup})
+
+    # Fetch lineups separately
+    mlb_sched = mlb_get("/schedule",{"sportId":1,"date":date_str,"hydrate":"lineups,team"})
     mlb_games = [] if not mlb_sched else [
         g for db in mlb_sched.get("dates",[]) for g in db.get("games",[])
     ]
-    mlb_lookup = {}
+    lineup_lookup = {}
     for g in mlb_games:
         aid = g.get("teams",{}).get("away",{}).get("team",{}).get("id")
         hid = g.get("teams",{}).get("home",{}).get("team",{}).get("id")
-        if aid and hid: mlb_lookup[(aid,hid)] = g
-
-    # Also fetch tomorrow's games in case some are listed there
-    from datetime import datetime, timedelta
-    from zoneinfo import ZoneInfo
-    tomorrow_str = (datetime.strptime(date_str,"%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
-    tmw_sched = mlb_get("/schedule",{"sportId":1,"date":tomorrow_str,"hydrate":"probablePitcher,lineups,team"})
-    if tmw_sched:
-        for db in tmw_sched.get("dates",[]):
-            for g in db.get("games",[]):
-                aid = g.get("teams",{}).get("away",{}).get("team",{}).get("id")
-                hid = g.get("teams",{}).get("home",{}).get("team",{}).get("id")
-                if aid and hid and (aid,hid) not in mlb_lookup:
-                    mlb_lookup[(aid,hid)] = g
+        if aid and hid: lineup_lookup[(aid,hid)] = g
 
     matchups = []
     for og in odds_games:
         away_name = og["away_team"]; home_name = og["home_team"]
         away_id = MLB_IDS.get(away_name); home_id = MLB_IDS.get(home_name)
         if not away_id or not home_id: continue
-        mlb_game = mlb_lookup.get((away_id,home_id)) or mlb_lookup.get((home_id,away_id))
-        away_p_raw = mlb_game.get("teams",{}).get("away",{}).get("probablePitcher") if mlb_game else None
-        home_p_raw = mlb_game.get("teams",{}).get("home",{}).get("probablePitcher") if mlb_game else None
 
-        # Fallback: if probable pitcher missing from schedule, try direct team probable starter
-        if not away_p_raw and away_id:
-            try:
-                tp = mlb_get(f"/teams/{away_id}/roster",{"rosterType":"active","hydrate":"probablePitcher"})
-                if tp:
-                    # Try fetching via schedule with team filter
-                    ts = mlb_get("/schedule",{"sportId":1,"date":date_str,"teamId":away_id,"hydrate":"probablePitcher"})
-                    if ts:
-                        for db in ts.get("dates",[]):
-                            for tg in db.get("games",[]):
-                                pp = tg.get("teams",{}).get("away",{}).get("probablePitcher") or \
-                                     tg.get("teams",{}).get("home",{}).get("probablePitcher")
-                                if pp:
-                                    # Match to correct side
-                                    taid = tg.get("teams",{}).get("away",{}).get("team",{}).get("id")
-                                    if taid == away_id:
-                                        away_p_raw = tg.get("teams",{}).get("away",{}).get("probablePitcher")
-                                    else:
-                                        away_p_raw = tg.get("teams",{}).get("home",{}).get("probablePitcher")
-                                    break
-            except Exception:
-                pass
+        # Get pitcher IDs from dedicated lookup
+        game_pitchers = pitcher_lookup.get((away_id,home_id)) or pitcher_lookup.get((home_id,away_id)) or {}
+        away_pitcher_id = game_pitchers.get("away") if game_pitchers.get("away") else None
+        home_pitcher_id = game_pitchers.get("home") if game_pitchers.get("home") else None
 
-        if not home_p_raw and home_id:
-            try:
-                ts = mlb_get("/schedule",{"sportId":1,"date":date_str,"teamId":home_id,"hydrate":"probablePitcher"})
-                if ts:
-                    for db in ts.get("dates",[]):
-                        for tg in db.get("games",[]):
-                            thid = tg.get("teams",{}).get("home",{}).get("team",{}).get("id")
-                            if thid == home_id:
-                                home_p_raw = tg.get("teams",{}).get("home",{}).get("probablePitcher")
-                                break
-            except Exception:
-                pass
-        away_pitcher = fetch_pitcher_stats(away_p_raw["id"] if away_p_raw else None)
-        home_pitcher = fetch_pitcher_stats(home_p_raw["id"] if home_p_raw else None)
+        # If reversed (home/away swapped in lookup), fix it
+        if pitcher_lookup.get((home_id,away_id)) and not pitcher_lookup.get((away_id,home_id)):
+            swapped = pitcher_lookup.get((home_id,away_id),{})
+            away_pitcher_id = swapped.get("home")
+            home_pitcher_id = swapped.get("away")
 
+        away_pitcher = fetch_pitcher_stats(away_pitcher_id)
+        home_pitcher = fetch_pitcher_stats(home_pitcher_id)
+
+        # Get lineups from lineup_lookup
+        mlb_game = lineup_lookup.get((away_id,home_id)) or lineup_lookup.get((home_id,away_id))
         lineups = mlb_game.get("lineups",{}) if mlb_game else {}
         def extract(raw):
             return [{"id":p["id"],"name":p.get("fullName",str(p["id"])),"pos":""} for p in raw if isinstance(p,dict) and "id" in p]
