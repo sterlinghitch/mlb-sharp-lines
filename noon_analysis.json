@@ -28,11 +28,11 @@
       "signal_label": ""
     },
     "Chicago Cubs @ Pittsburgh Pirates": {
-      "play": "Under 7.5 Runs",
-      "price": "-110",
-      "book": "BetMGM",
-      "is_pass": false,
-      "edge": "+2.4%",
+      "play": "No Play",
+      "price": "Best option (Chicago Cubs Moneyline) is overpriced",
+      "book": "current lines",
+      "is_pass": true,
+      "edge": "-0.3%",
       "away_true": 40,
       "home_true": 60,
       "away_fair": "+149",
@@ -80,11 +80,11 @@
       "signal_label": "SPLIT MARKET"
     },
     "Boston Red Sox @ Cleveland Guardians": {
-      "play": "Under 8.0 Runs",
-      "price": "-110",
+      "play": "Cleveland Guardians Moneyline",
+      "price": "-120",
       "book": "FanDuel",
       "is_pass": false,
-      "edge": "+1.5%",
+      "edge": "+0.9%",
       "away_true": 45,
       "home_true": 55,
       "away_fair": "+124",
