@@ -31,7 +31,7 @@
       "pick_team": "Washington Nationals",
       "side": null,
       "total_line": null,
-      "edge": "+2.4%",
+      "edge": "+2.5%",
       "signal": "fire"
     },
     {
@@ -41,13 +41,13 @@
       "away_id": 111,
       "home_id": 114,
       "play": "Cleveland Guardians Moneyline",
-      "price": "-117",
-      "book": "MyBookie.ag",
+      "price": "-110",
+      "book": "BetOnline.ag",
       "type": "ml",
       "pick_team": "Cleveland Guardians",
       "side": null,
       "total_line": null,
-      "edge": "+0.6%",
+      "edge": "+1.9%",
       "signal": "fire"
     },
     {
@@ -63,7 +63,7 @@
       "pick_team": "Milwaukee Brewers",
       "side": null,
       "total_line": null,
-      "edge": "+0.3%",
+      "edge": "+1.2%",
       "signal": "fire"
     },
     {
@@ -111,7 +111,7 @@
       "pick_team": null,
       "side": "Under",
       "total_line": 7.0,
-      "edge": "+4.3%",
+      "edge": "+4.9%",
       "signal": "watch"
     },
     {
@@ -127,7 +127,7 @@
       "pick_team": "St. Louis Cardinals",
       "side": null,
       "total_line": null,
-      "edge": "+0.6%",
+      "edge": "+0.5%",
       "signal": "watch"
     },
     {
