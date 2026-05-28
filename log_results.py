@@ -242,8 +242,10 @@ def main():
                 "play":   play,
                 "price":  pick.get("price", "?"),
                 "book":   pick.get("book", "?"),
-                "result": "P",   # treat as push/pending until we can verify
-                "note":   "Score not found — logged as push (check manually)",
+                "result": "P",
+                "signal": pick.get("signal", ""),
+                "date":   display_date,
+                "note":   "Score not found -- logged as push (check manually)",
             })
             continue
 
@@ -268,6 +270,8 @@ def main():
             "price":  pick.get("price", "?"),
             "book":   pick.get("book", "?"),
             "result": result,
+            "signal": pick.get("signal", ""),
+            "date":   display_date,
             "note":   note,
         })
         time.sleep(0.1)
