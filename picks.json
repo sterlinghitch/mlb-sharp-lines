@@ -15,7 +15,7 @@
       "pick_team": null,
       "side": "Under",
       "total_line": 8.5,
-      "edge": "+0.9%",
+      "edge": "+1.0%",
       "signal": "watch"
     },
     {
@@ -41,13 +41,13 @@
       "away_id": 144,
       "home_id": 111,
       "play": "Over 7.0 Runs",
-      "price": "+113",
+      "price": "+110",
       "book": "BetOnline.ag",
       "type": "total",
       "pick_team": null,
       "side": "Over",
       "total_line": 7.0,
-      "edge": "+1.7%",
+      "edge": "+1.0%",
       "signal": "watch"
     },
     {
@@ -73,13 +73,13 @@
       "away_id": 117,
       "home_id": 140,
       "play": "Houston Astros Moneyline",
-      "price": "+123",
+      "price": "+121",
       "book": "BetOnline.ag",
       "type": "ml",
       "pick_team": "Houston Astros",
       "side": null,
       "total_line": null,
-      "edge": "+1.9%",
+      "edge": "+1.6%",
       "signal": "watch"
     }
   ]
