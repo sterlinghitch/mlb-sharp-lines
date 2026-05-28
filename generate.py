@@ -1818,6 +1818,7 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                         }
 
         noon_picks = all_noon_data
+        html = '<div class="day-header"><span class="day-label" style="color:var(--muted)">In Progress / Completed Today</span></div>'
 
         for g in tracking_games:
             away = g["away_team"]; home = g["home_team"]
@@ -3068,7 +3069,6 @@ def main():
     results_data = {"days": []}
     try:
         if os.path.exists("results.json"):
-            import json
             with open("results.json") as f:
                 results_data = json.load(f)
             print(f"Loaded results.json: {sum(len(d.get('bets',[])) for d in results_data.get('days',[]))} bets")
