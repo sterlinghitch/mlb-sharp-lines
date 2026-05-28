@@ -3,7 +3,7 @@ MLB Sharp Lines -- Daily Generator
 Enhanced model v2: park factors, SP quality, bullpen fatigue,
 injuries, umpire zone, wind. Free tier only.
 """
-import os, sys, time, requests
+import os, sys, time, requests, json
 from datetime import datetime, timezone, timedelta
 from zoneinfo import ZoneInfo
 
@@ -389,7 +389,6 @@ def calc_platoon_adjustment(batter_sides, pitcher_hand):
 
 def load_opening_lines():
     """Load the 9am line snapshot if it exists."""
-    import json, os
     if not os.path.exists("opening_lines.json"):
         return {}
     try:
@@ -1020,6 +1019,29 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
     total=len(analyzed_games)
     books=max((len(g["book_data"]) for g in analyzed_games),default=0)
 
+    def alert_cards():
+        top=[p for p in all_plays if p["signal"] in ("fire","sharp","value") or abs(p.get("edge",0))>=2.5][:6]
+        if not top: return '<p style="color:var(--muted);font-size:13px;padding:1rem 0">No sharp alerts today.</p>'
+        html='<div class="alert-grid">'
+        for p in top:
+            sig=p["signal"]; ec="green" if (p.get("edge") or 0)>0 else "red"
+            ap=p["best_price"]; ab=p["best_book"]
+            at_str=str(p.get("true_pct","?")) + ("%" if "%" not in str(p.get("true_pct","?")) else "")
+            ai_str=str(p.get("implied_pct","?")) + ("%" if "%" not in str(p.get("implied_pct","?")) else "")
+            play_lbl=p.get("play_label",p.get("team","") + " ML")
+            html+=(f'<div class="alert-card {alert_cls.get(sig,"value")}">'
+                   f'<span class="badge {sig_cls.get(sig,"b-value")}">{sig.upper()}</span>'
+                   f'<div class="alert-game">{p["game"]}</div>'
+                   f'<div class="alert-rec">{play_lbl} -- {ap} @ {ab}</div>'
+                   f'<div class="alert-stats">'
+                   f'<div class="stat-box"><div class="sl">Best Price</div><div class="sv">{ap}</div></div>'
+                   f'<div class="stat-box"><div class="sl">Adj True%</div><div class="sv">{at_str}</div></div>'
+                   f'<div class="stat-box"><div class="sl">Implied%</div><div class="sv {ec}">{ai_str}</div></div>'
+                   f'</div>'
+                   f'<div class="alert-reasoning">{p.get("reasoning","")}</div>'
+                   f'</div>')
+        html+="</div>"; return html
+
     def parlay_legs_html(plays):
         if not plays:
             return '<div style="color:var(--muted);font-size:13px">No value plays available today to add as legs.</div>'
@@ -1364,10 +1386,8 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
         if not tracking_games:
             return ""
 
-        # all_noon_data is passed in directly from main() — it contains every game
-        # analyzed today (pre-game AND tracking), so no file reading needed.
-        # Keys are "Away @ Home" game strings.
-        noon_picks = all_noon_data  # already a dict keyed by game string
+        # all_noon_data is passed in directly from main()
+        noon_picks = all_noon_data
 
         html = '<div class="day-header"><span class="day-label" style="color:var(--muted)">In Progress / Completed Today</span></div>'
 
@@ -2521,7 +2541,6 @@ def main():
         f.write(html)
 
     # Save today's best bets to picks.json so log_results.py can check them tonight
-    import json
     picks = {
         "date": mlb_date,
         "date_display": date_str,
