@@ -3,38 +3,6 @@
   "date_display": "May 28, 2026",
   "bets": [
     {
-      "game": "Toronto Blue Jays @ Baltimore Orioles",
-      "away": "Toronto Blue Jays",
-      "home": "Baltimore Orioles",
-      "away_id": 141,
-      "home_id": 110,
-      "play": "Toronto Blue Jays Moneyline",
-      "price": "+115",
-      "book": "BetUS",
-      "type": "ml",
-      "pick_team": "Toronto Blue Jays",
-      "side": null,
-      "total_line": null,
-      "edge": "+1.7%",
-      "signal": "watch"
-    },
-    {
-      "game": "Chicago Cubs @ Pittsburgh Pirates",
-      "away": "Chicago Cubs",
-      "home": "Pittsburgh Pirates",
-      "away_id": 112,
-      "home_id": 134,
-      "play": "Under 7.5 Runs",
-      "price": "+100",
-      "book": "FanDuel",
-      "type": "total",
-      "pick_team": null,
-      "side": "Under",
-      "total_line": 7.5,
-      "edge": "+2.5%",
-      "signal": "watch"
-    },
-    {
       "game": "Houston Astros @ Texas Rangers",
       "away": "Houston Astros",
       "home": "Texas Rangers",
@@ -47,7 +15,7 @@
       "pick_team": "Texas Rangers",
       "side": null,
       "total_line": null,
-      "edge": "+1.9%",
+      "edge": "+2.0%",
       "signal": "watch"
     },
     {
@@ -79,23 +47,7 @@
       "pick_team": "Cleveland Guardians",
       "side": null,
       "total_line": null,
-      "edge": "+1.0%",
-      "signal": "fire"
-    },
-    {
-      "game": "Philadelphia Phillies @ Los Angeles Dodgers",
-      "away": "Philadelphia Phillies",
-      "home": "Los Angeles Dodgers",
-      "away_id": 143,
-      "home_id": 119,
-      "play": "Over 8.0 Runs",
-      "price": "-115",
-      "book": "BetMGM",
-      "type": "total",
-      "pick_team": null,
-      "side": "Over",
-      "total_line": 8.0,
-      "edge": "+0.2%",
+      "edge": "+0.5%",
       "signal": "fire"
     },
     {
@@ -105,13 +57,13 @@
       "away_id": 144,
       "home_id": 113,
       "play": "Over 9.5 Runs",
-      "price": "-105",
-      "book": "FanDuel",
+      "price": "-103",
+      "book": "MyBookie.ag",
       "type": "total",
       "pick_team": null,
       "side": "Over",
       "total_line": 9.5,
-      "edge": "+0.3%",
+      "edge": "+0.2%",
       "signal": "watch"
     },
     {
@@ -127,7 +79,7 @@
       "pick_team": null,
       "side": "Under",
       "total_line": 8.0,
-      "edge": "+2.0%",
+      "edge": "+1.7%",
       "signal": "watch"
     },
     {
@@ -137,13 +89,13 @@
       "away_id": 108,
       "home_id": 139,
       "play": "Tampa Bay Rays Moneyline",
-      "price": "-178",
+      "price": "-170",
       "book": "BetOnline.ag",
       "type": "ml",
       "pick_team": "Tampa Bay Rays",
       "side": null,
       "total_line": null,
-      "edge": "+1.5%",
+      "edge": "+2.0%",
       "signal": "watch"
     },
     {
@@ -153,13 +105,13 @@
       "away_id": 146,
       "home_id": 121,
       "play": "Under 7.0 Runs",
-      "price": "+103",
+      "price": "+104",
       "book": "DraftKings",
       "type": "total",
       "pick_team": null,
       "side": "Under",
       "total_line": 7.0,
-      "edge": "+5.7%",
+      "edge": "+5.9%",
       "signal": "watch"
     },
     {
