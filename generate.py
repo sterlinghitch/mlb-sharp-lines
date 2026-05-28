@@ -1142,71 +1142,190 @@ def build_html(analyzed_games, matchups, weather, results_data, date_str, time_s
 
 
     def accuracy_page(results_data):
-        days   = results_data.get("days", [])
+        days     = results_data.get("days", [])
         all_bets = [b for day in days for b in day.get("bets", [])]
-        wins   = sum(1 for b in all_bets if b.get("result","") == "W")
-        losses = sum(1 for b in all_bets if b.get("result","") == "L")
-        total  = wins + losses
-        pct    = round((wins / total) * 100) if total > 0 else 0
 
-        # SVG circle
-        r = 70; circ = round(2 * 3.14159 * r, 1)
-        filled = round(circ * pct / 100, 1)
-        gap    = round(circ - filled, 1)
-        pct_color = "#4ade80" if pct >= 55 else ("#fbbf24" if pct >= 45 else "#f87171")
+        # ── STAT HELPERS ─────────────────────────────────
+        def wl(bets):
+            w = sum(1 for b in bets if b.get("result","")=="W")
+            l = sum(1 for b in bets if b.get("result","")=="L")
+            return w, l
 
-        circle_svg = (
-            f'<svg viewBox="0 0 180 180" width="200" height="200" xmlns="http://www.w3.org/2000/svg">'
-            f'<circle cx="90" cy="90" r="{r}" fill="none" stroke="#27272a" stroke-width="14"/>'
-            f'<circle cx="90" cy="90" r="{r}" fill="none" stroke="{pct_color}" stroke-width="14"'
-            f' stroke-dasharray="{filled} {gap}" stroke-dashoffset="{round(circ*0.25,1)}"'
-            f' stroke-linecap="round"/>'
-            f'<text x="90" y="84" text-anchor="middle" fill="#fff" font-size="32"'
-            f' font-family="IBM Plex Mono,monospace" font-weight="700">{pct}%</text>'
-            f'<text x="90" y="108" text-anchor="middle" fill="#71717a" font-size="13"'
-            f' font-family="IBM Plex Mono,monospace">{wins}W - {losses}L</text>'
-            f'</svg>'
+        def pct(w, l):
+            return round(w/(w+l)*100) if (w+l)>0 else 0
+
+        def make_circle(w, l, size=200, label="Overall"):
+            p     = pct(w,l)
+            r     = 70; circ=round(2*3.14159*r,1)
+            fill  = round(circ*p/100,1); gap=round(circ-fill,1)
+            col   = "#4ade80" if p>=55 else ("#fbbf24" if p>=45 else "#f87171")
+            return (
+                f'<div style="display:flex;flex-direction:column;align-items:center;gap:6px">'
+                f'<svg viewBox="0 0 180 180" width="{size}" height="{size}" xmlns="http://www.w3.org/2000/svg">'
+                f'<circle cx="90" cy="90" r="{r}" fill="none" stroke="#27272a" stroke-width="14"/>'
+                f'<circle cx="90" cy="90" r="{r}" fill="none" stroke="{col}" stroke-width="14"'
+                f' stroke-dasharray="{fill} {gap}" stroke-dashoffset="{round(circ*0.25,1)}" stroke-linecap="round"/>'
+                f'<text x="90" y="82" text-anchor="middle" fill="#fff" font-size="30"'
+                f' font-family="IBM Plex Mono,monospace" font-weight="700">{p}%</text>'
+                f'<text x="90" y="104" text-anchor="middle" fill="#71717a" font-size="12"'
+                f' font-family="IBM Plex Mono,monospace">{w}W - {l}L</text>'
+                f'</svg>'
+                f'<div style="font-size:11px;color:var(--muted);font-family:monospace;'
+                f'text-transform:uppercase;letter-spacing:1px">{label}</div>'
+                f'</div>'
+            )
+
+        wins_all, losses_all = wl(all_bets)
+        total_all = wins_all + losses_all
+
+        # Signal-filtered bets
+        # "signal" field logged by log_results.py — fall back gracefully if missing
+        def sig_bets(signal_list):
+            return [b for b in all_bets if b.get("signal","") in signal_list]
+
+        sharp_bets = sig_bets(["fire"])
+        value_bets = sig_bets(["fire","value","sharp"])  # all flagged plays
+        w_sharp, l_sharp = wl(sharp_bets)
+        w_value, l_value = wl(value_bets)
+
+        if total_all == 0:
+            return (
+                f'{make_circle(0,0,label="All Bets")}'
+                f'<div style="text-align:center;padding:3rem 2rem;color:var(--muted);font-size:14px">'
+                f'No results recorded yet. The nightly workflow logs results automatically, '
+                f'or edit <code style="color:var(--accent)">results.json</code> in your repo.'
+                f'</div>'
+            )
+
+        # ── THREE CIRCLES ────────────────────────────────
+        circles = (
+            f'<div style="display:flex;justify-content:center;flex-wrap:wrap;gap:32px;margin-bottom:2rem">'
+            f'{make_circle(wins_all, losses_all, 200, "All Bets")}'
+            f'{make_circle(w_value, l_value, 160, "Value Plays")}'
+            f'{make_circle(w_sharp, l_sharp, 160, "Fire Alerts Only")}'
+            f'</div>'
         )
 
-        if total == 0:
-            empty = ('<div style="text-align:center;padding:4rem 2rem;color:var(--muted);font-size:14px">'
-                     'No results recorded yet. Edit <code style="color:var(--accent)">results.json</code>'
-                     ' in your GitHub repo to log best bet outcomes.</div>')
-            return (f'<div style="text-align:center;margin-bottom:2rem">{circle_svg}</div>'
-                    + empty)
+        # ── STAT ROW ──────────────────────────────────────
+        def stat_row(label, w, l):
+            p   = pct(w,l)
+            col = "var(--green)" if p>=55 else ("var(--red)" if p<45 else "var(--amber)")
+            t   = w+l
+            return (
+                f'<div style="display:flex;align-items:center;justify-content:space-between;'
+                f'padding:10px 14px;border-bottom:1px solid var(--border)">'
+                f'<span style="font-size:13px;color:var(--text)">{label}</span>'
+                f'<div style="display:flex;align-items:center;gap:20px">'
+                f'<span class="mono c-green">{w}W</span>'
+                f'<span class="mono c-red">{l}L</span>'
+                f'<span class="mono" style="color:var(--muted)">{t} bets</span>'
+                f'<span class="mono" style="color:{col};font-size:16px;min-width:50px;text-align:right">{p}%</span>'
+                f'</div></div>'
+            )
 
-        # Day blocks
+        stats_table = (
+            f'<div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;'
+            f'overflow:hidden;margin-bottom:2rem">'
+            f'<div style="padding:10px 14px;background:var(--bg3);font-size:10px;'
+            f'font-family:monospace;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted)">'
+            f'Performance Breakdown</div>'
+            f'{stat_row("All Best Bets", wins_all, losses_all)}'
+            f'{stat_row("Value + Sharp + Fire Plays", w_value, l_value)}'
+            f'{stat_row("Fire Alerts Only (DISCREPANCY / SPLIT)", w_sharp, l_sharp)}'
+            f'</div>'
+        )
+
+        # ── ALL BETS DROPDOWN ────────────────────────────
+        def res_badge(res):
+            if res=="W": return '<span class="badge b-value" style="font-size:10px">W</span>'
+            if res=="L": return '<span class="badge b-fire" style="font-size:10px">L</span>'
+            return '<span class="badge b-pass" style="font-size:10px">PUSH</span>'
+
+        def sig_badge(sig):
+            cls = {"fire":"b-fire","value":"b-value","sharp":"b-sharp","watch":"b-watch"}.get(sig,"b-pass")
+            return f'<span class="badge {cls}" style="font-size:9px;margin-left:4px">{sig.upper()}</span>' if sig else ""
+
+        # Wins dropdown
+        win_rows = "".join(
+            f'<tr>'
+            f'<td>{b.get("game","?")}</td>'
+            f'<td class="mono">{b.get("play","?")}{sig_badge(b.get("signal",""))}</td>'
+            f'<td class="mono">{b.get("price","?")}</td>'
+            f'<td style="font-size:11px;color:var(--muted)">{b.get("book","?")}</td>'
+            f'<td style="font-size:11px;color:var(--muted)">{b.get("date","")}</td>'
+            f'<td style="font-size:11px;color:#888">{b.get("note","")}</td>'
+            f'</tr>'
+            for b in all_bets if b.get("result","")=="W"
+        )
+        loss_rows = "".join(
+            f'<tr>'
+            f'<td>{b.get("game","?")}</td>'
+            f'<td class="mono">{b.get("play","?")}{sig_badge(b.get("signal",""))}</td>'
+            f'<td class="mono">{b.get("price","?")}</td>'
+            f'<td style="font-size:11px;color:var(--muted)">{b.get("book","?")}</td>'
+            f'<td style="font-size:11px;color:var(--muted)">{b.get("date","")}</td>'
+            f'<td style="font-size:11px;color:#888">{b.get("note","")}</td>'
+            f'</tr>'
+            for b in all_bets if b.get("result","")=="L"
+        )
+
+        table_header = '<thead><tr><th>Game</th><th>Play</th><th>Price</th><th>Book</th><th>Date</th><th>Note</th></tr></thead>'
+
+        all_bets_section = (
+            f'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:2rem">'
+
+            # Wins block
+            f'<div class="game-block open" onclick="toggleGame(this)">'
+            f'<div class="game-header" style="background:rgba(74,222,128,0.05)">'
+            f'<div><div class="game-teams" style="color:var(--green)">All Wins</div>'
+            f'<div class="game-time">{wins_all} correct bets</div></div>'
+            f'<div class="game-right"><span class="toggle">v</span></div>'
+            f'</div>'
+            f'<div class="game-body">'
+            f'{"<p style=padding:1rem;color:var(--muted)>No wins recorded yet.</p>" if not win_rows else ""}'
+            f'<table class="dtable" style="margin-top:8px">{table_header}<tbody>{win_rows}</tbody></table>'
+            f'</div></div>'
+
+            # Losses block
+            f'<div class="game-block open" onclick="toggleGame(this)">'
+            f'<div class="game-header" style="background:rgba(248,113,113,0.05)">'
+            f'<div><div class="game-teams" style="color:var(--red)">All Losses</div>'
+            f'<div class="game-time">{losses_all} incorrect bets</div></div>'
+            f'<div class="game-right"><span class="toggle">v</span></div>'
+            f'</div>'
+            f'<div class="game-body">'
+            f'{"<p style=padding:1rem;color:var(--muted)>No losses recorded yet.</p>" if not loss_rows else ""}'
+            f'<table class="dtable" style="margin-top:8px">{table_header}<tbody>{loss_rows}</tbody></table>'
+            f'</div></div>'
+
+            f'</div>'
+        )
+
+        # ── BY DAY DROPDOWN ───────────────────────────────
         day_blocks = ""
         for day in reversed(days):
             date_lbl = day.get("date","?")
             bets     = day.get("bets",[])
-            dw = sum(1 for b in bets if b.get("result","")=="W")
-            dl = sum(1 for b in bets if b.get("result","")=="L")
-            dcolor = "var(--green)" if dw>dl else ("var(--red)" if dl>dw else "var(--amber)")
-            rows = ""
-            for b in bets:
-                res = b.get("result","?")
-                if res == "W":
-                    res_badge = '<span class="badge b-value">W</span>'
-                elif res == "L":
-                    res_badge = '<span class="badge b-fire">L</span>'
-                else:
-                    res_badge = '<span class="badge b-pass">PUSH</span>'
-                rows += (f'<tr>'
-                         f'<td>{b.get("game","?")}</td>'
-                         f'<td class="mono">{b.get("play","?")}</td>'
-                         f'<td class="mono">{b.get("price","?")}</td>'
-                         f'<td style="font-size:11px;color:var(--muted)">{b.get("book","?")}</td>'
-                         f'<td>{res_badge}</td>'
-                         f'<td style="font-size:11px;color:var(--muted)">{b.get("note","")}</td>'
-                         f'</tr>')
+            dw,dl    = wl(bets)
+            dcol     = "var(--green)" if dw>dl else ("var(--red)" if dl>dw else "var(--amber)")
+            rows = "".join(
+                f'<tr>'
+                f'<td>{b.get("game","?")}</td>'
+                f'<td class="mono">{b.get("play","?")}{sig_badge(b.get("signal",""))}</td>'
+                f'<td class="mono">{b.get("price","?")}</td>'
+                f'<td style="font-size:11px;color:var(--muted)">{b.get("book","?")}</td>'
+                f'<td>{res_badge(b.get("result","?"))}</td>'
+                f'<td style="font-size:11px;color:var(--muted)">{b.get("note","")}</td>'
+                f'</tr>'
+                for b in bets
+            )
             day_blocks += (
                 f'<div class="game-block" onclick="toggleGame(this)">'
                 f'<div class="game-header">'
                 f'<div><div class="game-teams">{date_lbl}</div>'
-                f'<div class="game-time">{len(bets)} best bets recorded</div></div>'
+                f'<div class="game-time">{len(bets)} best bets</div></div>'
                 f'<div class="game-right">'
-                f'<span style="font-family:\'IBM Plex Mono\',monospace;font-size:14px;font-weight:700;color:{dcolor}">{dw}W-{dl}L</span>'
+                f'<span style="font-family:\'IBM Plex Mono\',monospace;font-size:14px;font-weight:700;color:{dcol}">{dw}W-{dl}L</span>'
                 f'<span class="toggle">v</span></div>'
                 f'</div>'
                 f'<div class="game-body">'
@@ -1216,25 +1335,19 @@ def build_html(analyzed_games, matchups, weather, results_data, date_str, time_s
                 f'</div></div>'
             )
 
+        hint = (
+            f'<div style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:1.5rem;font-family:monospace">'
+            f'Results logged automatically nightly. To manually add: edit '
+            f'<code style="color:var(--accent)">results.json</code> in your GitHub repo.</div>'
+        )
+
         return (
-            f'<div style="display:flex;flex-direction:column;align-items:center;gap:4px;margin-bottom:2rem">'
-            f'{circle_svg}'
-            f'<div style="display:flex;gap:20px;margin-top:8px">'
-            f'<div class="metric-card" style="text-align:center;min-width:90px">'
-            f'<div class="metric-label">Correct</div>'
-            f'<div class="metric-val green">{wins}</div></div>'
-            f'<div class="metric-card" style="text-align:center;min-width:90px">'
-            f'<div class="metric-label">Incorrect</div>'
-            f'<div class="metric-val" style="color:var(--red)">{losses}</div></div>'
-            f'<div class="metric-card" style="text-align:center;min-width:90px">'
-            f'<div class="metric-label">Total</div>'
-            f'<div class="metric-val">{total}</div></div>'
-            f'</div>'
-            f'<div style="font-size:12px;color:var(--muted);margin-top:10px;font-family:monospace">'
-            f'To log a result: edit <code style="color:var(--accent)">results.json</code> in your GitHub repo, then re-run the workflow.'
-            f'</div>'
-            f'</div>'
-            f'<div class="sec-header"><h2>Results by Day</h2><div class="sec-line"></div></div>'
+            circles
+            + hint
+            + stats_table
+            + f'<div class="sec-header"><h2>Wins vs Losses</h2><div class="sec-line"></div></div>'
+            + all_bets_section
+            + f'<div class="sec-header"><h2>Results by Day</h2><div class="sec-line"></div></div>'
             + day_blocks
         )
 
