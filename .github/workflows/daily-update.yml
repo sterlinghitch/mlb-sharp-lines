@@ -3,10 +3,10 @@ name: Daily MLB Lines Update
 on:
   schedule:
     - cron: '0 16 * * *'   # 12:00 PM Eastern every day
-  workflow_dispatch:         # lets you also click "Run" manually anytime
+  workflow_dispatch:
 
 permissions:
-  contents: write            # THIS is what was missing — allows the bot to push commits
+  contents: write
 
 jobs:
   update-site:
@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history so rebase works cleanly
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -32,6 +34,7 @@ jobs:
         run: |
           git config user.name "MLB Bot"
           git config user.email "bot@mlbsharplines.com"
-          git add index.html
+          git add index.html picks.json || true
           git diff --staged --quiet || git commit -m "Daily update $(date +'%B %d %Y')"
+          git pull --rebase origin main
           git push
