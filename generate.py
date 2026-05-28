@@ -1264,6 +1264,8 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                 f'</div></div>'
             )
         return html
+
+    def matchup_page():
         if not matchups:
             return '<p style="color:var(--muted);font-size:13px;padding:2rem 0;text-align:center">Matchup data unavailable -- probable pitchers may not be announced yet.</p>'
         def avg_color(avg_str):
