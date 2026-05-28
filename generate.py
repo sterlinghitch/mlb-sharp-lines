@@ -699,31 +699,29 @@ def build_matchup_data(odds_games, date_str):
         away_pitcher_id = game_pitchers.get("away")
         home_pitcher_id = game_pitchers.get("home")
 
-        # Final fallback: fetch directly from individual game preview if still missing
+        # Final fallback: per-gamePk direct lookup
         if not away_pitcher_id and not home_pitcher_id:
             mlb_g = lineup_lookup.get((away_id,home_id)) or lineup_lookup.get((home_id,away_id))
             if mlb_g:
                 pk = mlb_g.get("gamePk")
                 if pk:
-                    try:
-                        preview = mlb_get(f"/game/{pk}/feed/live/diffPatch",
-                                          {"startTimecode":"00000000_000000"})
-                    except Exception:
-                        preview = None
-                    # Try game meta directly
-                    gmeta = mlb_get(f"/schedule", {
-                        "sportId":1, "gamePks": str(pk),
-                        "hydrate": "probablePitcher,team"
-                    })
-                    if gmeta:
-                        for db in gmeta.get("dates",[]):
-                            for gg in db.get("games",[]):
-                                ap = gg.get("teams",{}).get("away",{}).get("probablePitcher")
-                                hp = gg.get("teams",{}).get("home",{}).get("probablePitcher")
-                                if ap or hp:
-                                    away_pitcher_id = ap.get("id") if ap else None
-                                    home_pitcher_id = hp.get("id") if hp else None
-                                    print(f"    Found pitchers via gamePk {pk}: {away_pitcher_id} / {home_pitcher_id}")
+                    for hydrate in ["probablePitcher(note),team","probablePitcher,team"]:
+                        gmeta = mlb_get("/schedule", {
+                            "sportId":1, "gamePks": str(pk),
+                            "hydrate": hydrate
+                        })
+                        if gmeta:
+                            for db in gmeta.get("dates",[]):
+                                for gg in db.get("games",[]):
+                                    ap = gg.get("teams",{}).get("away",{}).get("probablePitcher")
+                                    hp = gg.get("teams",{}).get("home",{}).get("probablePitcher")
+                                    if ap or hp:
+                                        away_pitcher_id = ap.get("id") if ap else None
+                                        home_pitcher_id = hp.get("id") if hp else None
+                                        print(f"    Pitcher via gamePk {pk}: {away_pitcher_id}/{home_pitcher_id}")
+                                        break
+                        if away_pitcher_id or home_pitcher_id:
+                            break
 
         away_pitcher = fetch_pitcher_stats(away_pitcher_id)
         home_pitcher = fetch_pitcher_stats(home_pitcher_id)
@@ -1036,7 +1034,7 @@ def analyze_game(game, context):
     #  since the discrepancy itself is the signal, but hard cap at -1%)
     best_bet_edge_val = max((c["edge_val"] for c in candidates), default=0.0)
 
-    qualifies = (not bet_is_pass) and (best_bet_edge_val >= -1.0) and (
+    qualifies = (not bet_is_pass) and (best_bet_edge_val > 0) and (
         signal in ("fire","value","sharp") or best_bet_edge_val >= 2.5
     )
 
