@@ -618,7 +618,19 @@ def analyze_game(game, context):
                           "gap":gap,"best_book":best["name"],"worst_book":worst["name"]})
 
     value_play = None
-    if signal in ("fire","value","sharp") and not bet_is_pass:
+    # Qualify for value tab if:
+    #   1. Book discrepancy signal (fire/value/sharp), OR
+    #   2. Best bet has a genuine +2.5% or better edge from model adjustments
+    # Either way, must not be a pass
+    best_bet_edge_val = 0.0
+    if candidates:
+        best_bet_edge_val = max(c["edge_val"] for c in candidates)
+
+    qualifies = (not bet_is_pass) and (
+        signal in ("fire","value","sharp") or best_bet_edge_val >= 2.5
+    )
+
+    if qualifies:
         fav_t = home if adj_ht>adj_at else away
         fav_p = max(adj_at,adj_ht); dog_p = min(adj_at,adj_ht)
         dog_t = away if fav_t==home else home
@@ -633,13 +645,26 @@ def analyze_game(game, context):
             fi=american_to_implied(fp)
             vt=fav_t; vp=fmt(fp); vb=fb; vtp=round(fav_p*100,1); vi=round((fi or 0)*100,1)
             ve=round((fav_p-(fi or 0))*100,1)
-        # Build reasoning string
-        reason_parts = [f"{vt} at {vp} ({vtp}% true vs {vi}% implied -- {'+' if ve>0 else ''}{ve}% edge)."]
+
+        # For edge-only plays (no discrepancy), use the best bet candidate directly
+        # so the play shown matches what the model actually recommends
+        if signal not in ("fire","value","sharp") and candidates:
+            best_c = max(candidates, key=lambda c: c["edge_val"])
+            vp = best_c["best_price"]; vb = best_c["sub"].split(" at ")[-1] if " at " in best_c["sub"] else vb
+            vtp_str = best_c["true_pct"]; vi = round(american_to_implied(int(vp.replace("+","")) if vp.replace("+","").replace("-","").isdigit() else 0)*100,1) if vp not in ("N/A","—") else vi
+            ve = best_c["edge_val"]
+            play_label = best_c["play"]
+        else:
+            play_label = f"{vt} ML"
+
+        reason_parts = [f"{play_label} at {vp} ({vtp}% true vs {vi}% implied -- {'+' if ve>0 else ''}{ve}% edge)."]
         if adjustments:
             reason_parts.append("Adj: " + " | ".join(f"{a[0]}" for a in adjustments[:2]) + ".")
-        if split_market: reason_parts.append("Split market -- sharp divergence across books.")
-        elif max(away_gap,home_gap)>=15:
-            reason_parts.append(f"Line discrepancy {max(away_gap,home_gap)}c -- shop books.")
+        if signal in ("fire","value","sharp"):
+            if split_market: reason_parts.append("Split market -- sharp divergence across books.")
+            elif max(away_gap,home_gap)>=15:
+                reason_parts.append(f"Line discrepancy {max(away_gap,home_gap)}c -- shop books.")
+
         value_play = {"game":f"{away} @ {home}","signal":signal,"team":vt,
                       "best_price":vp,"best_book":vb,"true_pct":vtp,
                       "implied_pct":vi,"edge":ve,"reasoning":" ".join(reason_parts)}
@@ -702,7 +727,7 @@ def build_html(analyzed_games, matchups, weather, results_data, date_str, time_s
         for d in g["discrepancies"]: all_disc.append({**d,"game":g["game"]})
         if g["value_play"]: all_plays.append(g["value_play"])
         if g["signal"]=="fire": sharp_ct+=1
-        if g["signal"] in ("fire","value","sharp"): value_ct+=1
+        if g["signal"] in ("fire","value","sharp") or (g["value_play"] and abs(g["value_play"].get("edge",0))>=2.5): value_ct+=1
     all_plays.sort(key=lambda x:-abs(x.get("edge",0)))
     all_disc.sort(key=lambda x:-(x.get("gap",0)))
     sig_cls={"fire":"b-fire","sharp":"b-sharp","value":"b-value","watch":"b-watch","pass":"b-pass"}
@@ -711,7 +736,7 @@ def build_html(analyzed_games, matchups, weather, results_data, date_str, time_s
     books=max((len(g["book_data"]) for g in analyzed_games),default=0)
 
     def alert_cards():
-        top=[p for p in all_plays if p["signal"] in ("fire","sharp","value")][:4]
+        top=[p for p in all_plays if p["signal"] in ("fire","sharp","value") or abs(p.get("edge",0))>=2.5][:4]
         if not top: return '<p style="color:var(--muted);font-size:13px;padding:1rem 0">No sharp alerts today.</p>'
         html='<div class="alert-grid">'
         for p in top:
