@@ -223,7 +223,7 @@ def fetch_last_five_record(team_id):
         return None
 
 
-
+def fetch_batter_vs_pitcher(batter_id, pitcher_id):
     """Career stats for one batter against one pitcher."""
     data = mlb_get(f"/people/{batter_id}/stats", {
         "stats":            "vsPlayer",
