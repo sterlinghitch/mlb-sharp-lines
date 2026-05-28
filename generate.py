@@ -1991,6 +1991,7 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                     f'<span style="font-size:11px;font-weight:700;color:{col}">{label}</span>'
                     f'<span style="font-size:10px;color:var(--muted);margin-left:auto">'
                     f'{dominated} dominated / {owned} owned</span></div>')
+        html = ""
         prev_date = None
         for i,m in enumerate(matchups):
             open_cls="open" if i<1 else ""
