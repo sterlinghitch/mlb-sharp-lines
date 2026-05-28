@@ -3,22 +3,6 @@
   "date_display": "May 28, 2026",
   "bets": [
     {
-      "game": "Atlanta Braves @ Boston Red Sox",
-      "away": "Atlanta Braves",
-      "home": "Boston Red Sox",
-      "away_id": 144,
-      "home_id": 111,
-      "play": "Atlanta Braves Moneyline",
-      "price": "-128",
-      "book": "BetOnline.ag",
-      "type": "ml",
-      "pick_team": "Atlanta Braves",
-      "side": null,
-      "total_line": null,
-      "edge": "-0.4%",
-      "signal": "watch"
-    },
-    {
       "game": "Toronto Blue Jays @ Baltimore Orioles",
       "away": "Toronto Blue Jays",
       "home": "Baltimore Orioles",
@@ -48,22 +32,6 @@
       "side": "Under",
       "total_line": 7.5,
       "edge": "+2.4%",
-      "signal": "watch"
-    },
-    {
-      "game": "Houston Astros @ Texas Rangers",
-      "away": "Houston Astros",
-      "home": "Texas Rangers",
-      "away_id": 117,
-      "home_id": 140,
-      "play": "Texas Rangers Moneyline",
-      "price": "-132",
-      "book": "BetOnline.ag",
-      "type": "ml",
-      "pick_team": "Texas Rangers",
-      "side": null,
-      "total_line": null,
-      "edge": "-0.5%",
       "signal": "watch"
     },
     {
@@ -115,22 +83,6 @@
       "signal": "watch"
     },
     {
-      "game": "Miami Marlins @ New York Mets",
-      "away": "Miami Marlins",
-      "home": "New York Mets",
-      "away_id": 146,
-      "home_id": 121,
-      "play": "Miami Marlins Moneyline",
-      "price": "+112",
-      "book": "BetOnline.ag",
-      "type": "ml",
-      "pick_team": "Miami Marlins",
-      "side": null,
-      "total_line": null,
-      "edge": "-1.0%",
-      "signal": "watch"
-    },
-    {
       "game": "Detroit Tigers @ Chicago White Sox",
       "away": "Detroit Tigers",
       "home": "Chicago White Sox",
@@ -144,22 +96,6 @@
       "side": "Under",
       "total_line": 8.5,
       "edge": "+3.4%",
-      "signal": "watch"
-    },
-    {
-      "game": "Kansas City Royals @ Texas Rangers",
-      "away": "Kansas City Royals",
-      "home": "Texas Rangers",
-      "away_id": 118,
-      "home_id": 140,
-      "play": "Over 8.0 Runs",
-      "price": "-105",
-      "book": "FanDuel",
-      "type": "total",
-      "pick_team": null,
-      "side": "Over",
-      "total_line": 8.0,
-      "edge": "-1.6%",
       "signal": "watch"
     },
     {
