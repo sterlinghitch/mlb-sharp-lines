@@ -3,10 +3,10 @@
   "games": {
     "Atlanta Braves @ Boston Red Sox": {
       "play": "No Play",
-      "price": "Best option (Under 6.5 Runs) is overpriced",
+      "price": "Best option (Atlanta Braves Moneyline) is overpriced",
       "book": "current lines",
       "is_pass": true,
-      "edge": "-0.4%",
+      "edge": "-0.2%",
       "away_true": 56,
       "home_true": 44,
       "away_fair": "-128",
