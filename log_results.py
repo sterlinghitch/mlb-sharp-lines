@@ -94,7 +94,75 @@ def fetch_final_scores(date_str):
 # =============================================================
 # GRADE ONE PICK
 # =============================================================
-def grade_pick(pick, scores):
+def calc_clv(pick, closing_games):
+    """
+    Closing Line Value: compare noon pick price to closing line.
+    Positive CLV = you beat the closing line (sharp signal).
+    Returns cents of CLV or None if data unavailable.
+    """
+    if not closing_games: return None
+    game_key  = pick.get("game","")
+    closing   = closing_games.get(game_key,{})
+    if not closing: return None
+
+    books = closing.get("books",{})
+    if not books: return None
+
+    # Median closing price for the picked side
+    bet_type  = pick.get("type","ml")
+    pick_team = pick.get("pick_team","")
+    away_name = pick.get("away","")
+    noon_price_str = pick.get("price","")
+
+    try:
+        noon_price = float(noon_price_str.replace("+",""))
+    except Exception:
+        return None
+
+    if bet_type == "ml":
+        if pick_team in (away_name, pick.get("away","")):
+            side_prices = [b["away_price"] for b in books.values() if b.get("away_price")]
+        else:
+            side_prices = [b["home_price"] for b in books.values() if b.get("home_price")]
+    elif bet_type == "total":
+        side     = pick.get("side","Over")
+        key      = "over_price" if side=="Over" else "under_price"
+        side_prices = [b[key] for b in books.values() if b.get(key)]
+    else:
+        return None
+
+    if not side_prices: return None
+
+    # Median closing price
+    s = sorted(side_prices); n = len(s)
+    close_price = s[n//2] if n%2 else (s[n//2-1]+s[n//2])/2
+
+    # CLV in cents (percentage points of implied probability)
+    noon_imp  = american_to_implied(noon_price)
+    close_imp = american_to_implied(close_price)
+    if noon_imp is None or close_imp is None: return None
+
+    # Positive CLV = we got better price than the market closed at = beat the line
+    clv_cents = round((close_imp - noon_imp) * 100, 1)
+    return {"clv_cents": clv_cents, "noon_price": noon_price_str,
+            "close_price": int(close_price), "beat_close": clv_cents > 0}
+
+
+def load_closing_lines():
+    if not os.path.exists("closing_lines.json"): return {}
+    try:
+        with open("closing_lines.json") as f:
+            data = json.load(f)
+        return data.get("games",{})
+    except Exception:
+        return {}
+
+def american_to_implied(price):
+    try:
+        p = float(price)
+        return 100/(p+100) if p>0 else abs(p)/(abs(p)+100)
+    except Exception:
+        return None
     """
     Returns "W", "L", or "P" (push), or None if no final score found.
 
@@ -212,11 +280,16 @@ def main():
     # Fetch final scores from MLB API
     print(f"\nFetching final scores for {yesterday_str}...")
     scores = fetch_final_scores(yesterday_str)
-
-    # Also check today in case a game ran past midnight into today
     today_str = now_et.strftime("%Y-%m-%d")
     print(f"Also checking late games finishing today ({today_str})...")
     scores.update(fetch_final_scores(today_str))
+
+    # Load closing lines for CLV tracking
+    closing_games = load_closing_lines()
+    if closing_games:
+        print(f"Loaded closing_lines.json: {len(closing_games)} games for CLV tracking")
+    else:
+        print("No closing_lines.json -- CLV tracking skipped today")
 
     if not scores:
         print("No final scores found. Games may still be in progress — try running later.")
@@ -264,6 +337,7 @@ def main():
             note = f"Final: {pick.get('away','?')} {ar} @ {pick.get('home','?')} {hr}"
 
         print(f"  {result}  {game} | {play} | {note}")
+        clv = calc_clv(pick, closing_games)
         graded_bets.append({
             "game":   game,
             "play":   play,
@@ -273,6 +347,7 @@ def main():
             "signal": pick.get("signal", ""),
             "date":   display_date,
             "note":   note,
+            "clv":    clv,
         })
         time.sleep(0.1)
 
