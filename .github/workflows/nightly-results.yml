@@ -32,7 +32,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Actions"
-          git add results.json picks.json
-          # Only commit if something actually changed
+          git add -f results.json || true
+          git add -f picks.json || true
           git diff --staged --quiet || git commit -m "Auto: log best bet results $(date -u '+%Y-%m-%d')"
-          git push
+          git push || true
