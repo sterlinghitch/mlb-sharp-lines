@@ -1244,7 +1244,18 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                 "signal_label":g["signal_label"],
             }
 
-        # Fallback: picks.json (covers games analyzed at noon, now in tracking)
+        # Fallback: noon_analysis.json (full game analysis saved at noon including passes)
+        if _os.path.exists("noon_analysis.json"):
+            try:
+                with open("noon_analysis.json") as f:
+                    na = _json.load(f)
+                for gk, gdata in na.get("games", {}).items():
+                    if gk not in noon_picks:
+                        noon_picks[gk] = gdata
+            except Exception:
+                pass
+
+        # Second fallback: picks.json (only has games with actual bets, not passes)
         if _os.path.exists("picks.json"):
             try:
                 with open("picks.json") as f:
@@ -2201,13 +2212,32 @@ def main():
         "date_display": date_str,
         "bets": []
     }
+    # Also save full analysis for ALL games (including passes) for tracking cards
+    noon_analysis = {
+        "date": mlb_date,
+        "games": {}
+    }
     for g in analyzed:
+        # Full analysis for tracking cards (all games)
+        noon_analysis["games"][g["game"]] = {
+            "play":        g["bet_play"],
+            "price":       g["bet_sub"].split(" at ")[0] if " at " in g["bet_sub"] else g["bet_sub"],
+            "book":        g["bet_sub"].split(" at ")[1] if " at " in g["bet_sub"] else "",
+            "is_pass":     g["bet_is_pass"],
+            "edge":        g["bet_edge"],
+            "away_true":   g["away_true"],
+            "home_true":   g["home_true"],
+            "away_fair":   g["away_fair"],
+            "home_fair":   g["home_fair"],
+            "signal":      g["signal"],
+            "signal_label":g["signal_label"],
+        }
+        # picks.json only logs real bets (for nightly grader)
         if not g["bet_is_pass"] and "No Play" not in g["bet_play"]:
-            # Parse total line from bet_play if it's an O/U pick
             bet_type = "total" if "Runs" in g["bet_play"] else "ml"
             side = None; total_line = None
             if bet_type == "total":
-                parts = g["bet_play"].split()  # e.g. ["Over", "8.5", "Runs"]
+                parts = g["bet_play"].split()
                 side       = parts[0] if len(parts)>0 else None
                 total_line = float(parts[1]) if len(parts)>1 else None
             picks["bets"].append({
@@ -2220,7 +2250,7 @@ def main():
                 "price":      g["bet_sub"].split(" at ")[0] if " at " in g["bet_sub"] else g["bet_sub"],
                 "book":       g["bet_sub"].split(" at ")[1] if " at " in g["bet_sub"] else "",
                 "type":       bet_type,
-                "pick_team":  g["away"] if "Away" in g["bet_play"] or g["away"] in g["bet_play"] else g["home"] if bet_type=="ml" else None,
+                "pick_team":  g["away"] if g["away"] in g["bet_play"] else (g["home"] if bet_type=="ml" else None),
                 "side":       side,
                 "total_line": total_line,
                 "edge":       g["bet_edge"],
@@ -2229,7 +2259,9 @@ def main():
 
     with open("picks.json","w",encoding="utf-8") as f:
         json.dump(picks, f, indent=2)
-    print(f"Saved picks.json: {len(picks['bets'])} best bets for tonight's checker")
+    with open("noon_analysis.json","w",encoding="utf-8") as f:
+        json.dump(noon_analysis, f, indent=2)
+    print(f"Saved picks.json: {len(picks['bets'])} best bets")
 
     print(f"Done -- {len(analyzed)} games, {len(matchups)} matchups, {len(html):,} chars")
 
