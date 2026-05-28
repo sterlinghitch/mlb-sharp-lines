@@ -15,7 +15,7 @@
       "pick_team": "Atlanta Braves",
       "side": null,
       "total_line": null,
-      "edge": "-0.6%",
+      "edge": "-0.4%",
       "signal": "watch"
     },
     {
@@ -57,13 +57,13 @@
       "away_id": 117,
       "home_id": 140,
       "play": "Texas Rangers Moneyline",
-      "price": "-133",
+      "price": "-132",
       "book": "BetOnline.ag",
       "type": "ml",
       "pick_team": "Texas Rangers",
       "side": null,
       "total_line": null,
-      "edge": "-0.7%",
+      "edge": "-0.5%",
       "signal": "watch"
     },
     {
@@ -105,13 +105,13 @@
       "away_id": 108,
       "home_id": 139,
       "play": "Tampa Bay Rays Moneyline",
-      "price": "-171",
+      "price": "-178",
       "book": "BetOnline.ag",
       "type": "ml",
       "pick_team": "Tampa Bay Rays",
       "side": null,
       "total_line": null,
-      "edge": "+2.1%",
+      "edge": "+1.7%",
       "signal": "watch"
     },
     {
@@ -136,14 +136,14 @@
       "home": "Chicago White Sox",
       "away_id": 116,
       "home_id": 145,
-      "play": "Under 9.0 Runs",
-      "price": "-120",
-      "book": "BetOnline.ag",
+      "play": "Under 8.5 Runs",
+      "price": "-110",
+      "book": "FanDuel",
       "type": "total",
       "pick_team": null,
       "side": "Under",
-      "total_line": 9.0,
-      "edge": "+2.3%",
+      "total_line": 8.5,
+      "edge": "+3.4%",
       "signal": "watch"
     },
     {
