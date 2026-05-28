@@ -2,8 +2,17 @@ name: Nightly Result Logger
 
 on:
   schedule:
-    - cron: '0 6 * * *'    # 1:00 AM ET (6:00 UTC)  -- first pass, most games done
-    - cron: '0 9 * * *'    # 4:00 AM ET (9:00 UTC)  -- safety net for west coast extras
+    # Runs every 30 minutes from 6pm ET (23:00 UTC) to 2am ET (07:00 UTC)
+    # This grades each game as soon as it goes Final in the MLB API
+    - cron: '0,30 23 * * *'    # 6:00pm and 6:30pm ET
+    - cron: '0,30 0 * * *'     # 7:00pm and 7:30pm ET
+    - cron: '0,30 1 * * *'     # 8:00pm and 8:30pm ET
+    - cron: '0,30 2 * * *'     # 9:00pm and 9:30pm ET
+    - cron: '0,30 3 * * *'     # 10:00pm and 10:30pm ET
+    - cron: '0,30 4 * * *'     # 11:00pm and 11:30pm ET
+    - cron: '0,30 5 * * *'     # 12:00am and 12:30am ET
+    - cron: '0,30 6 * * *'     # 1:00am and 1:30am ET
+    - cron: '0 7 * * *'        # 2:00am ET -- final safety net
   workflow_dispatch:
 
 jobs:
