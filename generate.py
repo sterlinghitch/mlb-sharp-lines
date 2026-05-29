@@ -720,6 +720,70 @@ def match_public_betting(game_key, public_data, away_name, home_name):
     return result
 
 
+def fetch_probable_pitchers(date_str):
+    """
+    Fetch probable pitchers for all games on a given date.
+    Tries multiple hydration formats since the MLB API is inconsistent.
+    Returns dict: {(away_team_id, home_team_id): {"away": pitcher_id, "home": pitcher_id}}
+    """
+    result = {}
+    for hydrate in ["probablePitcher(note),team","probablePitcher,team","probablePitcher"]:
+        data = mlb_get("/schedule",{"sportId":1,"date":date_str,"hydrate":hydrate})
+        if not data: continue
+        found = 0
+        for db in data.get("dates",[]):
+            for g in db.get("games",[]):
+                teams  = g.get("teams",{})
+                away_t = teams.get("away",{}); home_t = teams.get("home",{})
+                aid    = away_t.get("team",{}).get("id")
+                hid    = home_t.get("team",{}).get("id")
+                ap     = away_t.get("probablePitcher")
+                hp     = home_t.get("probablePitcher")
+                if aid and hid and (ap or hp):
+                    result[(aid,hid)] = {
+                        "away": ap.get("id") if ap else None,
+                        "home": hp.get("id") if hp else None,
+                    }
+                    found += 1
+        if found > 0:
+            print(f"  Pitchers via schedule hydrate='{hydrate}': {found} games")
+            return result
+
+    # Fallback: per-game content via gamePk
+    print("  Schedule hydration returned no pitchers -- trying per-game lookup...")
+    sched = mlb_get("/schedule",{"sportId":1,"date":date_str})
+    if sched:
+        game_pks = []
+        for db in sched.get("dates",[]):
+            for g in db.get("games",[]):
+                pk  = g.get("gamePk")
+                aid = g.get("teams",{}).get("away",{}).get("team",{}).get("id")
+                hid = g.get("teams",{}).get("home",{}).get("team",{}).get("id")
+                if pk and aid and hid:
+                    game_pks.append((pk,aid,hid))
+        for pk,aid,hid in game_pks:
+            for hydrate in ["probablePitcher(note),team","probablePitcher,team"]:
+                gmeta = mlb_get("/schedule",{"sportId":1,"gamePks":str(pk),"hydrate":hydrate})
+                if gmeta:
+                    for db in gmeta.get("dates",[]):
+                        for gg in db.get("games",[]):
+                            ap = gg.get("teams",{}).get("away",{}).get("probablePitcher")
+                            hp = gg.get("teams",{}).get("home",{}).get("probablePitcher")
+                            if ap or hp:
+                                result[(aid,hid)] = {
+                                    "away": ap.get("id") if ap else None,
+                                    "home": hp.get("id") if hp else None,
+                                }
+                                print(f"    Pitcher via gamePk {pk}: {result[(aid,hid)]}")
+                                break
+                if (aid,hid) in result: break
+            time.sleep(0.05)
+
+    if not result:
+        print(f"  WARNING: No probable pitchers for {date_str} -- not announced yet")
+    return result
+
+
 def build_matchup_data(odds_games, date_str):
     print("Fetching matchup data...")
 
@@ -1726,15 +1790,17 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                            f'HP Ump: <span style="color:var(--text)">{ump["name"]}</span> '
                            f'- Run impact: <span style="color:{ri_col}">{ri_lbl}</span></div>')
 
+            # Define lm once — used by both pub_strip and lm_strip
+            lm = g.get("line_movement")
+            lm_strip = ""
+
             # Public betting indicator
             pb_data = match_public_betting(g["game"], public_betting, g["away"], g["home"])
             pub_strip = ""
             if pb_data:
                 ab = pb_data.get("away_bets",50); hb = pb_data.get("home_bets",50)
                 am = pb_data.get("away_money"); hm = pb_data.get("home_money")
-                # Reverse line movement detection
-                # Public on one side but line moving the other = sharp indicator
-                lm = g.get("line_movement")
+                # Reverse line movement detection (lm already defined above)
                 rlm_note = ""
                 if lm and abs(lm.get("move_cents",0)) >= 8:
                     moved_away = lm.get("moved_team","") == "away"
