@@ -2,7 +2,6 @@ name: Nightly Result Logger
 
 on:
   schedule:
-    # Runs every 30 minutes from 6pm ET (23:00 UTC) to 2am ET (07:00 UTC)
     - cron: '0,30 23 * * *'    # 6:00pm and 6:30pm ET
     - cron: '0,30 0 * * *'     # 7:00pm and 7:30pm ET
     - cron: '0,30 1 * * *'     # 8:00pm and 8:30pm ET
@@ -17,7 +16,6 @@ on:
 jobs:
   log-results:
     runs-on: ubuntu-latest
-
     permissions:
       contents: write
 
@@ -36,17 +34,35 @@ jobs:
         run: pip install requests
 
       - name: Run result logger
-        # continue-on-error means the commit step still runs even if logger exits non-zero
-        # The logger itself uses sys.exit(0) for expected no-op cases
-        run: python log_results.py
+        id: logger
+        run: |
+          python log_results.py
+          echo "ran=true" >> $GITHUB_OUTPUT
         continue-on-error: true
 
-      - name: Commit updated results
+      - name: Commit results.json and picks.json
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Actions"
           git add -f results.json || true
           git add -f picks.json || true
           git diff --staged --quiet || git commit -m "Auto: log best bet results $(date -u '+%Y-%m-%d %H:%M')"
+          git pull --rebase origin main
+          git push || true
+
+      - name: Rebuild site with updated results
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: |
+          pip install -r requirements.txt
+          python generate.py
+        continue-on-error: true
+
+      - name: Commit updated site
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Actions"
+          git add index.html picks.json noon_analysis.json || true
+          git diff --staged --quiet || git commit -m "Auto: rebuild site after results update $(date -u '+%Y-%m-%d %H:%M')"
           git pull --rebase origin main
           git push || true
