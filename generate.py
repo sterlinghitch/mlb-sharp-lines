@@ -3166,9 +3166,69 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
 
         calendar_section = build_calendar()
 
+        # ── PENDING PICKS (today's locked bets waiting for results) ──
+        import os as _os
+        pending_section = ""
+        try:
+            if _os.path.exists("picks.json"):
+                with open("picks.json") as f:
+                    picks_data = json.load(f)
+                pending_bets = picks_data.get("bets", [])
+                picks_date   = picks_data.get("date_display", picks_data.get("date",""))
+
+                # Check if these picks are already graded in results
+                graded_games = {b.get("game","") for b in all_bets}
+                ungraded = [b for b in pending_bets
+                            if b.get("game","") not in graded_games]
+
+                if ungraded:
+                    rows = ""
+                    for b in ungraded:
+                        sig = b.get("signal","watch")
+                        sig_col = {"fire":"var(--red)","sharp":"#60a5fa",
+                                   "value":"var(--green)","watch":"var(--muted)"}.get(sig,"var(--muted)")
+                        edge = b.get("edge","")
+                        rows += (
+                            f'<div style="display:flex;align-items:center;gap:10px;'
+                            f'padding:10px 14px;border-bottom:1px solid var(--border)">'
+                            f'<div style="flex:1">'
+                            f'<div style="font-size:13px;font-weight:700;color:#fff">{b.get("play","?")}</div>'
+                            f'<div style="font-size:11px;color:var(--muted)">{b.get("game","?")}</div>'
+                            f'</div>'
+                            f'<div style="text-align:right">'
+                            f'<div style="font-family:monospace;font-size:13px;color:var(--accent)">'
+                            f'{b.get("price","?")} @ {b.get("book","?")}</div>'
+                            f'<div style="font-size:10px;color:{sig_col}">'
+                            f'{sig.upper()} · {edge}</div>'
+                            f'</div>'
+                            f'<div style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);'
+                            f'border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;'
+                            f'color:var(--amber);font-family:monospace;white-space:nowrap">⏳ PENDING</div>'
+                            f'</div>'
+                        )
+                    pending_section = (
+                        f'<div class="sec-header"><h2>Pending Results</h2><div class="sec-line"></div></div>'
+                        f'<div style="background:var(--bg2);border:1px solid rgba(251,191,36,0.25);'
+                        f'border-radius:12px;overflow:hidden;margin-bottom:2rem">'
+                        f'<div style="padding:10px 14px;background:rgba(251,191,36,0.06);'
+                        f'display:flex;align-items:center;justify-content:space-between">'
+                        f'<div style="font-size:11px;color:var(--amber);font-family:monospace;font-weight:700">'
+                        f'⏳ {len(ungraded)} PICKS AWAITING RESULTS</div>'
+                        f'<div style="font-size:10px;color:var(--muted)">{picks_date}</div>'
+                        f'</div>'
+                        f'{rows}'
+                        f'<div style="padding:8px 14px;font-size:11px;color:var(--muted);font-style:italic">'
+                        f'These picks are locked in picks.json and will be graded automatically '
+                        f'tonight as games finish. Results appear here once logged.</div>'
+                        f'</div>'
+                    )
+        except Exception as e:
+            pending_section = ""
+
         return (
             circles
             + hint
+            + pending_section
             + calendar_section
             + calib_section
             + clv_feedback
