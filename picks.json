@@ -3,6 +3,22 @@
   "date_display": "May 29, 2026",
   "bets": [
     {
+      "game": "Minnesota Twins @ Pittsburgh Pirates",
+      "away": "Minnesota Twins",
+      "home": "Pittsburgh Pirates",
+      "away_id": 142,
+      "home_id": 134,
+      "play": "Pittsburgh Pirates Moneyline",
+      "price": "-134",
+      "book": "FanDuel",
+      "type": "ml",
+      "pick_team": "Pittsburgh Pirates",
+      "side": null,
+      "total_line": null,
+      "edge": "+1.0%",
+      "signal": "watch"
+    },
+    {
       "game": "Atlanta Braves @ Cincinnati Reds",
       "away": "Atlanta Braves",
       "home": "Cincinnati Reds",
