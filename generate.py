@@ -214,7 +214,17 @@ def fetch_odds():
         except Exception:
             pregame.append(g)
     print(f"Got {len(all_games)} total -- {len(pregame)} pre-game, {len(tracking)} tracking")
-    return pregame, tracking
+    # Deduplicate by game ID (odds API can return same game multiple times)
+    seen = set()
+    pregame_deduped = []
+    for g in pregame:
+        gid = g.get("id","") or f"{g.get('away_team','')}@{g.get('home_team','')}"
+        if gid not in seen:
+            seen.add(gid)
+            pregame_deduped.append(g)
+    if len(pregame_deduped) < len(pregame):
+        print(f"  Deduped: {len(pregame)} -> {len(pregame_deduped)} pre-game games")
+    return pregame_deduped, tracking
 
 
 # =============================================================
@@ -1687,9 +1697,14 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
         for d in g["discrepancies"]: all_disc.append({**d,"game":g["game"]})
         if g["value_play"]: all_plays.append(g["value_play"])
         if g["signal"]=="fire": sharp_ct+=1
-    # value_ct must match the alert cards filter exactly
-    all_plays.sort(key=lambda x: -(x.get("edge") or 0))
-    value_ct = len(all_plays)  # all passed the 1.5% threshold at qualification
+    # Sort: today's plays by edge first, then tomorrow's by edge
+    today_date_val = analyzed_games[0].get("date_et","Today") if analyzed_games else "Today"
+    date_lookup_sort = {g["game"]: g.get("date_et","Today") for g in analyzed_games}
+    all_plays.sort(key=lambda x: (
+        0 if date_lookup_sort.get(x.get("game",""),"") == today_date_val else 1,
+        -(x.get("edge") or 0)
+    ))
+    value_ct = len(all_plays)
     all_disc.sort(key=lambda x:-(x.get("gap",0)))
     sig_cls={"fire":"b-fire","sharp":"b-sharp","value":"b-value","watch":"b-watch","pass":"b-pass"}
     alert_cls={"fire":"fire","sharp":"sharp","value":"value","watch":"watch"}
@@ -1697,35 +1712,52 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
     books=max((len(g["book_data"]) for g in analyzed_games),default=0)
 
     def alert_cards():
-        top = all_plays[:6]  # sorted by edge, all passed 1.5% threshold
-        if not top: return '<p style="color:var(--muted);font-size:13px;padding:1rem 0">No sharp alerts today.</p>'
+        if not all_plays: return '<p style="color:var(--muted);font-size:13px;padding:1rem 0">No sharp alerts today.</p>'
         date_lookup = {g["game"]: g.get("date_et","Today") for g in analyzed_games}
         time_lookup = {g["game"]: g.get("time","") for g in analyzed_games}
-        html='<div class="alert-grid">'
-        for p in top:
+        today_d = analyzed_games[0].get("date_et","Today") if analyzed_games else "Today"
+        today_plays    = [p for p in all_plays if date_lookup.get(p.get("game",""),today_d) == today_d]
+        tomorrow_plays = [p for p in all_plays if date_lookup.get(p.get("game",""),today_d) != today_d]
+        html = ""
+
+        def render_card(p):
             sig=p["signal"]; ec="green" if (p.get("edge") or 0)>0 else "red"
             ap=p["best_price"]; ab=p["best_book"]
             at_str=str(p.get("true_pct","?")) + ("%" if "%" not in str(p.get("true_pct","?")) else "")
             ai_str=str(p.get("implied_pct","?")) + ("%" if "%" not in str(p.get("implied_pct","?")) else "")
             play_lbl=p.get("play_label",p.get("team","") + " ML")
-            game_date = date_lookup.get(p.get("game",""),"")
             game_time = time_lookup.get(p.get("game",""),"")
-            date_str_display = f'{game_date}{(" · " + game_time) if game_time else ""}'
-            html+=(f'<div class="alert-card {alert_cls.get(sig,"value")}">'
-                   f'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">'
-                   f'<span class="badge {sig_cls.get(sig,"b-value")}">{sig.upper()}</span>'
-                   f'<span style="font-size:10px;color:var(--muted);font-family:monospace">{date_str_display}</span>'
-                   f'</div>'
-                   f'<div class="alert-game">{p["game"]}</div>'
-                   f'<div class="alert-rec">{play_lbl} -- {ap} @ {ab}</div>'
-                   f'<div class="alert-stats">'
-                   f'<div class="stat-box"><div class="sl">Best Price</div><div class="sv">{ap}</div></div>'
-                   f'<div class="stat-box"><div class="sl">Adj True%</div><div class="sv">{at_str}</div></div>'
-                   f'<div class="stat-box"><div class="sl">Implied%</div><div class="sv {ec}">{ai_str}</div></div>'
-                   f'</div>'
-                   f'<div class="alert-reasoning">{p.get("reasoning","")}</div>'
-                   f'</div>')
-        html+="</div>"; return html
+            return (f'<div class="alert-card {alert_cls.get(sig,"value")}">'
+                    f'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">'
+                    f'<span class="badge {sig_cls.get(sig,"b-value")}">{sig.upper()}</span>'
+                    f'<span style="font-size:10px;color:var(--muted);font-family:monospace">{game_time}</span>'
+                    f'</div>'
+                    f'<div class="alert-game">{p["game"]}</div>'
+                    f'<div class="alert-rec">{play_lbl} -- {ap} @ {ab}</div>'
+                    f'<div class="alert-stats">'
+                    f'<div class="stat-box"><div class="sl">Best Price</div><div class="sv">{ap}</div></div>'
+                    f'<div class="stat-box"><div class="sl">Adj True%</div><div class="sv">{at_str}</div></div>'
+                    f'<div class="stat-box"><div class="sl">Implied%</div><div class="sv {ec}">{ai_str}</div></div>'
+                    f'</div>'
+                    f'<div class="alert-reasoning">{p.get("reasoning","")}</div>'
+                    f'</div>')
+
+        if today_plays:
+            html += '<div class="alert-grid">'
+            for p in today_plays[:6]:
+                html += render_card(p)
+            html += "</div>"
+        elif not tomorrow_plays:
+            return '<p style="color:var(--muted);font-size:13px;padding:1rem 0">No sharp alerts today.</p>'
+
+        if tomorrow_plays:
+            html += (f'<div class="sec-header" style="margin-top:1.5rem">'
+                     f'<h2>Tomorrow\'s Best Plays</h2><div class="sec-line"></div></div>'
+                     f'<div class="alert-grid">')
+            for p in tomorrow_plays[:6]:
+                html += render_card(p)
+            html += "</div>"
+        return html
 
     def parlay_legs_html(plays):
         if not plays:
