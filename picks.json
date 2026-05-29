@@ -1,6 +1,6 @@
 {
-  "date": "2026-05-28",
-  "date_display": "May 28, 2026",
+  "date": "2026-05-29",
+  "date_display": "May 29, 2026",
   "bets": [
     {
       "game": "San Diego Padres @ Washington Nationals",
@@ -25,13 +25,13 @@
       "away_id": 111,
       "home_id": 114,
       "play": "Cleveland Guardians Moneyline",
-      "price": "-110",
+      "price": "-112",
       "book": "BetOnline.ag",
       "type": "ml",
       "pick_team": "Cleveland Guardians",
       "side": null,
       "total_line": null,
-      "edge": "+1.9%",
+      "edge": "+1.7%",
       "signal": "fire"
     },
     {
@@ -47,7 +47,7 @@
       "pick_team": "Milwaukee Brewers",
       "side": null,
       "total_line": null,
-      "edge": "+0.9%",
+      "edge": "+1.1%",
       "signal": "fire"
     },
     {
@@ -57,30 +57,14 @@
       "away_id": 143,
       "home_id": 119,
       "play": "Over 8.0 Runs",
-      "price": "-115",
-      "book": "BetOnline.ag",
+      "price": "-114",
+      "book": "DraftKings",
       "type": "total",
       "pick_team": null,
       "side": "Over",
       "total_line": 8.0,
-      "edge": "-0.0%",
+      "edge": "+0.4%",
       "signal": "fire"
-    },
-    {
-      "game": "Atlanta Braves @ Cincinnati Reds",
-      "away": "Atlanta Braves",
-      "home": "Cincinnati Reds",
-      "away_id": 144,
-      "home_id": 113,
-      "play": "Over 9.5 Runs",
-      "price": "-102",
-      "book": "MyBookie.ag",
-      "type": "total",
-      "pick_team": null,
-      "side": "Over",
-      "total_line": 9.5,
-      "edge": "0.0%",
-      "signal": "watch"
     },
     {
       "game": "Los Angeles Angels @ Tampa Bay Rays",
@@ -89,13 +73,13 @@
       "away_id": 108,
       "home_id": 139,
       "play": "Tampa Bay Rays Moneyline",
-      "price": "-170",
+      "price": "-166",
       "book": "BetOnline.ag",
       "type": "ml",
       "pick_team": "Tampa Bay Rays",
       "side": null,
       "total_line": null,
-      "edge": "+2.0%",
+      "edge": "+2.4%",
       "signal": "watch"
     },
     {
@@ -105,13 +89,13 @@
       "away_id": 146,
       "home_id": 121,
       "play": "Under 7.0 Runs",
-      "price": "+102",
-      "book": "MyBookie.ag",
+      "price": "+105",
+      "book": "BetOnline.ag",
       "type": "total",
       "pick_team": null,
       "side": "Under",
       "total_line": 7.0,
-      "edge": "+4.0%",
+      "edge": "+2.6%",
       "signal": "watch"
     },
     {
@@ -121,13 +105,13 @@
       "away_id": 112,
       "home_id": 138,
       "play": "St. Louis Cardinals Moneyline",
-      "price": "+121",
-      "book": "BetOnline.ag",
+      "price": "+122",
+      "book": "BetUS",
       "type": "ml",
       "pick_team": "St. Louis Cardinals",
       "side": null,
       "total_line": null,
-      "edge": "+0.5%",
+      "edge": "+0.7%",
       "signal": "watch"
     },
     {
@@ -137,13 +121,29 @@
       "away_id": 137,
       "home_id": 115,
       "play": "Over 10.5 Runs",
-      "price": "-110",
+      "price": "-114",
       "book": "FanDuel",
       "type": "total",
       "pick_team": null,
       "side": "Over",
       "total_line": 10.5,
-      "edge": "+2.9%",
+      "edge": "+2.0%",
+      "signal": "watch"
+    },
+    {
+      "game": "New York Yankees @ Athletics",
+      "away": "New York Yankees",
+      "home": "Athletics",
+      "away_id": 147,
+      "home_id": 133,
+      "play": "New York Yankees Moneyline",
+      "price": "-144",
+      "book": "FanDuel",
+      "type": "ml",
+      "pick_team": "New York Yankees",
+      "side": null,
+      "total_line": null,
+      "edge": "+0.2%",
       "signal": "watch"
     },
     {
@@ -153,13 +153,13 @@
       "away_id": 109,
       "home_id": 136,
       "play": "Seattle Mariners Moneyline",
-      "price": "-143",
+      "price": "-140",
       "book": "BetOnline.ag",
       "type": "ml",
       "pick_team": "Seattle Mariners",
       "side": null,
       "total_line": null,
-      "edge": "+1.4%",
+      "edge": "+1.7%",
       "signal": "watch"
     }
   ]
