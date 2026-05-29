@@ -2637,34 +2637,26 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                     if sr:   context_parts.append(sr)
                     context_line = " · ".join(context_parts)
 
+                    context_html = (f'<div style="font-size:12px;color:#aaa;line-height:1.6;font-style:italic">'
+                                    f'{context_line}</div>') if context_line else ""
                     trend_html += (
                         f'<div style="background:{res_bg};border:1px solid {res_bdr};border-radius:10px;'
                         f'padding:12px 16px;margin-bottom:8px;display:grid;'
                         f'grid-template-columns:auto 1fr auto;gap:12px;align-items:start">'
-
-                        # Left: signal badge + result
                         f'<div style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:52px">'
                         f'<span style="font-size:18px">{icon}</span>'
-                        f'<span style="font-size:11px;font-weight:700;color:{res_col};font-family:monospace;'
-                        f'white-space:nowrap">{res_lbl}</span>'
+                        f'<span style="font-size:11px;font-weight:700;color:{res_col};font-family:monospace;white-space:nowrap">{res_lbl}</span>'
                         f'</div>'
-
-                        # Middle: game info + context
                         f'<div>'
                         f'<div style="font-size:11px;color:var(--muted);margin-bottom:2px">{game}</div>'
                         f'<div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:3px">{play}</div>'
-                        f'<div style="font-size:12px;color:{col};font-family:monospace;margin-bottom:6px">'
-                        f'{price} at {book}</div>'
-                        f'{"<div style=\"font-size:12px;color:#aaa;line-height:1.6;font-style:italic\">" + context_line + "</div>" if context_line else ""}'
+                        f'<div style="font-size:12px;color:{col};font-family:monospace;margin-bottom:6px">{price} at {book}</div>'
+                        f'{context_html}'
                         f'</div>'
-
-                        # Right: signal pill
                         f'<div style="text-align:right">'
                         f'<span style="background:{bg};border:1px solid {col};border-radius:4px;'
-                        f'padding:2px 8px;font-size:10px;font-family:monospace;color:{col};'
-                        f'font-weight:700">{sig.upper()}</span>'
+                        f'padding:2px 8px;font-size:10px;font-family:monospace;color:{col};font-weight:700">{sig.upper()}</span>'
                         f'</div>'
-
                         f'</div>'
                     )
 
