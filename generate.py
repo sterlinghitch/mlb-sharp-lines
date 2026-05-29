@@ -3503,7 +3503,36 @@ def main():
         json.dump(noon_analysis, f, indent=2)
     print(f"Saved picks.json: {len(picks['bets'])} best bets")
 
-    print(f"Done -- {len(analyzed)} games, {len(matchups)} matchups, {len(html):,} chars")
+    # Save to permanent picks history (never overwritten, accumulates forever)
+    history_path = "picks_history.json"
+    history = {"picks": []}
+    if os.path.exists(history_path):
+        try:
+            with open(history_path) as f:
+                history = json.load(f)
+        except Exception:
+            pass
+
+    # Only add today's picks if this date isn't already in history
+    existing_dates = {p.get("date") for p in history.get("picks",[])}
+    if mlb_date not in existing_dates:
+        for b in picks["bets"]:
+            history["picks"].append({
+                "date":       mlb_date,
+                "date_display": date_str,
+                "game":       b["game"],
+                "play":       b["play"],
+                "price":      b["price"],
+                "book":       b["book"],
+                "type":       b["type"],
+                "edge":       b["edge"],
+                "signal":     b["signal"],
+            })
+        with open(history_path, "w", encoding="utf-8") as f:
+            json.dump(history, f, indent=2)
+        print(f"Saved picks_history.json: {len(history['picks'])} total picks on record")
+    else:
+        print(f"picks_history.json already has picks for {mlb_date} -- not overwriting")
 
 if __name__ == "__main__":
     main()
