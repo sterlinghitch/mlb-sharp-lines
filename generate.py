@@ -3753,18 +3753,21 @@ def main():
     with open("index.html","w",encoding="utf-8") as f:
         f.write(html)
 
-    # Save today's best bets to picks.json so log_results.py can check them tonight
-    # MERGE with existing picks.json so the 4pm run preserves noon bets for
-    # games that have already started (they won't be in the 4pm analyzed list)
-    picks = {
+    # Save picks.json — but NOT during overnight nightly rebuilds
+    # (NIGHTLY_REBUILD=1 means we're just updating the site after grading,
+    #  not generating fresh picks — saves with correct ET date at noon/4pm only)
+    is_nightly_rebuild = os.environ.get("NIGHTLY_REBUILD","") == "1"
+
+    if not is_nightly_rebuild:
+      picks = {
         "date": mlb_date,
         "date_display": date_str,
         "bets": []
-    }
+      }
 
-    # Load existing picks from today so we can merge
-    existing_picks_by_game = {}
-    if os.path.exists("picks.json"):
+      # Load existing picks from today so we can merge
+      existing_picks_by_game = {}
+      if os.path.exists("picks.json"):
         try:
             with open("picks.json") as f:
                 existing_picks = json.load(f)
