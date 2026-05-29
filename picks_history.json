@@ -1,0 +1,114 @@
+{
+  "picks": [
+    {
+      "date": "2026-05-28",
+      "date_display": "May 28, 2026",
+      "game": "San Diego Padres @ Washington Nationals",
+      "play": "Washington Nationals Moneyline",
+      "price": "-102",
+      "book": "FanDuel",
+      "type": "ml",
+      "edge": "+2.5%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-05-28",
+      "date_display": "May 28, 2026",
+      "game": "Boston Red Sox @ Cleveland Guardians",
+      "play": "Cleveland Guardians Moneyline",
+      "price": "-110",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+1.9%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-05-28",
+      "date_display": "May 28, 2026",
+      "game": "Milwaukee Brewers @ Houston Astros",
+      "play": "Milwaukee Brewers Moneyline",
+      "price": "-116",
+      "book": "FanDuel",
+      "type": "ml",
+      "edge": "+0.9%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-05-28",
+      "date_display": "May 28, 2026",
+      "game": "Philadelphia Phillies @ Los Angeles Dodgers",
+      "play": "Over 8.0 Runs",
+      "price": "-115",
+      "book": "BetOnline.ag",
+      "type": "total",
+      "edge": "-0.0%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-05-28",
+      "date_display": "May 28, 2026",
+      "game": "Atlanta Braves @ Cincinnati Reds",
+      "play": "Over 9.5 Runs",
+      "price": "-102",
+      "book": "MyBookie.ag",
+      "type": "total",
+      "edge": "0.0%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-05-28",
+      "date_display": "May 28, 2026",
+      "game": "Los Angeles Angels @ Tampa Bay Rays",
+      "play": "Tampa Bay Rays Moneyline",
+      "price": "-170",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+2.0%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-05-28",
+      "date_display": "May 28, 2026",
+      "game": "Miami Marlins @ New York Mets",
+      "play": "Under 7.0 Runs",
+      "price": "+102",
+      "book": "MyBookie.ag",
+      "type": "total",
+      "edge": "+4.0%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-05-28",
+      "date_display": "May 28, 2026",
+      "game": "Chicago Cubs @ St. Louis Cardinals",
+      "play": "St. Louis Cardinals Moneyline",
+      "price": "+121",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+0.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-05-28",
+      "date_display": "May 28, 2026",
+      "game": "San Francisco Giants @ Colorado Rockies",
+      "play": "Over 10.5 Runs",
+      "price": "-110",
+      "book": "FanDuel",
+      "type": "total",
+      "edge": "+2.9%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-05-28",
+      "date_display": "May 28, 2026",
+      "game": "Arizona Diamondbacks @ Seattle Mariners",
+      "play": "Seattle Mariners Moneyline",
+      "price": "-143",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+1.4%",
+      "signal": "watch"
+    }
+  ]
+}
