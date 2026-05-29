@@ -275,8 +275,9 @@ def main():
     # Load picks.json
     picks_data = load_json("picks.json")
     if not picks_data:
-        print("No picks.json found — nothing to grade. Did generate.py run today?")
-        sys.exit(0)
+        print("No picks.json found — nothing to grade yet. This is normal on the first run.")
+        print("picks.json is created by generate.py after each noon/4pm site update.")
+        sys.exit(0)  # exit 0 = success, not an error
 
     picks_date = picks_data.get("date", "")
     if picks_date != yesterday_str:
@@ -340,7 +341,8 @@ def main():
         print("No closing_lines.json -- CLV tracking skipped today")
 
     if not scores:
-        print("No final scores found. Games may still be in progress — try running later.")
+        print("No final scores found yet — games may still be in progress.")
+        print("The next scheduled run will retry automatically.")
         sys.exit(0)
 
     print(f"\nGrading {len(bets)} picks against {len(scores)} final scores...")
