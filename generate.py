@@ -1565,7 +1565,7 @@ def build_why_this_bet(game):
     return items
 
 
-def build_html(analyzed_games, matchups, weather, results_data, tracking_games, all_noon_data, public_betting, date_str, time_str):
+def build_html(analyzed_games, matchups, weather, results_data, tracking_games, all_noon_data, public_betting, pending_picks, date_str, time_str):
     all_disc=[]; all_plays=[]; sharp_ct=0; value_ct=0
     for g in analyzed_games:
         for d in g["discrepancies"]: all_disc.append({**d,"game":g["game"]})
@@ -3167,20 +3167,10 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
         calendar_section = build_calendar()
 
         # ── PENDING PICKS (today's locked bets waiting for results) ──
-        import os as _os
         pending_section = ""
         try:
-            pending_bets = []
-            picks_date   = ""
-            if _os.path.exists("picks.json"):
-                with open("picks.json") as f:
-                    picks_data = json.load(f)
-                pending_bets = picks_data.get("bets", [])
-                picks_date   = picks_data.get("date_display", picks_data.get("date",""))
-
-            # Check which picks are already graded
             graded_games = {b.get("game","") for b in all_bets}
-            ungraded = [b for b in pending_bets
+            ungraded = [b for b in pending_picks
                         if b.get("game","") not in graded_games]
 
             if ungraded:
@@ -3221,7 +3211,7 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                     f'<span style="font-size:12px;color:var(--amber);font-family:monospace;font-weight:700">'
                     f'{len(ungraded)} PICKS LOCKED IN — WAITING FOR RESULTS</span>'
                     f'</div>'
-                    f'<div style="font-size:10px;color:var(--muted)">{picks_date}</div>'
+                    f'<div style="font-size:10px;color:var(--muted)">{date_str}</div>'
                     f'</div>'
                     f'{rows}'
                     f'<div style="padding:10px 16px;font-size:11px;color:var(--muted)">'
@@ -3835,7 +3825,44 @@ def main():
     # Fetch public betting percentages (Action Network)
     public_betting = fetch_public_betting(mlb_date)
 
-    html = build_html(analyzed, matchups, weather, results_data, tracking_games, all_noon_data, public_betting, date_str, time_str)
+    # Build pending picks for display on accuracy tab
+    # These are today's best bets that haven't been graded yet
+    # Built here so build_html has fresh data (picks.json written after build_html)
+    pending_picks_for_display = []
+    graded_games_today = set()
+    for day in results_data.get("days", []):
+        if day.get("date","") == date_str or day.get("date","") == mlb_date:
+            for b in day.get("bets",[]):
+                graded_games_today.add(b.get("game",""))
+    for g in analyzed:
+        if not g["bet_is_pass"] and "No Play" not in g["bet_play"]:
+            try:
+                edge_num = float(str(g["bet_edge"]).replace("+","").replace("%",""))
+                if edge_num > 0 and g["game"] not in graded_games_today:
+                    pending_picks_for_display.append({
+                        "game":   g["game"],
+                        "play":   g["bet_play"],
+                        "price":  g["bet_sub"].split(" at ")[0] if " at " in g["bet_sub"] else g["bet_sub"],
+                        "book":   g["bet_sub"].split(" at ")[1] if " at " in g["bet_sub"] else "",
+                        "edge":   g["bet_edge"],
+                        "signal": g["signal"],
+                    })
+            except Exception:
+                pass
+    # Also include existing picks for games already started (from existing picks.json)
+    if os.path.exists("picks.json"):
+        try:
+            with open("picks.json") as f:
+                existing_p = json.load(f)
+            if existing_p.get("date") == mlb_date:
+                existing_games = {p["game"] for p in pending_picks_for_display}
+                for b in existing_p.get("bets",[]):
+                    if b.get("game","") not in existing_games and b.get("game","") not in graded_games_today:
+                        pending_picks_for_display.append(b)
+        except Exception:
+            pass
+
+    html = build_html(analyzed, matchups, weather, results_data, tracking_games, all_noon_data, public_betting, pending_picks_for_display, date_str, time_str)
     with open("index.html","w",encoding="utf-8") as f:
         f.write(html)
 
