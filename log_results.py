@@ -360,12 +360,28 @@ def main():
     print(f"\nFetching final scores for {grade_date}...")
     scores = fetch_final_scores(grade_date)
     print(f"  Found {len(scores)} final scores for {grade_date}")
+
+    # If 0 finals found and picks are from "today", the picks were likely
+    # generated yesterday ET but saved with today's date after midnight UTC.
+    # Fall back to yesterday's scores.
+    if len(scores) == 0 and grade_date == today_str:
+        print(f"  No finals for {grade_date} — trying yesterday {yesterday_str} (picks may be from yesterday's games)")
+        yesterday_scores = fetch_final_scores(yesterday_str)
+        print(f"  Found {len(yesterday_scores)} final scores for {yesterday_str}")
+        if yesterday_scores:
+            scores.update(yesterday_scores)
+            display_date = yesterday_et.strftime("%B %d, %Y")
+            print(f"  Using {yesterday_str} scores — updating display_date to {display_date}")
+
+    # Also check next day for west coast games finishing past midnight
     from datetime import datetime as _dt2
     next_day = (_dt2.strptime(grade_date, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
-    print(f"Also checking {next_day} for late finishers...")
-    late = fetch_final_scores(next_day)
-    print(f"  Found {len(late)} final scores for {next_day}")
-    scores.update(late)
+    if next_day != today_str:  # don't re-check today if we already did
+        print(f"Also checking {next_day} for late finishers...")
+        late = fetch_final_scores(next_day)
+        print(f"  Found {len(late)} final scores for {next_day}")
+        scores.update(late)
+
     print(f"  Total scores available: {len(scores)}")
 
     # Load closing lines for CLV tracking
