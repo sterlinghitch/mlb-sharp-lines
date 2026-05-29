@@ -3170,59 +3170,81 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
         import os as _os
         pending_section = ""
         try:
+            pending_bets = []
+            picks_date   = ""
             if _os.path.exists("picks.json"):
                 with open("picks.json") as f:
                     picks_data = json.load(f)
                 pending_bets = picks_data.get("bets", [])
                 picks_date   = picks_data.get("date_display", picks_data.get("date",""))
 
-                # Check if these picks are already graded in results
-                graded_games = {b.get("game","") for b in all_bets}
-                ungraded = [b for b in pending_bets
-                            if b.get("game","") not in graded_games]
+            # Check which picks are already graded
+            graded_games = {b.get("game","") for b in all_bets}
+            ungraded = [b for b in pending_bets
+                        if b.get("game","") not in graded_games]
 
-                if ungraded:
-                    rows = ""
-                    for b in ungraded:
-                        sig = b.get("signal","watch")
-                        sig_col = {"fire":"var(--red)","sharp":"#60a5fa",
-                                   "value":"var(--green)","watch":"var(--muted)"}.get(sig,"var(--muted)")
-                        edge = b.get("edge","")
-                        rows += (
-                            f'<div style="display:flex;align-items:center;gap:10px;'
-                            f'padding:10px 14px;border-bottom:1px solid var(--border)">'
-                            f'<div style="flex:1">'
-                            f'<div style="font-size:13px;font-weight:700;color:#fff">{b.get("play","?")}</div>'
-                            f'<div style="font-size:11px;color:var(--muted)">{b.get("game","?")}</div>'
-                            f'</div>'
-                            f'<div style="text-align:right">'
-                            f'<div style="font-family:monospace;font-size:13px;color:var(--accent)">'
-                            f'{b.get("price","?")} @ {b.get("book","?")}</div>'
-                            f'<div style="font-size:10px;color:{sig_col}">'
-                            f'{sig.upper()} · {edge}</div>'
-                            f'</div>'
-                            f'<div style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);'
-                            f'border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;'
-                            f'color:var(--amber);font-family:monospace;white-space:nowrap">⏳ PENDING</div>'
-                            f'</div>'
-                        )
-                    pending_section = (
-                        f'<div class="sec-header"><h2>Pending Results</h2><div class="sec-line"></div></div>'
-                        f'<div style="background:var(--bg2);border:1px solid rgba(251,191,36,0.25);'
-                        f'border-radius:12px;overflow:hidden;margin-bottom:2rem">'
-                        f'<div style="padding:10px 14px;background:rgba(251,191,36,0.06);'
-                        f'display:flex;align-items:center;justify-content:space-between">'
-                        f'<div style="font-size:11px;color:var(--amber);font-family:monospace;font-weight:700">'
-                        f'⏳ {len(ungraded)} PICKS AWAITING RESULTS</div>'
-                        f'<div style="font-size:10px;color:var(--muted)">{picks_date}</div>'
+            if ungraded:
+                rows = ""
+                for b in ungraded:
+                    sig     = b.get("signal","watch")
+                    sig_col = {"fire":"var(--red)","sharp":"#60a5fa",
+                               "value":"var(--green)","watch":"var(--muted)"}.get(sig,"var(--muted)")
+                    edge    = b.get("edge","")
+                    rows += (
+                        f'<div style="display:flex;align-items:center;gap:12px;'
+                        f'padding:12px 16px;border-bottom:1px solid var(--border)">'
+                        f'<div style="flex:1">'
+                        f'<div style="font-size:14px;font-weight:700;color:#fff">{b.get("play","?")}</div>'
+                        f'<div style="font-size:11px;color:var(--muted);margin-top:2px">{b.get("game","?")}</div>'
                         f'</div>'
-                        f'{rows}'
-                        f'<div style="padding:8px 14px;font-size:11px;color:var(--muted);font-style:italic">'
-                        f'These picks are locked in picks.json and will be graded automatically '
-                        f'tonight as games finish. Results appear here once logged.</div>'
+                        f'<div style="text-align:right;flex-shrink:0">'
+                        f'<div style="font-family:monospace;font-size:13px;font-weight:700;color:var(--accent)">'
+                        f'{b.get("price","?")} @ {b.get("book","?")}</div>'
+                        f'<div style="font-size:10px;color:{sig_col};margin-top:2px">'
+                        f'{sig.upper()} · {edge}</div>'
+                        f'</div>'
+                        f'<div style="background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.4);'
+                        f'border-radius:6px;padding:5px 12px;font-size:11px;font-weight:700;'
+                        f'color:var(--amber);font-family:monospace;white-space:nowrap;flex-shrink:0">'
+                        f'⏳ PENDING</div>'
                         f'</div>'
                     )
-        except Exception as e:
+                pending_section = (
+                    f'<div class="sec-header"><h2>Awaiting Results</h2><div class="sec-line"></div></div>'
+                    f'<div style="background:var(--bg2);border:2px solid rgba(251,191,36,0.3);'
+                    f'border-radius:12px;overflow:hidden;margin-bottom:2rem">'
+                    f'<div style="padding:12px 16px;background:rgba(251,191,36,0.06);'
+                    f'border-bottom:1px solid rgba(251,191,36,0.2);'
+                    f'display:flex;align-items:center;justify-content:space-between">'
+                    f'<div style="display:flex;align-items:center;gap:10px">'
+                    f'<span class="live-dot" style="background:var(--amber)"></span>'
+                    f'<span style="font-size:12px;color:var(--amber);font-family:monospace;font-weight:700">'
+                    f'{len(ungraded)} PICKS LOCKED IN — WAITING FOR RESULTS</span>'
+                    f'</div>'
+                    f'<div style="font-size:10px;color:var(--muted)">{picks_date}</div>'
+                    f'</div>'
+                    f'{rows}'
+                    f'<div style="padding:10px 16px;font-size:11px;color:var(--muted)">'
+                    f'Picks are saved in picks.json. The nightly logger checks scores every 30 min '
+                    f'from 6pm–2am ET and will flip these to ✓ WIN or ✗ LOSS automatically. '
+                    f'This page auto-refreshes every 5 minutes.</div>'
+                    f'</div>'
+                )
+            else:
+                # Show a "waiting for noon picks" message before the daily run
+                pending_section = (
+                    f'<div class="sec-header"><h2>Awaiting Results</h2><div class="sec-line"></div></div>'
+                    f'<div style="background:var(--bg2);border:1px solid var(--border);'
+                    f'border-radius:12px;padding:1.5rem;margin-bottom:2rem;text-align:center">'
+                    f'<div style="font-size:32px;margin-bottom:8px">⏳</div>'
+                    f'<div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px">'
+                    f'No pending picks yet</div>'
+                    f'<div style="font-size:12px;color:var(--muted);line-height:1.6">'
+                    f'Today\'s picks will appear here after the noon workflow runs (~12pm ET). '
+                    f'Once picks are locked in they stay visible until graded tonight.</div>'
+                    f'</div>'
+                )
+        except Exception:
             pending_section = ""
 
         return (
@@ -3817,45 +3839,21 @@ def main():
     with open("index.html","w",encoding="utf-8") as f:
         f.write(html)
 
-    # Save picks.json — but NOT during overnight nightly rebuilds
-    # (NIGHTLY_REBUILD=1 means we're just updating the site after grading,
-    #  not generating fresh picks — saves with correct ET date at noon/4pm only)
+    # Save picks.json — skip during overnight nightly rebuilds
     is_nightly_rebuild = os.environ.get("NIGHTLY_REBUILD","") == "1"
 
-    if not is_nightly_rebuild:
-      picks = {
-        "date": mlb_date,
-        "date_display": date_str,
-        "bets": []
-      }
-
-      # Load existing picks from today so we can merge
-      existing_picks_by_game = {}
-      if os.path.exists("picks.json"):
-        try:
-            with open("picks.json") as f:
-                existing_picks = json.load(f)
-            if existing_picks.get("date") == mlb_date:
-                for b in existing_picks.get("bets", []):
-                    existing_picks_by_game[b.get("game","")] = b
-                print(f"  Loaded {len(existing_picks_by_game)} existing picks to merge")
-        except Exception:
-            pass
-    # Also save full analysis for ALL games (including passes) for tracking cards
-    # MERGE with existing file so 4pm run preserves noon data for games now in progress
+    # Always build noon_analysis (tracking cards need it regardless)
     noon_analysis = {"date": mlb_date, "games": {}}
     if os.path.exists("noon_analysis.json"):
         try:
             with open("noon_analysis.json") as f:
                 existing_na = json.load(f)
-            # Only keep data from today (discard yesterday's stale data)
             if existing_na.get("date") == mlb_date:
                 noon_analysis["games"] = existing_na.get("games", {})
         except Exception:
             pass
 
     for g in analyzed:
-        # Always write/overwrite with fresh data for pre-game games
         noon_analysis["games"][g["game"]] = {
             "play":        g["bet_play"],
             "price":       g["bet_sub"].split(" at ")[0] if " at " in g["bet_sub"] else g["bet_sub"],
@@ -3869,52 +3867,67 @@ def main():
             "signal":      g["signal"],
             "signal_label":g["signal_label"],
         }
-        # picks.json only logs real bets (for nightly grader)
-        # LOCK: if this game already has a pick from the noon run, keep it unchanged
-        if g["game"] in existing_picks_by_game:
-            continue   # already locked in from noon run
-        if not g["bet_is_pass"] and "No Play" not in g["bet_play"]:
-            # Only save picks with genuine positive edge (avoids -0.0% slipping through)
-            try:
-                edge_num = float(str(g["bet_edge"]).replace("+","").replace("%",""))
-                if edge_num <= 0:
-                    continue
-            except Exception:
-                pass
-            bet_type = "total" if "Runs" in g["bet_play"] else "ml"
-            side = None; total_line = None
-            if bet_type == "total":
-                parts = g["bet_play"].split()
-                side       = parts[0] if len(parts)>0 else None
-                total_line = float(parts[1]) if len(parts)>1 else None
-            picks["bets"].append({
-                "game":       g["game"],
-                "away":       g["away"],
-                "home":       g["home"],
-                "away_id":    MLB_IDS.get(g["away"]),
-                "home_id":    MLB_IDS.get(g["home"]),
-                "play":       g["bet_play"],
-                "price":      g["bet_sub"].split(" at ")[0] if " at " in g["bet_sub"] else g["bet_sub"],
-                "book":       g["bet_sub"].split(" at ")[1] if " at " in g["bet_sub"] else "",
-                "type":       bet_type,
-                "pick_team":  g["away"] if g["away"] in g["bet_play"] else (g["home"] if bet_type=="ml" else None),
-                "side":       side,
-                "total_line": total_line,
-                "edge":       g["bet_edge"],
-                "signal":     g["signal"],
-            })
 
-    # Add back any existing picks for games not in this run (already started)
-    for game_key, existing_bet in existing_picks_by_game.items():
-        if not any(b["game"] == game_key for b in picks["bets"]):
-            picks["bets"].append(existing_bet)
-            print(f"  Preserved pick for started game: {game_key}")
-
-    with open("picks.json","w",encoding="utf-8") as f:
-        json.dump(picks, f, indent=2)
     with open("noon_analysis.json","w",encoding="utf-8") as f:
         json.dump(noon_analysis, f, indent=2)
-    print(f"Saved picks.json: {len(picks['bets'])} best bets")
+
+    if not is_nightly_rebuild:
+        # Build picks.json — merge with existing so 4pm preserves noon picks
+        picks = {"date": mlb_date, "date_display": date_str, "bets": []}
+        existing_picks_by_game = {}
+        if os.path.exists("picks.json"):
+            try:
+                with open("picks.json") as f:
+                    existing_picks = json.load(f)
+                if existing_picks.get("date") == mlb_date:
+                    for b in existing_picks.get("bets", []):
+                        existing_picks_by_game[b.get("game","")] = b
+                    print(f"  Loaded {len(existing_picks_by_game)} existing picks to merge")
+            except Exception:
+                pass
+
+        for g in analyzed:
+            if g["game"] in existing_picks_by_game:
+                continue  # locked from noon run
+            if not g["bet_is_pass"] and "No Play" not in g["bet_play"]:
+                try:
+                    edge_num = float(str(g["bet_edge"]).replace("+","").replace("%",""))
+                    if edge_num <= 0:
+                        continue
+                except Exception:
+                    pass
+                bet_type   = "total" if "Runs" in g["bet_play"] else "ml"
+                side       = None; total_line = None
+                if bet_type == "total":
+                    parts      = g["bet_play"].split()
+                    side       = parts[0] if len(parts)>0 else None
+                    total_line = float(parts[1]) if len(parts)>1 else None
+                picks["bets"].append({
+                    "game":       g["game"],
+                    "away":       g["away"],
+                    "home":       g["home"],
+                    "away_id":    MLB_IDS.get(g["away"]),
+                    "home_id":    MLB_IDS.get(g["home"]),
+                    "play":       g["bet_play"],
+                    "price":      g["bet_sub"].split(" at ")[0] if " at " in g["bet_sub"] else g["bet_sub"],
+                    "book":       g["bet_sub"].split(" at ")[1] if " at " in g["bet_sub"] else "",
+                    "type":       bet_type,
+                    "pick_team":  g["away"] if g["away"] in g["bet_play"] else (g["home"] if bet_type=="ml" else None),
+                    "side":       side,
+                    "total_line": total_line,
+                    "edge":       g["bet_edge"],
+                    "signal":     g["signal"],
+                })
+
+        # Add back preserved picks for started games
+        for game_key, existing_bet in existing_picks_by_game.items():
+            if not any(b["game"] == game_key for b in picks["bets"]):
+                picks["bets"].append(existing_bet)
+                print(f"  Preserved pick for started game: {game_key}")
+
+        with open("picks.json","w",encoding="utf-8") as f:
+            json.dump(picks, f, indent=2)
+        print(f"Saved picks.json: {len(picks['bets'])} best bets")
 
     # Save to permanent picks history (never overwritten, accumulates forever)
     history_path = "picks_history.json"
