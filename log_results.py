@@ -288,42 +288,62 @@ def main():
 
     bets = picks_data.get("bets", [])
     if not bets:
-        # picks.json is empty — check if there are unresolved pushes in results.json
-        # that the 4am safety-net run should attempt to fix
-        results_data = load_json("results.json") or {"days": []}
-        existing_day = next((d for d in results_data.get("days",[])
-                             if d.get("date") == display_date), None)
-        if existing_day:
-            unresolved = [b for b in existing_day.get("bets",[]) if b.get("result")=="P"]
-            if unresolved:
-                print(f"picks.json is empty but found {len(unresolved)} unresolved pushes in results.json for {display_date} -- re-grading.")
-                # Reconstruct bets from results.json for re-grading
-                # We can only re-grade if we have enough info (game + type fields)
-                # Pushes without type info will stay as pushes
-                bets = []
-                for b in existing_day.get("bets",[]):
-                    bets.append({
-                        "game":       b.get("game",""),
-                        "play":       b.get("play",""),
-                        "price":      b.get("price",""),
-                        "book":       b.get("book",""),
-                        "signal":     b.get("signal",""),
-                        "type":       "total" if "Runs" in b.get("play","") else "ml",
-                        "away":       b.get("game","").split(" @ ")[0] if " @ " in b.get("game","") else "",
-                        "home":       b.get("game","").split(" @ ")[1] if " @ " in b.get("game","") else "",
-                        "away_id":    MLB_IDS.get(b.get("game","").split(" @ ")[0]) if " @ " in b.get("game","") else None,
-                        "home_id":    MLB_IDS.get(b.get("game","").split(" @ ")[1]) if " @ " in b.get("game","") else None,
-                        "side":       b.get("play","").split()[0] if "Runs" in b.get("play","") else None,
-                        "total_line": float(b.get("play","").split()[1]) if "Runs" in b.get("play","") and len(b.get("play","").split())>1 else None,
-                        "pick_team":  b.get("play","").replace(" Moneyline","") if "Moneyline" in b.get("play","") else None,
-                    })
-                picks_date = display_date
-            else:
-                print(f"picks.json is empty and no unresolved pushes found for {display_date} -- nothing to do.")
-                sys.exit(0)
+        # picks.json is empty — try picks_history.json for today's picks
+        history = load_json("picks_history.json") or {"picks": []}
+        history_bets = [p for p in history.get("picks",[]) if p.get("date") == grade_date]
+        if history_bets:
+            print(f"picks.json empty but found {len(history_bets)} picks in picks_history.json for {grade_date} -- using those")
+            bets = []
+            for b in history_bets:
+                away = b.get("game","").split(" @ ")[0] if " @ " in b.get("game","") else ""
+                home = b.get("game","").split(" @ ")[1] if " @ " in b.get("game","") else ""
+                bets.append({
+                    "game":       b.get("game",""),
+                    "away":       away,
+                    "home":       home,
+                    "away_id":    MLB_IDS.get(away),
+                    "home_id":    MLB_IDS.get(home),
+                    "play":       b.get("play",""),
+                    "price":      b.get("price",""),
+                    "book":       b.get("book",""),
+                    "type":       b.get("type","ml"),
+                    "side":       b.get("play","").split()[0] if "Runs" in b.get("play","") else None,
+                    "total_line": float(b.get("play","").split()[1]) if "Runs" in b.get("play","") and len(b.get("play","").split())>1 else None,
+                    "pick_team":  b.get("play","").replace(" Moneyline","") if "Moneyline" in b.get("play","") else None,
+                    "edge":       b.get("edge",""),
+                    "signal":     b.get("signal",""),
+                })
         else:
-            print("picks.json has no bets recorded -- nothing to grade.")
-            sys.exit(0)
+            # Final fallback: check unresolved pushes in results.json
+            results_data = load_json("results.json") or {"days": []}
+            existing_day = next((d for d in results_data.get("days",[])
+                                 if d.get("date") == display_date), None)
+            if existing_day:
+                unresolved = [b for b in existing_day.get("bets",[]) if b.get("result")=="P"]
+                if unresolved:
+                    print(f"Found {len(unresolved)} unresolved pushes -- re-grading")
+                    bets = []
+                    for b in existing_day.get("bets",[]):
+                        away = b.get("game","").split(" @ ")[0] if " @ " in b.get("game","") else ""
+                        home = b.get("game","").split(" @ ")[1] if " @ " in b.get("game","") else ""
+                        bets.append({
+                            "game": b.get("game",""), "play": b.get("play",""),
+                            "price": b.get("price",""), "book": b.get("book",""),
+                            "signal": b.get("signal",""),
+                            "type": "total" if "Runs" in b.get("play","") else "ml",
+                            "away": away, "home": home,
+                            "away_id": MLB_IDS.get(away), "home_id": MLB_IDS.get(home),
+                            "side": b.get("play","").split()[0] if "Runs" in b.get("play","") else None,
+                            "total_line": float(b.get("play","").split()[1]) if "Runs" in b.get("play","") and len(b.get("play","").split())>1 else None,
+                            "pick_team": b.get("play","").replace(" Moneyline","") if "Moneyline" in b.get("play","") else None,
+                        })
+                    picks_date = grade_date
+                else:
+                    print("No unresolved pushes found -- nothing to do.")
+                    sys.exit(0)
+            else:
+                print("picks.json empty and no history found -- nothing to grade.")
+                sys.exit(0)
 
     print(f"Found {len(bets)} best bets to grade.")
 
