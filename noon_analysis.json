@@ -119,11 +119,11 @@
       "signal_label": ""
     },
     "Miami Marlins @ New York Mets": {
-      "play": "No Play",
-      "price": "Best option (Miami Marlins Moneyline) is overpriced",
-      "book": "current lines",
-      "is_pass": true,
-      "edge": "-0.5%",
+      "play": "Under 7.0 Runs",
+      "price": "+110",
+      "book": "BetOnline.ag",
+      "is_pass": false,
+      "edge": "-0.0%",
       "away_true": 46,
       "home_true": 54,
       "away_fair": "+116",
