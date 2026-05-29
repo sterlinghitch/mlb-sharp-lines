@@ -2460,6 +2460,228 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
         return html or '<p style="color:var(--muted);text-align:center;padding:2rem">No weather data.</p>'
 
 
+    def betting_trends_page(results_data):
+        days     = results_data.get("days",[])
+        all_bets = [b for day in days for b in day.get("bets",[])
+                    if b.get("result") in ("W","L","P")]
+
+        if not all_bets:
+            return (
+                f'<div style="text-align:center;padding:4rem 2rem">'
+                f'<div style="font-size:48px;margin-bottom:1rem">📈</div>'
+                f'<div style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px">No results yet</div>'
+                f'<div style="font-size:14px;color:var(--muted)">Betting trends will appear here once the nightly '
+                f'logger starts grading your picks. Check back tomorrow.</div>'
+                f'</div>'
+            )
+
+        # Last 7 days only
+        from datetime import datetime as _dt, timedelta as _td
+        today     = _dt.now().date()
+        week_ago  = today - _td(days=7)
+        week_bets = []
+        for day in days:
+            try:
+                d = _dt.strptime(day.get("date",""), "%B %d, %Y").date()
+                if d >= week_ago:
+                    for b in day.get("bets",[]):
+                        if b.get("result") in ("W","L","P"):
+                            week_bets.append({**b, "_date": d, "_date_lbl": day.get("date","")})
+            except Exception:
+                pass
+
+        # ── SUMMARY STATS BAR ──────────────────────────────
+        def wl(bets):
+            w=sum(1 for b in bets if b.get("result")=="W")
+            l=sum(1 for b in bets if b.get("result")=="L")
+            return w,l
+
+        w7,l7  = wl(week_bets)
+        wall,lall = wl(all_bets)
+        pct7   = round(w7/(w7+l7)*100) if w7+l7>0 else 0
+        pctall = round(wall/(wall+lall)*100) if wall+lall>0 else 0
+        streak = 0; streak_type = ""
+        for b in reversed(all_bets):
+            r = b.get("result","")
+            if not streak_type and r in ("W","L"):
+                streak_type = r; streak = 1
+            elif r == streak_type:
+                streak += 1
+            else:
+                break
+        streak_col  = "var(--green)" if streak_type=="W" else "var(--red)"
+        streak_lbl  = f"{streak}{'W' if streak_type=='W' else 'L'} streak"
+
+        pct7_col = "var(--green)" if pct7>=55 else ("var(--red)" if pct7<45 else "var(--amber)")
+        summary_bar = (
+            f'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:2rem">'
+            f'<div class="metric-card" style="text-align:center">'
+            f'<div class="metric-label">Last 7 Days</div>'
+            f'<div class="metric-val" style="color:{pct7_col};font-size:24px">{pct7}%</div>'
+            f'<div style="font-size:11px;color:var(--muted)">{w7}W - {l7}L</div>'
+            f'</div>'
+            f'<div class="metric-card" style="text-align:center">'
+            f'<div class="metric-label">All Time</div>'
+            f'<div class="metric-val" style="font-size:24px">{pctall}%</div>'
+            f'<div style="font-size:11px;color:var(--muted)">{wall}W - {lall}L</div>'
+            f'</div>'
+            f'<div class="metric-card" style="text-align:center">'
+            f'<div class="metric-label">Current Streak</div>'
+            f'<div class="metric-val" style="color:{streak_col};font-size:24px">{streak_lbl if streak_type else "—"}</div>'
+            f'<div style="font-size:11px;color:var(--muted)">{"Active" if streak_type else "No bets yet"}</div>'
+            f'</div>'
+            f'<div class="metric-card" style="text-align:center">'
+            f'<div class="metric-label">Total Tracked</div>'
+            f'<div class="metric-val" style="font-size:24px">{len(all_bets)}</div>'
+            f'<div style="font-size:11px;color:var(--muted)">best bets graded</div>'
+            f'</div>'
+            f'</div>'
+        )
+
+        # ── TREND CARDS ────────────────────────────────────
+        # Show last 7 days in reverse order, each bet as a rich card
+        sig_colors = {
+            "fire":  ("#7f1d1d","#f87171","🔥"),
+            "sharp": ("#1e3a5f","#60a5fa","⚡"),
+            "value": ("#14532d","#4ade80","💰"),
+            "watch": ("#27272a","#a1a1aa","👁"),
+        }
+
+        def edge_sentence(b):
+            """Extract a clean edge sentence from the stored note or edge field."""
+            note = b.get("note","")
+            edge = b.get("edge","")
+            if edge and "%" in str(edge):
+                return f"Edge was {edge}"
+            return ""
+
+        def result_why(b):
+            """Generate a brief post-result context note."""
+            note = b.get("note","")
+            result = b.get("result","")
+            # Extract final score from note
+            if "Final:" in note:
+                score_part = note.split("Final:")[-1].strip()
+                return f"Final: {score_part}"
+            return note[:80] if note else ""
+
+        def signal_reason(sig):
+            reasons = {
+                "fire":  "Sharp market split + model edge",
+                "sharp": "Book discrepancy + model edge",
+                "value": "Book discrepancy flagged",
+                "watch": "Model edge, books in agreement",
+            }
+            return reasons.get(sig,"")
+
+        if not week_bets:
+            trend_html = (
+                f'<div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;'
+                f'padding:2rem;text-align:center;color:var(--muted)">'
+                f'No bets in the last 7 days yet.</div>'
+            )
+        else:
+            trend_html = ""
+            # Group by date
+            from collections import OrderedDict
+            date_groups = OrderedDict()
+            for b in sorted(week_bets, key=lambda x: x["_date"], reverse=True):
+                d = b["_date_lbl"]
+                date_groups.setdefault(d,[]).append(b)
+
+            for date_lbl, bets in date_groups.items():
+                dw,dl = wl(bets)
+                dcol  = "var(--green)" if dw>dl else ("var(--red)" if dl>dw else "var(--amber)")
+
+                trend_html += (
+                    f'<div style="margin-bottom:1.5rem">'
+                    f'<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">'
+                    f'<div style="font-size:13px;font-weight:700;color:var(--text);font-family:monospace">{date_lbl}</div>'
+                    f'<div style="height:1px;flex:1;background:var(--border)"></div>'
+                    f'<div style="font-family:\'IBM Plex Mono\',monospace;font-size:13px;font-weight:700;color:{dcol}">{dw}W-{dl}L</div>'
+                    f'</div>'
+                )
+
+                for b in bets:
+                    res    = b.get("result","?")
+                    sig    = b.get("signal","watch")
+                    bg,col,icon = sig_colors.get(sig,sig_colors["watch"])
+                    play   = b.get("play","?")
+                    price  = b.get("price","?")
+                    book   = b.get("book","?")
+                    game   = b.get("game","?")
+                    note   = result_why(b)
+                    es     = edge_sentence(b)
+                    sr     = signal_reason(sig)
+
+                    if res == "W":
+                        res_bg  = "rgba(74,222,128,0.08)"
+                        res_bdr = "rgba(74,222,128,0.3)"
+                        res_lbl = "✓ WIN"
+                        res_col = "var(--green)"
+                    elif res == "L":
+                        res_bg  = "rgba(248,113,113,0.08)"
+                        res_bdr = "rgba(248,113,113,0.3)"
+                        res_lbl = "✗ LOSS"
+                        res_col = "var(--red)"
+                    else:
+                        res_bg  = "rgba(161,161,170,0.08)"
+                        res_bdr = "rgba(161,161,170,0.3)"
+                        res_lbl = "· PUSH"
+                        res_col = "var(--muted)"
+
+                    # Build the context line
+                    context_parts = []
+                    if note: context_parts.append(note)
+                    if es:   context_parts.append(es)
+                    if sr:   context_parts.append(sr)
+                    context_line = " · ".join(context_parts)
+
+                    trend_html += (
+                        f'<div style="background:{res_bg};border:1px solid {res_bdr};border-radius:10px;'
+                        f'padding:12px 16px;margin-bottom:8px;display:grid;'
+                        f'grid-template-columns:auto 1fr auto;gap:12px;align-items:start">'
+
+                        # Left: signal badge + result
+                        f'<div style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:52px">'
+                        f'<span style="font-size:18px">{icon}</span>'
+                        f'<span style="font-size:11px;font-weight:700;color:{res_col};font-family:monospace;'
+                        f'white-space:nowrap">{res_lbl}</span>'
+                        f'</div>'
+
+                        # Middle: game info + context
+                        f'<div>'
+                        f'<div style="font-size:11px;color:var(--muted);margin-bottom:2px">{game}</div>'
+                        f'<div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:3px">{play}</div>'
+                        f'<div style="font-size:12px;color:{col};font-family:monospace;margin-bottom:6px">'
+                        f'{price} at {book}</div>'
+                        f'{"<div style=\"font-size:12px;color:#aaa;line-height:1.6;font-style:italic\">" + context_line + "</div>" if context_line else ""}'
+                        f'</div>'
+
+                        # Right: signal pill
+                        f'<div style="text-align:right">'
+                        f'<span style="background:{bg};border:1px solid {col};border-radius:4px;'
+                        f'padding:2px 8px;font-size:10px;font-family:monospace;color:{col};'
+                        f'font-weight:700">{sig.upper()}</span>'
+                        f'</div>'
+
+                        f'</div>'
+                    )
+
+                trend_html += f'</div>'  # close date group
+
+        return (
+            f'<div style="margin-bottom:1.5rem">'
+            f'<div style="font-family:\'IBM Plex Mono\',monospace;font-size:22px;font-weight:700;'
+            f'color:#fff;margin-bottom:4px">📈 Betting Trends</div>'
+            f'<div style="font-size:13px;color:var(--muted)">Last 7 days of model picks with results and context. '
+            f'Pushes and ungraded bets are excluded from percentage calculations.</div>'
+            f'</div>'
+            + summary_bar
+            + f'<div class="sec-header"><h2>This Week\'s Picks</h2><div class="sec-line"></div></div>'
+            + trend_html
+        )
+
     def accuracy_page(results_data):
         days     = results_data.get("days", [])
         all_bets = [b for day in days for b in day.get("bets", [])]
@@ -3140,6 +3362,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
   <div class="nav-item" onclick="showPage('matchups',this)"><span class="nav-icon">&#9889;</span><span class="nav-label">Pitcher / Batter</span><span class="nav-count">{lm}</span></div>
   <div class="nav-item" onclick="showPage('weather',this)"><span class="nav-icon">&#127780;</span><span class="nav-label">Weather</span><span class="nav-count">{lw}</span></div>
   <div class="nav-item" onclick="showPage('parlay',this)"><span class="nav-icon">&#127922;</span><span class="nav-label">Parlay Analyzer</span></div>
+  <div class="nav-item" onclick="showPage('trends',this)"><span class="nav-icon">&#128200;</span><span class="nav-label">Betting Trends</span></div>
   <div class="nav-item" onclick="showPage('accuracy',this)"><span class="nav-icon">&#127919;</span><span class="nav-label">Model Accuracy</span></div>
   <div class="sidebar-section" style="margin-top:8px">Today</div>
   <div class="sidebar-stats">
@@ -3240,6 +3463,10 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
     {weather_page()}
   </div></div>
 
+  <div class="page" id="page-trends"><div class="page-inner">
+    {betting_trends_page(results_data)}
+  </div></div>
+
   <div class="page" id="page-accuracy"><div class="page-inner">
     {accuracy_page(results_data)}
   </div></div>
@@ -3296,7 +3523,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
     document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
     document.getElementById('page-'+name).classList.add('active');
     if(el)el.classList.add('active');
-    const t={{home:'Home',plays:'Top Value Plays',games:'All Games',matchups:'Pitcher / Batter',weather:'Weather & Wind',parlay:'Parlay Analyzer',accuracy:'Model Accuracy'}};
+    const t={{home:'Home',plays:'Top Value Plays',games:'All Games',matchups:'Pitcher / Batter',weather:'Weather & Wind',parlay:'Parlay Analyzer',trends:'Betting Trends',accuracy:'Model Accuracy'}};
     document.getElementById('topbar-title').textContent=t[name]||name;
     window.scrollTo(0,0);closeSidebar();
   }}
