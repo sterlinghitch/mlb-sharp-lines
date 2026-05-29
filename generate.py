@@ -3415,11 +3415,26 @@ def main():
         f.write(html)
 
     # Save today's best bets to picks.json so log_results.py can check them tonight
+    # MERGE with existing picks.json so the 4pm run preserves noon bets for
+    # games that have already started (they won't be in the 4pm analyzed list)
     picks = {
         "date": mlb_date,
         "date_display": date_str,
         "bets": []
     }
+
+    # Load existing picks from today so we can merge
+    existing_picks_by_game = {}
+    if os.path.exists("picks.json"):
+        try:
+            with open("picks.json") as f:
+                existing_picks = json.load(f)
+            if existing_picks.get("date") == mlb_date:
+                for b in existing_picks.get("bets", []):
+                    existing_picks_by_game[b.get("game","")] = b
+                print(f"  Loaded {len(existing_picks_by_game)} existing picks to merge")
+        except Exception:
+            pass
     # Also save full analysis for ALL games (including passes) for tracking cards
     # MERGE with existing file so 4pm run preserves noon data for games now in progress
     noon_analysis = {"date": mlb_date, "games": {}}
@@ -3449,6 +3464,9 @@ def main():
             "signal_label":g["signal_label"],
         }
         # picks.json only logs real bets (for nightly grader)
+        # LOCK: if this game already has a pick from the noon run, keep it unchanged
+        if g["game"] in existing_picks_by_game:
+            continue   # already locked in from noon run
         if not g["bet_is_pass"] and "No Play" not in g["bet_play"]:
             bet_type = "total" if "Runs" in g["bet_play"] else "ml"
             side = None; total_line = None
@@ -3472,6 +3490,12 @@ def main():
                 "edge":       g["bet_edge"],
                 "signal":     g["signal"],
             })
+
+    # Add back any existing picks for games not in this run (already started)
+    for game_key, existing_bet in existing_picks_by_game.items():
+        if not any(b["game"] == game_key for b in picks["bets"]):
+            picks["bets"].append(existing_bet)
+            print(f"  Preserved pick for started game: {game_key}")
 
     with open("picks.json","w",encoding="utf-8") as f:
         json.dump(picks, f, indent=2)
