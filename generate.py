@@ -1158,7 +1158,11 @@ def analyze_game(game, context):
     #  since the discrepancy itself is the signal, but hard cap at -1%)
     best_bet_edge_val = max((c["edge_val"] for c in candidates), default=0.0)
 
-    qualifies = (not bet_is_pass) and (best_bet_edge_val > 0) and (
+    # Qualify for value tab:
+    # - Minimum +1.5% edge required regardless of signal type
+    # - Discrepancy signals (fire/value/sharp) need 1.5%+
+    # - Model-only plays need 2.5%+
+    qualifies = (not bet_is_pass) and (best_bet_edge_val >= 1.5) and (
         signal in ("fire","value","sharp") or best_bet_edge_val >= 2.5
     )
 
@@ -1452,8 +1456,8 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
         if g["value_play"]: all_plays.append(g["value_play"])
         if g["signal"]=="fire": sharp_ct+=1
     # value_ct must match the alert cards filter exactly
-    all_plays.sort(key=lambda x:-abs(x.get("edge",0)))
-    value_ct = len([p for p in all_plays if p["signal"] in ("fire","sharp","value") or abs(p.get("edge",0))>=2.5])
+    all_plays.sort(key=lambda x: -(x.get("edge") or 0))
+    value_ct = len(all_plays)  # all passed the 1.5% threshold at qualification
     all_disc.sort(key=lambda x:-(x.get("gap",0)))
     sig_cls={"fire":"b-fire","sharp":"b-sharp","value":"b-value","watch":"b-watch","pass":"b-pass"}
     alert_cls={"fire":"fire","sharp":"sharp","value":"value","watch":"watch"}
@@ -1461,7 +1465,7 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
     books=max((len(g["book_data"]) for g in analyzed_games),default=0)
 
     def alert_cards():
-        top=[p for p in all_plays if p["signal"] in ("fire","sharp","value") or abs(p.get("edge",0))>=2.5][:6]
+        top = all_plays[:6]  # sorted by edge, all passed 1.5% threshold
         if not top: return '<p style="color:var(--muted);font-size:13px;padding:1rem 0">No sharp alerts today.</p>'
         date_lookup = {g["game"]: g.get("date_et","Today") for g in analyzed_games}
         time_lookup = {g["game"]: g.get("time","") for g in analyzed_games}
@@ -1601,7 +1605,7 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
             f'<div style="font-size:12px;color:#888;line-height:1.6">{reason}</div>'
             f'</div>'
         )
-        top=[p for p in all_plays if p["signal"] in ("fire","sharp","value") or abs(p.get("edge",0))>=2.5][:6]
+        top = all_plays[:6]  # sorted by edge, all passed 1.5% threshold
         if not top: return '<p style="color:var(--muted);font-size:13px;padding:1rem 0">No sharp alerts today.</p>'
         html='<div class="alert-grid">'
         for p in top:
@@ -3468,6 +3472,13 @@ def main():
         if g["game"] in existing_picks_by_game:
             continue   # already locked in from noon run
         if not g["bet_is_pass"] and "No Play" not in g["bet_play"]:
+            # Only save picks with genuine positive edge (avoids -0.0% slipping through)
+            try:
+                edge_num = float(str(g["bet_edge"]).replace("+","").replace("%",""))
+                if edge_num <= 0:
+                    continue
+            except Exception:
+                pass
             bet_type = "total" if "Runs" in g["bet_play"] else "ml"
             side = None; total_line = None
             if bet_type == "total":
