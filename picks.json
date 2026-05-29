@@ -3,22 +3,6 @@
   "date_display": "May 28, 2026",
   "bets": [
     {
-      "game": "Houston Astros @ Texas Rangers",
-      "away": "Houston Astros",
-      "home": "Texas Rangers",
-      "away_id": 117,
-      "home_id": 140,
-      "play": "Texas Rangers Moneyline",
-      "price": "-139",
-      "book": "BetOnline.ag",
-      "type": "ml",
-      "pick_team": "Texas Rangers",
-      "side": null,
-      "total_line": null,
-      "edge": "+2.0%",
-      "signal": "watch"
-    },
-    {
       "game": "San Diego Padres @ Washington Nationals",
       "away": "San Diego Padres",
       "home": "Washington Nationals",
@@ -79,7 +63,7 @@
       "pick_team": null,
       "side": "Over",
       "total_line": 8.0,
-      "edge": "-0.0%",
+      "edge": "0.0%",
       "signal": "fire"
     },
     {
@@ -111,7 +95,7 @@
       "pick_team": null,
       "side": "Under",
       "total_line": 7.0,
-      "edge": "+4.0%",
+      "edge": "+4.3%",
       "signal": "watch"
     },
     {
