@@ -1186,14 +1186,133 @@ def analyze_game(game, context):
             # For ML picks figure out which side was picked from the play string
             vt = away if away in play_label else home
 
-        reason_parts = [f"{play_label} at {vp} ({vtp}% true vs {vi}% implied -- {'+' if ve>0 else ''}{ve}% edge)."]
-        if adjustments:
-            reason_parts.append("Adj: " + " | ".join(a[0] for a in adjustments[:2]) + ".")
-        if signal in ("fire","value","sharp"):
-            if split_market:
-                reason_parts.append("Split market -- sharp divergence across books.")
-            elif max(away_gap, home_gap) >= 15:
-                reason_parts.append(f"Line discrepancy {max(away_gap,home_gap)}c -- shop books.")
+        # Build natural language narrative — 2-3 readable sentences
+        def build_narrative():
+            sentences = []
+            is_total   = best_c["type"] == "Total"
+            is_over    = "Over" in play_label
+            pick_team  = None if is_total else vt
+            opp_team   = home if pick_team == away else away
+
+            # ── Sentence 1: The core edge case ──
+            edge_desc = "strong" if ve >= 4 else ("solid" if ve >= 2.5 else "slight")
+            if is_total:
+                direction_word = "go over" if is_over else "stay under"
+                s1 = (f"The model gives this game a {vtp}% chance to {direction_word} {play_label.split()[1]} runs, "
+                      f"while the book is only pricing it at {vi}% — a {edge_desc} {ve}% edge at {vp}.")
+            else:
+                s1 = (f"The model gives {pick_team} a {vtp}% true win probability in this matchup, "
+                      f"while the market is only pricing them at {vi}% — a {edge_desc} {ve}% edge available at {vp} on {vb}.")
+            sentences.append(s1)
+
+            # ── Sentence 2: The strongest supporting factor ──
+            ap = context.get("away_pitcher",{}); hp = context.get("home_pitcher",{})
+            wx = context.get("weather",{})
+            abp = context.get("away_bullpen",{}); hbp = context.get("home_bullpen",{})
+            lm  = context.get("line_movement")
+
+            # Find the most compelling factor
+            s2 = None
+
+            # Pitcher quality
+            if not is_total:
+                fav_pitcher = ap if pick_team == away else hp
+                opp_pitcher = hp if pick_team == away else ap
+                if fav_pitcher.get("era","N/A") != "N/A":
+                    try:
+                        era = float(fav_pitcher["era"])
+                        name = fav_pitcher.get("name","Their starter")
+                        if era < 3.50:
+                            s2 = (f"{name} has been one of the better arms in the league with a {era} ERA, "
+                                  f"giving {pick_team} a meaningful pitching advantage in this spot.")
+                        elif era < 4.00:
+                            s2 = f"{name} has been solid this season at {era} ERA, providing a slight edge on the mound."
+                    except Exception: pass
+                if s2 is None and opp_pitcher.get("era","N/A") != "N/A":
+                    try:
+                        era = float(opp_pitcher["era"])
+                        name = opp_pitcher.get("name","The opposing starter")
+                        if era > 5.00:
+                            s2 = (f"{name} has struggled this season with a {era} ERA, "
+                                  f"making {pick_team} a particularly attractive play against this pitching matchup.")
+                        elif era > 4.50:
+                            s2 = (f"The opposing starter {name} has been below average at {era} ERA, "
+                                  f"which works in {pick_team}'s favor tonight.")
+                    except Exception: pass
+
+            # Wind/weather for totals
+            if s2 is None and is_total and not wx.get("roof"):
+                wind_spd = int(wx.get("wind_speed","0") or 0)
+                wind_eff = wx.get("wind_effect","")
+                temp     = wx.get("temp","")
+                if wind_spd >= 10 and wind_eff == "blowing_out" and is_over:
+                    s2 = (f"Wind is blowing out at {wind_spd} mph at {wx.get('stadium','the park')} tonight, "
+                          f"which historically inflates scoring and supports the Over.")
+                elif wind_spd >= 10 and wind_eff == "blowing_in" and not is_over:
+                    s2 = (f"Wind is blowing in hard at {wind_spd} mph, "
+                          f"creating a pitcher-friendly environment that supports the Under.")
+                elif temp and int(str(temp).split(".")[0]) < 55:
+                    s2 = (f"Cold game time temperature ({temp}°F) suppresses fly ball distance and run scoring, "
+                          f"adding weight to the Under.")
+
+            # Bullpen fatigue
+            if s2 is None:
+                fav_bp  = abp if pick_team == away else hbp
+                opp_bp  = hbp if pick_team == away else abp
+                if opp_bp.get("fatigue",0) > 0.6 and not is_total:
+                    s2 = (f"{opp_team}'s bullpen has been heavily used over the last three days ({opp_bp.get('ip','?')} IP), "
+                          f"meaning if the game gets to the back end, {pick_team} could exploit a tired relief corps.")
+                elif fav_bp.get("fatigue",0) < 0.1 and not is_total:
+                    s2 = (f"{pick_team}'s bullpen is well-rested heading in, "
+                          f"giving them a late-game advantage if needed.")
+
+            # Platoon splits
+            if s2 is None:
+                for adj_label, adj_away, adj_home in adjustments:
+                    if "platoon" in adj_label.lower() or "Platoon" in adj_label:
+                        if not is_total:
+                            s2 = (f"The lineup matchup favors {pick_team} tonight — "
+                                  f"their batting order has a meaningful handedness advantage against this starter.")
+                        break
+
+            # Park factor for totals
+            if s2 is None and is_total:
+                pf = PARK_FACTORS.get(home, 1.0)
+                if pf > 1.15 and is_over:
+                    s2 = (f"This game is being played at a hitter-friendly park (factor {pf}), "
+                          f"which historically produces above-average run totals.")
+                elif pf < 0.90 and not is_over:
+                    s2 = (f"This is one of the more pitcher-friendly parks in baseball (factor {pf}), "
+                          f"which historically suppresses scoring and supports the Under.")
+
+            if s2:
+                sentences.append(s2)
+
+            # ── Sentence 3: Market confirmation if applicable ──
+            s3 = None
+            if signal == "fire" and split_market:
+                s3 = ("Sharp books and recreational books are pricing this game differently — "
+                      "that kind of market split is one of the strongest signals a play can have.")
+            elif signal in ("fire","value","sharp") and max(away_gap, home_gap) >= 15:
+                gap = max(away_gap, home_gap)
+                s3  = (f"There's a {gap}-cent price gap across books on this game, "
+                       f"meaning you can get meaningfully better value by shopping — {vb} currently has the best number.")
+            elif lm and lm.get("significant"):
+                mt  = lm.get("moved_team","")
+                mc  = abs(lm.get("move_cents",0))
+                if mt.lower() in play_label.lower():
+                    s3 = (f"The line has moved {mc:.0f} cents toward {mt} since this morning, "
+                          f"suggesting sharp money has come in on the same side the model prefers.")
+                else:
+                    s3 = (f"Worth noting the line has moved {mc:.0f} cents against this side since open — "
+                          f"the edge is there but the market is moving the other way.")
+
+            if s3:
+                sentences.append(s3)
+
+            return " ".join(sentences)
+
+        narrative = build_narrative()
 
         value_play = {
             "game":        f"{away} @ {home}",
@@ -1205,7 +1324,7 @@ def analyze_game(game, context):
             "true_pct":    vtp,
             "implied_pct": vi,
             "edge":        ve,
-            "reasoning":   " ".join(reason_parts),
+            "reasoning":   narrative,
         }
 
     # ── BET UP TO ────────────────────────────────────────
@@ -2921,7 +3040,7 @@ html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-fam
 .sl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px}
 .sv{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:#fff}
 .sv.green{color:var(--green)}.sv.red{color:var(--red)}.sv.amber{color:var(--amber)}
-.alert-reasoning{font-size:12px;color:#888;line-height:1.6;border-top:1px solid var(--border);padding-top:8px;margin-top:4px}
+.alert-reasoning{font-size:12.5px;color:#aaa;line-height:1.75;border-top:1px solid var(--border);padding-top:10px;margin-top:8px;font-style:italic}
 .dtable{width:100%;border-collapse:collapse;font-size:12px}
 .dtable th{text-align:left;padding:8px 12px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:600;font-family:'IBM Plex Mono',monospace;background:var(--bg3);border-bottom:1px solid var(--border)}
 .dtable td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
