@@ -47,7 +47,7 @@
       "pick_team": "Milwaukee Brewers",
       "side": null,
       "total_line": null,
-      "edge": "+1.2%",
+      "edge": "+0.9%",
       "signal": "fire"
     },
     {
@@ -63,7 +63,7 @@
       "pick_team": null,
       "side": "Over",
       "total_line": 8.0,
-      "edge": "0.0%",
+      "edge": "-0.0%",
       "signal": "fire"
     },
     {
@@ -95,7 +95,7 @@
       "pick_team": null,
       "side": "Under",
       "total_line": 7.0,
-      "edge": "+4.3%",
+      "edge": "+4.0%",
       "signal": "watch"
     },
     {
