@@ -3825,29 +3825,11 @@ def main():
     # Fetch public betting percentages (Action Network)
     public_betting = fetch_public_betting(mlb_date)
 
-    # Build pending picks for display on accuracy tab
-    # Load directly from picks.json which has ALL today's picks including started games
+    # Build pending picks for display — use analyzed games directly (picks.json not written yet)
     pending_picks_for_display = []
-    graded_games_today = set()
-    for day in results_data.get("days", []):
-        for b in day.get("bets",[]):
-            graded_games_today.add(b.get("game",""))
-
-    if os.path.exists("picks.json"):
-        try:
-            with open("picks.json") as f:
-                existing_p = json.load(f)
-            if existing_p.get("date") == mlb_date:
-                for b in existing_p.get("bets",[]):
-                    if b.get("game","") not in graded_games_today:
-                        pending_picks_for_display.append(b)
-        except Exception:
-            pass
-
-    # Also add any pre-game picks from this run not already in picks.json
-    existing_games = {p["game"] for p in pending_picks_for_display}
+    graded_games_today = {b.get("game","") for day in results_data.get("days",[]) for b in day.get("bets",[])}
     for g in analyzed:
-        if g["game"] in existing_games or g["game"] in graded_games_today:
+        if g["game"] in graded_games_today:
             continue
         if not g["bet_is_pass"] and "No Play" not in g["bet_play"]:
             try:
@@ -3863,6 +3845,19 @@ def main():
                     })
             except Exception:
                 pass
+    # Add tracking games (started today) from existing picks.json
+    try:
+        if os.path.exists("picks.json"):
+            with open("picks.json") as f:
+                ep = json.load(f)
+            if ep.get("date") == mlb_date:
+                analyzed_game_keys = {g["game"] for g in analyzed}
+                for b in ep.get("bets",[]):
+                    if b.get("game","") not in analyzed_game_keys and b.get("game","") not in graded_games_today:
+                        pending_picks_for_display.append(b)
+    except Exception:
+        pass
+    print(f"Pending picks for display: {len(pending_picks_for_display)}")
 
     html = build_html(analyzed, matchups, weather, results_data, tracking_games, all_noon_data, public_betting, pending_picks_for_display, date_str, time_str)
     with open("index.html","w",encoding="utf-8") as f:
