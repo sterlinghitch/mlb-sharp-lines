@@ -81,10 +81,10 @@
     },
     "Atlanta Braves @ Cincinnati Reds": {
       "play": "No Play",
-      "price": "Best option (Atlanta Braves Moneyline) is overpriced",
+      "price": "Best option (Over 9.5 Runs) is overpriced",
       "book": "current lines",
       "is_pass": true,
-      "edge": "-0.3%",
+      "edge": "-0.1%",
       "away_true": 58,
       "home_true": 42,
       "away_fair": "-139",
