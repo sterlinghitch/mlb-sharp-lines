@@ -83,7 +83,42 @@ WIND_DIR_DEG = {
 # =============================================================
 # HELPERS
 # =============================================================
-def mlb_get(path, params=None):
+MLB_DIVISIONS = {
+    # AL East
+    "New York Yankees":147, "Boston Red Sox":111, "Tampa Bay Rays":139,
+    "Baltimore Orioles":110, "Toronto Blue Jays":141,
+    # AL Central
+    "Chicago White Sox":145, "Cleveland Guardians":114, "Detroit Tigers":116,
+    "Kansas City Royals":118, "Minnesota Twins":142,
+    # AL West
+    "Houston Astros":117, "Los Angeles Angels":108, "Athletics":133,
+    "Oakland Athletics":133, "Seattle Mariners":136, "Texas Rangers":140,
+    # NL East
+    "Atlanta Braves":144, "Miami Marlins":146, "New York Mets":121,
+    "Philadelphia Phillies":143, "Washington Nationals":120,
+    # NL Central
+    "Chicago Cubs":112, "Cincinnati Reds":113, "Milwaukee Brewers":158,
+    "Pittsburgh Pirates":134, "St. Louis Cardinals":138,
+    # NL West
+    "Arizona Diamondbacks":109, "Colorado Rockies":115, "Los Angeles Dodgers":119,
+    "San Diego Padres":135, "San Francisco Giants":137,
+}
+
+# Division groups for rivalry detection
+MLB_DIVISION_GROUPS = [
+    {147,111,139,110,141},   # AL East
+    {145,114,116,118,142},   # AL Central
+    {117,108,133,136,140},   # AL West
+    {144,146,121,143,120},   # NL East
+    {112,113,158,134,138},   # NL Central
+    {109,115,119,135,137},   # NL West
+]
+
+def same_division(team1_id, team2_id):
+    for div in MLB_DIVISION_GROUPS:
+        if team1_id in div and team2_id in div:
+            return True
+    return False
     try:
         r = requests.get(MLB_BASE + path, params=params, timeout=15)
         if r.status_code == 200: return r.json()
@@ -366,7 +401,14 @@ def fetch_last_five_record(team_id):
                                  "opp":op_s.get("team",{}).get("abbreviation","?"),"home":is_home})
         last5 = results[-5:] if len(results)>=5 else results
         wins  = sum(1 for r in last5 if r["won"])
-        return {"games":last5,"wins":wins,"losses":len(last5)-wins}
+        # Bounce-back detection: lost by 5+ in most recent game
+        bounce_back = False
+        if results:
+            last = results[-1]
+            if not last["won"] and (last["op_runs"] - last["my_runs"]) >= 5:
+                bounce_back = True
+        return {"games":last5,"wins":wins,"losses":len(last5)-wins,
+                "bounce_back": bounce_back}
     except Exception: return None
 
 def fetch_roster(team_id):
@@ -993,6 +1035,47 @@ def analyze_game(game, context):
         adj_at += net_plat; adj_ht -= net_plat
         adjustments.append((f"Platoon splits (away {ap_hand} vs home {hp_hand})",net_plat,-net_plat))
 
+    # 5a. Bounce-back spot -- team blownout 5+ runs yesterday
+    away_l5 = context.get("away_last5") or {}
+    home_l5 = context.get("home_last5") or {}
+    if isinstance(away_l5, dict) and away_l5.get("bounce_back"):
+        # Away team got blown out yesterday -- bounce-back edge
+        adj_at += 0.025; adj_ht -= 0.025
+        adjustments.append((f"{away} bounce-back spot (blowout yesterday)", 0.025, -0.025))
+    if isinstance(home_l5, dict) and home_l5.get("bounce_back"):
+        adj_ht += 0.025; adj_at -= 0.025
+        adjustments.append((f"{home} bounce-back spot (blowout yesterday)", -0.025, 0.025))
+
+    # 5b. Division dog -- underdog facing a division rival
+    away_id_n = MLB_IDS.get(away); home_id_n = MLB_IDS.get(home)
+    is_division_game = away_id_n and home_id_n and same_division(away_id_n, home_id_n)
+    if is_division_game:
+        away_is_dog = adj_at < adj_ht
+        home_is_dog = adj_ht < adj_at
+        # Division dogs get a +1.5% boost — familiarity levels the playing field
+        if away_is_dog and away_med > 0:   # away is underdog (positive ML)
+            adj_at += 0.015; adj_ht -= 0.015
+            adjustments.append((f"Division dog: {away} familiar with {home}", 0.015, -0.015))
+        elif home_is_dog and home_med > 0: # home is underdog
+            adj_ht += 0.015; adj_at -= 0.015
+            adjustments.append((f"Division dog: {home} familiar with {away}", -0.015, 0.015))
+
+    # 5c. Key number flag -- moneyline in -110 to -125 range (most sensitive zone)
+    # Store for display purposes (not a probability adjustment, just a signal)
+    key_number_flag = None
+    bst_away = min((b for b in book_data if b.get("away_price")),
+                   key=lambda b: abs(b["away_price"]), default=None)
+    bst_home = min((b for b in book_data if b.get("home_price")),
+                   key=lambda b: abs(b["home_price"]), default=None)
+    if bst_away and bst_away.get("away_price"):
+        ap_val = abs(bst_away["away_price"])
+        if 110 <= ap_val <= 125:
+            key_number_flag = f"{away} ML in key zone ({'+' if bst_away['away_price']>0 else ''}{bst_away['away_price']})"
+    if bst_home and bst_home.get("home_price"):
+        hp_val = abs(bst_home["home_price"])
+        if 110 <= hp_val <= 125 and not key_number_flag:
+            key_number_flag = f"{home} ML in key zone ({'+' if bst_home['home_price']>0 else ''}{bst_home['home_price']})"
+
     # 5. Line movement signal -- sharp money indicator
     line_movement = None
     opening_games = context.get("opening_lines",{})
@@ -1053,7 +1136,21 @@ def analyze_game(game, context):
         cons_line = sorted([b["total_line"] for b in bwt])[len(bwt)//2]
         filtered  = [b for b in bwt if b["total_line"]==cons_line]
         if not filtered: return results
-        op_list = [b["over_price"] for b in filtered]
+        # Hook detection -- check if any book offers a better half-point
+        hook_note = ""
+        all_lines = sorted(set(b["total_line"] for b in bwt))
+        if len(all_lines) > 1:
+            # Multiple lines available -- flag the half-point difference
+            best_line_for_over  = min(all_lines)
+            best_line_for_under = max(all_lines)
+            if cons_line != best_line_for_over:
+                hook_note = f"🪝 Hook: Over {best_line_for_over} available at {[b['name'] for b in bwt if b['total_line']==best_line_for_over][0]}"
+            elif cons_line != best_line_for_under:
+                hook_note = f"🪝 Hook: Under {best_line_for_under} available at {[b['name'] for b in bwt if b['total_line']==best_line_for_under][0]}"
+
+        # Key total numbers -- 8, 8.5, 9 are the most common final totals
+        key_total_numbers = {7.5, 8.0, 8.5, 9.0, 9.5}
+        is_key_total = cons_line in key_total_numbers
         up_list = [b["under_price"] for b in filtered]
         med_ov  = sorted(op_list)[len(op_list)//2]
         med_un  = sorted(up_list)[len(up_list)//2]
@@ -1407,6 +1504,8 @@ def analyze_game(game, context):
         "worst_away":worst_away,"worst_home":worst_home,
         "away_gap":away_gap,"home_gap":home_gap,"props":[],
         "confidence":confidence,"confidence_why":confidence_why,"kelly_pct":kelly_pct,
+        "key_number_flag":key_number_flag,
+        "is_division_game":is_division_game,
         "commence_iso":commence_iso,
         "away_pitcher":context.get("away_pitcher",{}),
         "home_pitcher":context.get("home_pitcher",{}),
@@ -1414,6 +1513,8 @@ def analyze_game(game, context):
         "home_injuries":context.get("home_injuries",[]),
         "away_bullpen":context.get("away_bullpen",{}),
         "home_bullpen":context.get("home_bullpen",{}),
+        "away_last5":context.get("away_last5"),
+        "home_last5":context.get("home_last5"),
         "umpire":context.get("umpire",{}),
         "line_movement":line_movement,
     }
@@ -2073,6 +2174,29 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                             f'</details>'
                         )
 
+            # Situational angles strip
+            sit_strip = ""
+            sit_parts = []
+            # Bounce-back
+            if isinstance(g.get("away_last5"),dict) and g["away_last5"].get("bounce_back"):
+                sit_parts.append(f'<span style="color:var(--green)">🔄 {g["away"]} bounce-back spot</span>')
+            if isinstance(g.get("home_last5"),dict) and g["home_last5"].get("bounce_back"):
+                sit_parts.append(f'<span style="color:var(--green)">🔄 {g["home"]} bounce-back spot</span>')
+            # Division game
+            if g.get("is_division_game"):
+                sit_parts.append(f'<span style="color:#60a5fa">⚔️ Division rivalry</span>')
+            # Key number
+            if g.get("key_number_flag"):
+                sit_parts.append(f'<span style="color:var(--amber)">🎯 {g["key_number_flag"]}</span>')
+            if sit_parts:
+                sit_strip = (
+                    f'<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;'
+                    f'padding:6px 10px;background:var(--bg3);border-radius:6px;font-size:11px;'
+                    f'font-family:monospace">'
+                    + " · ".join(sit_parts) +
+                    f'</div>'
+                )
+
             best_bet=(f'<div class="{bb_cls}">'
                       f'<div class="bb-header">Best Bet This Game</div>'
                       f'<div class="bb-play">{g["bet_play"]}</div>'
@@ -2096,7 +2220,7 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                    f'<div class="game-right">{conf_badge}{sig_badge}<span class="toggle">v</span></div>'
                    f'</div>'
                    f'<div class="game-body">'
-                   f'{pitcher_strip}{ump_strip}{lm_strip}{pub_strip}{inj_row}{adj_row}{adj_note}'
+                   f'{pitcher_strip}{ump_strip}{lm_strip}{pub_strip}{sit_strip}{inj_row}{adj_row}{adj_note}'
                    f'<table class="otable" style="margin-top:10px">'
                    f'<thead><tr><th>Book</th><th>{g["away"]}</th><th>Implied%</th>'
                    f'<th>{g["home"]}</th><th>Implied%</th><th>Total O/U</th></tr></thead>'
@@ -3825,11 +3949,29 @@ def main():
     # Fetch public betting percentages (Action Network)
     public_betting = fetch_public_betting(mlb_date)
 
-    # Build pending picks for display — use analyzed games directly (picks.json not written yet)
+    # Build pending picks for display — show everything in picks.json as pending
+    # This is purely for display, not for grading logic
     pending_picks_for_display = []
     graded_games_today = {b.get("game","") for day in results_data.get("days",[]) for b in day.get("bets",[])}
+
+    # PRIMARY: read from picks.json which has the locked-in noon picks
+    if os.path.exists("picks.json"):
+        try:
+            with open("picks.json") as f:
+                ep = json.load(f)
+            # Show picks from today OR yesterday (in case of overnight run)
+            if ep.get("date") in (mlb_date, (datetime.now(EASTERN) - timedelta(days=1)).strftime("%Y-%m-%d")):
+                for b in ep.get("bets",[]):
+                    if b.get("game","") not in graded_games_today:
+                        pending_picks_for_display.append(b)
+                print(f"  Pending from picks.json: {len(pending_picks_for_display)} bets")
+        except Exception as e:
+            print(f"  picks.json read error: {e}")
+
+    # SECONDARY: add any current pre-game picks not already in picks.json
+    existing_games = {p["game"] for p in pending_picks_for_display}
     for g in analyzed:
-        if g["game"] in graded_games_today:
+        if g["game"] in existing_games or g["game"] in graded_games_today:
             continue
         if not g["bet_is_pass"] and "No Play" not in g["bet_play"]:
             try:
@@ -3845,18 +3987,7 @@ def main():
                     })
             except Exception:
                 pass
-    # Add tracking games (started today) from existing picks.json
-    try:
-        if os.path.exists("picks.json"):
-            with open("picks.json") as f:
-                ep = json.load(f)
-            if ep.get("date") == mlb_date:
-                analyzed_game_keys = {g["game"] for g in analyzed}
-                for b in ep.get("bets",[]):
-                    if b.get("game","") not in analyzed_game_keys and b.get("game","") not in graded_games_today:
-                        pending_picks_for_display.append(b)
-    except Exception:
-        pass
+
     print(f"Pending picks for display: {len(pending_picks_for_display)}")
 
     html = build_html(analyzed, matchups, weather, results_data, tracking_games, all_noon_data, public_betting, pending_picks_for_display, date_str, time_str)
