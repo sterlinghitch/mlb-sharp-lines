@@ -3,6 +3,22 @@
   "date_display": "May 29, 2026",
   "bets": [
     {
+      "game": "Atlanta Braves @ Cincinnati Reds",
+      "away": "Atlanta Braves",
+      "home": "Cincinnati Reds",
+      "away_id": 144,
+      "home_id": 113,
+      "play": "Atlanta Braves Moneyline",
+      "price": "-132",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "pick_team": "Atlanta Braves",
+      "side": null,
+      "total_line": null,
+      "edge": "+0.1%",
+      "signal": "watch"
+    },
+    {
       "game": "San Diego Padres @ Washington Nationals",
       "away": "San Diego Padres",
       "home": "Washington Nationals",
