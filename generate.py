@@ -3826,19 +3826,33 @@ def main():
     public_betting = fetch_public_betting(mlb_date)
 
     # Build pending picks for display on accuracy tab
-    # These are today's best bets that haven't been graded yet
-    # Built here so build_html has fresh data (picks.json written after build_html)
+    # Load directly from picks.json which has ALL today's picks including started games
     pending_picks_for_display = []
     graded_games_today = set()
     for day in results_data.get("days", []):
-        if day.get("date","") == date_str or day.get("date","") == mlb_date:
-            for b in day.get("bets",[]):
-                graded_games_today.add(b.get("game",""))
+        for b in day.get("bets",[]):
+            graded_games_today.add(b.get("game",""))
+
+    if os.path.exists("picks.json"):
+        try:
+            with open("picks.json") as f:
+                existing_p = json.load(f)
+            if existing_p.get("date") == mlb_date:
+                for b in existing_p.get("bets",[]):
+                    if b.get("game","") not in graded_games_today:
+                        pending_picks_for_display.append(b)
+        except Exception:
+            pass
+
+    # Also add any pre-game picks from this run not already in picks.json
+    existing_games = {p["game"] for p in pending_picks_for_display}
     for g in analyzed:
+        if g["game"] in existing_games or g["game"] in graded_games_today:
+            continue
         if not g["bet_is_pass"] and "No Play" not in g["bet_play"]:
             try:
                 edge_num = float(str(g["bet_edge"]).replace("+","").replace("%",""))
-                if edge_num > 0 and g["game"] not in graded_games_today:
+                if edge_num > 0:
                     pending_picks_for_display.append({
                         "game":   g["game"],
                         "play":   g["bet_play"],
@@ -3849,18 +3863,6 @@ def main():
                     })
             except Exception:
                 pass
-    # Also include existing picks for games already started (from existing picks.json)
-    if os.path.exists("picks.json"):
-        try:
-            with open("picks.json") as f:
-                existing_p = json.load(f)
-            if existing_p.get("date") == mlb_date:
-                existing_games = {p["game"] for p in pending_picks_for_display}
-                for b in existing_p.get("bets",[]):
-                    if b.get("game","") not in existing_games and b.get("game","") not in graded_games_today:
-                        pending_picks_for_display.append(b)
-        except Exception:
-            pass
 
     html = build_html(analyzed, matchups, weather, results_data, tracking_games, all_noon_data, public_betting, pending_picks_for_display, date_str, time_str)
     with open("index.html","w",encoding="utf-8") as f:
