@@ -1947,8 +1947,8 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
             conf_why = g.get("confidence_why","")
             tooltip_text = f"{conf}/5: {conf_why}" if conf_why else f"Confidence: {conf}/5"
             conf_stars = "".join(
-                f'<span style="color:{"var(--accent)" if i<conf else "var(--border2)"}">●</span>'
-                for i in range(5)
+                f'<span style="color:{"var(--accent)" if ci<conf else "var(--border2)"}">●</span>'
+                for ci in range(5)
             )
             conf_badge = (f'<span class="conf-tooltip-wrap" style="position:relative;cursor:help">'
                           f'<span style="font-size:10px;letter-spacing:1px;font-family:monospace">{conf_stars}</span>'
