@@ -1163,6 +1163,7 @@ def analyze_game(game, context):
         # Key total numbers -- 8, 8.5, 9 are the most common final totals
         key_total_numbers = {7.5, 8.0, 8.5, 9.0, 9.5}
         is_key_total = cons_line in key_total_numbers
+        op_list = [b["over_price"] for b in filtered]
         up_list = [b["under_price"] for b in filtered]
         med_ov  = sorted(op_list)[len(op_list)//2]
         med_un  = sorted(up_list)[len(up_list)//2]
