@@ -558,7 +558,67 @@ def fetch_weather_for_games(games_raw):
 # =============================================================
 # MATCHUP DATA
 # =============================================================
-def fetch_probable_pitchers(date_str):
+def fetch_public_betting(date_str):
+    """
+    Fetch public betting percentages from Action Network's unofficial API.
+    Returns dict keyed by "Away @ Home" with {away_pct, home_pct, away_money_pct, home_money_pct}
+    """
+    result = {}
+    try:
+        url = f"https://api.actionnetwork.com/web/v1/scoreboard/mlb"
+        r = requests.get(url, params={"period":"game","date":date_str.replace("-","")},
+                         headers={"User-Agent":"Mozilla/5.0"},
+                         timeout=15)
+        if r.status_code != 200:
+            print(f"  Public betting: HTTP {r.status_code} from Action Network")
+            return result
+        data = r.json()
+        for game in data.get("games",[]):
+            teams = game.get("teams",[])
+            if len(teams) < 2: continue
+            # Action Network: index 0 = away, index 1 = home
+            away_t = next((t for t in teams if not t.get("is_home",True)), teams[0])
+            home_t = next((t for t in teams if t.get("is_home",False)), teams[1])
+            away_name = away_t.get("full_name","")
+            home_name = home_t.get("full_name","")
+            away_bets  = away_t.get("bettors_pct") or away_t.get("bets_pct")
+            home_bets  = home_t.get("bettors_pct") or home_t.get("bets_pct")
+            away_money = away_t.get("money_pct")
+            home_money = home_t.get("money_pct")
+            if away_name and home_name and (away_bets is not None or home_bets is not None):
+                # Try to match to our team name format
+                key = f"{away_name} @ {home_name}"
+                result[key] = {
+                    "away_bets":  round(float(away_bets  or 0)),
+                    "home_bets":  round(float(home_bets  or 0)),
+                    "away_money": round(float(away_money or 0)) if away_money else None,
+                    "home_money": round(float(home_money or 0)) if home_money else None,
+                }
+        if result:
+            print(f"  Public betting data: {len(result)} games from Action Network")
+        else:
+            print("  Public betting: no data returned (may not be available pre-game)")
+    except Exception as e:
+        print(f"  Public betting error: {e}")
+    return result
+
+
+def match_public_betting(game_key, public_data, away_name, home_name):
+    """
+    Fuzzy match our game key to Action Network's team names.
+    Returns the public betting dict or None.
+    """
+    if game_key in public_data:
+        return public_data[game_key]
+    # Try partial name matching
+    for key, val in public_data.items():
+        parts = key.split(" @ ")
+        if len(parts) != 2: continue
+        an_away, an_home = parts
+        if (any(w in an_away for w in away_name.split()[-2:]) and
+            any(w in an_home for w in home_name.split()[-2:])):
+            return val
+    return None
     """
     Fetch probable pitchers for all games on a given date.
     Tries multiple methods since the MLB API hydration is inconsistent.
@@ -1111,15 +1171,16 @@ def analyze_game(game, context):
     except Exception:
         time_display=""; date_et="Today"; date_sort="9999-99-99"; commence_iso=""
     # Counts how many independent signals all point the same direction
-    conf = 0
-    if best_bet_edge_val >= 2.5: conf += 1
-    if best_bet_edge_val >= 5.0: conf += 1
-    if signal in ("fire","value","sharp"): conf += 1
-    if line_movement and line_movement.get("significant"): conf += 1
-    # Adjustments stacking — if 2+ adjustments all push same direction
+    conf = 0; conf_reasons = []
+    if best_bet_edge_val >= 2.5: conf += 1; conf_reasons.append(f"Edge +{round(best_bet_edge_val,1)}%")
+    if best_bet_edge_val >= 5.0: conf += 1; conf_reasons.append("Strong edge 5%+")
+    if signal in ("fire","value","sharp"): conf += 1; conf_reasons.append(signal.upper())
+    if line_movement and line_movement.get("significant"):
+        conf += 1; conf_reasons.append(f"Sharp move {abs(line_movement.get('move_cents',0)):.0f}c")
     if len([a for a in adjustments if a[1] > 0]) >= 2 or len([a for a in adjustments if a[1] < 0]) >= 2:
-        conf += 1
-    confidence = min(conf, 5)
+        conf += 1; conf_reasons.append(f"{len(adjustments)} factors stacking")
+    confidence     = min(conf, 5)
+    confidence_why = " · ".join(conf_reasons) if conf_reasons else "No strong signals"
 
     # ── KELLY CRITERION ───────────────────────────────────
     # Quarter-Kelly bet sizing: conservative standard for sports betting
@@ -1161,7 +1222,7 @@ def analyze_game(game, context):
         "best_away":best_away,"best_home":best_home,
         "worst_away":worst_away,"worst_home":worst_home,
         "away_gap":away_gap,"home_gap":home_gap,"props":[],
-        "confidence":confidence,"kelly_pct":kelly_pct,
+        "confidence":confidence,"confidence_why":confidence_why,"kelly_pct":kelly_pct,
         "commence_iso":commence_iso,
         "away_pitcher":context.get("away_pitcher",{}),
         "home_pitcher":context.get("home_pitcher",{}),
@@ -1320,7 +1381,7 @@ def build_why_this_bet(game):
     return items
 
 
-def build_html(analyzed_games, matchups, weather, results_data, tracking_games, all_noon_data, date_str, time_str):
+def build_html(analyzed_games, matchups, weather, results_data, tracking_games, all_noon_data, public_betting, date_str, time_str):
     all_disc=[]; all_plays=[]; sharp_ct=0; value_ct=0
     for g in analyzed_games:
         for d in g["discrepancies"]: all_disc.append({**d,"game":g["game"]})
@@ -1584,11 +1645,16 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                        if g["signal_label"] else "")
             # Confidence meter (filled/empty stars)
             conf = g.get("confidence",0)
+            conf_why = g.get("confidence_why","")
+            tooltip_text = f"{conf}/5: {conf_why}" if conf_why else f"Confidence: {conf}/5"
             conf_stars = "".join(
                 f'<span style="color:{"var(--accent)" if i<conf else "var(--border2)"}">●</span>'
                 for i in range(5)
             )
-            conf_badge = f'<span style="font-size:10px;letter-spacing:1px;font-family:monospace" title="Confidence: {conf}/5">{conf_stars}</span>'
+            conf_badge = (f'<span class="conf-tooltip-wrap" style="position:relative;cursor:help">'
+                          f'<span style="font-size:10px;letter-spacing:1px;font-family:monospace">{conf_stars}</span>'
+                          f'<span class="conf-tooltip">{tooltip_text}</span>'
+                          f'</span>')
             # Countdown timer uses commence_iso stored on each game
             commence_iso = g.get("commence_iso","")
             countdown_id = f'cd_{g["game"].replace(" ","_").replace("@","at")[:20]}'
@@ -1660,8 +1726,53 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                            f'HP Ump: <span style="color:var(--text)">{ump["name"]}</span> '
                            f'- Run impact: <span style="color:{ri_col}">{ri_lbl}</span></div>')
 
-            lm = g.get("line_movement")
-            lm_strip = ""
+            # Public betting indicator
+            pb_data = match_public_betting(g["game"], public_betting, g["away"], g["home"])
+            pub_strip = ""
+            if pb_data:
+                ab = pb_data.get("away_bets",50); hb = pb_data.get("home_bets",50)
+                am = pb_data.get("away_money"); hm = pb_data.get("home_money")
+                # Reverse line movement detection
+                # Public on one side but line moving the other = sharp indicator
+                lm = g.get("line_movement")
+                rlm_note = ""
+                if lm and abs(lm.get("move_cents",0)) >= 8:
+                    moved_away = lm.get("moved_team","") == "away"
+                    public_away = ab > hb
+                    if moved_away != public_away:
+                        rlm_note = '<span style="color:var(--red);font-weight:700;margin-left:8px">⚡ REVERSE LINE MOVEMENT</span>'
+                # Bar widths
+                away_w = ab; home_w = hb
+                away_col = "#4ade80" if ab < 45 else ("#f87171" if ab > 65 else "#fbbf24")
+                home_col = "#4ade80" if hb < 45 else ("#f87171" if hb > 65 else "#fbbf24")
+                money_row = ""
+                if am is not None and hm is not None:
+                    money_row = (f'<div style="display:flex;align-items:center;gap:6px;margin-top:4px">'
+                                 f'<span style="font-size:10px;color:var(--muted);width:60px">Money:</span>'
+                                 f'<div style="flex:1;height:3px;background:var(--border2);border-radius:2px">'
+                                 f'<div style="height:3px;width:{am}%;background:#60a5fa;border-radius:2px"></div></div>'
+                                 f'<span style="font-size:10px;font-family:monospace;color:#60a5fa">{am}%</span>'
+                                 f'<span style="font-size:10px;color:var(--muted)">vs</span>'
+                                 f'<span style="font-size:10px;font-family:monospace;color:#60a5fa">{hm}%</span>'
+                                 f'</div>')
+                pub_strip = (
+                    f'<div style="margin-top:6px;padding:8px 10px;background:var(--bg3);border-radius:6px">'
+                    f'<div style="font-size:10px;font-family:monospace;text-transform:uppercase;'
+                    f'letter-spacing:1px;color:var(--muted);margin-bottom:6px">Public Betting{rlm_note}</div>'
+                    f'<div style="display:flex;align-items:center;gap:6px">'
+                    f'<span style="font-size:11px;color:var(--muted);width:60px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{g["away"][:12]}</span>'
+                    f'<div style="flex:1;height:6px;background:var(--border2);border-radius:3px">'
+                    f'<div style="height:6px;width:{away_w}%;background:{away_col};border-radius:3px"></div></div>'
+                    f'<span style="font-size:11px;font-family:monospace;font-weight:700;color:{away_col};width:32px;text-align:right">{ab}%</span>'
+                    f'<span style="font-size:10px;color:var(--muted)">vs</span>'
+                    f'<span style="font-size:11px;font-family:monospace;font-weight:700;color:{home_col};width:32px">{hb}%</span>'
+                    f'<div style="flex:1;height:6px;background:var(--border2);border-radius:3px">'
+                    f'<div style="height:6px;width:{home_w}%;background:{home_col};border-radius:3px;float:right"></div></div>'
+                    f'<span style="font-size:11px;color:var(--muted);width:60px;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{g["home"][:12]}</span>'
+                    f'</div>'
+                    f'{money_row}'
+                    f'</div>'
+                )
             if lm:
                 mc   = lm.get("move_cents",0)
                 mt   = lm.get("moved_team","")
@@ -1799,7 +1910,7 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                    f'<div class="game-right">{conf_badge}{sig_badge}<span class="toggle">v</span></div>'
                    f'</div>'
                    f'<div class="game-body">'
-                   f'{pitcher_strip}{ump_strip}{lm_strip}{inj_row}{adj_row}{adj_note}'
+                   f'{pitcher_strip}{ump_strip}{lm_strip}{pub_strip}{inj_row}{adj_row}{adj_note}'
                    f'<table class="otable" style="margin-top:10px">'
                    f'<thead><tr><th>Book</th><th>{g["away"]}</th><th>Implied%</th>'
                    f'<th>{g["home"]}</th><th>Implied%</th><th>Total O/U</th></tr></thead>'
@@ -2545,9 +2656,120 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
             f'</div>'
         )
 
+        # ── CALENDAR HEATMAP ─────────────────────────────
+        from calendar import monthcalendar, month_abbr
+        import re as _re
+
+        def build_calendar():
+            if not days: return ""
+            # Build day lookup: {date_str: (wins, losses)}
+            day_map = {}
+            for day in days:
+                date_lbl = day.get("date","")
+                dw,dl = wl(day.get("bets",[]))
+                if dw+dl > 0:
+                    # Parse date label "May 29, 2026" -> "2026-05-29"
+                    try:
+                        from datetime import datetime as _dt
+                        parsed = _dt.strptime(date_lbl, "%B %d, %Y")
+                        day_map[parsed.strftime("%Y-%m-%d")] = (dw,dl)
+                    except Exception:
+                        pass
+
+            if not day_map: return ""
+
+            # Group by month
+            from datetime import datetime as _dt, date as _date
+            sorted_keys = sorted(day_map.keys())
+            first_date  = _dt.strptime(sorted_keys[0], "%Y-%m-%d").date()
+            last_date   = _dt.strptime(sorted_keys[-1],"%Y-%m-%d").date()
+
+            html = f'<div class="sec-header"><h2>Best Bet Calendar</h2><div class="sec-line"></div></div>'
+            html += '<div style="overflow-x:auto;margin-bottom:2rem">'
+
+            year = first_date.year; month = first_date.month
+            while (year, month) <= (last_date.year, last_date.month):
+                html += (f'<div style="margin-bottom:1.5rem">'
+                         f'<div style="font-size:12px;font-family:monospace;font-weight:700;color:var(--text);'
+                         f'text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">'
+                         f'{month_abbr[month]} {year}</div>'
+                         f'<div style="display:flex;gap:3px;flex-wrap:wrap">')
+
+                # Day-of-week headers
+                html += '<div style="display:grid;grid-template-columns:repeat(7,28px);gap:3px;margin-bottom:3px">'
+                for d in ["Su","Mo","Tu","We","Th","Fr","Sa"]:
+                    html += f'<div style="width:28px;text-align:center;font-size:9px;color:var(--muted);font-family:monospace">{d}</div>'
+                html += '</div>'
+
+                # Calendar grid
+                html += '<div style="display:grid;grid-template-columns:repeat(7,28px);gap:3px">'
+                import calendar as _cal
+                # Get first day of month weekday (0=Mon, 6=Sun) convert to Sun=0
+                first_weekday = (_cal.weekday(year, month, 1) + 1) % 7
+                days_in_month = _cal.monthrange(year, month)[1]
+
+                # Empty cells before first day
+                for _ in range(first_weekday):
+                    html += '<div style="width:28px;height:28px"></div>'
+
+                for day_num in range(1, days_in_month + 1):
+                    date_key = f"{year:04d}-{month:02d}-{day_num:02d}"
+                    if date_key in day_map:
+                        dw, dl = day_map[date_key]
+                        if dw > dl:
+                            bg = "#166534"; border = "#4ade80"; tc = "#4ade80"
+                        elif dl > dw:
+                            bg = "#7f1d1d"; border = "#f87171"; tc = "#f87171"
+                        else:
+                            bg = "#3f3f00"; border = "#fbbf24"; tc = "#fbbf24"
+                        tip = f"{dw}W-{dl}L"
+                        html += (f'<div title="{date_key}: {tip}" style="width:28px;height:28px;'
+                                 f'background:{bg};border:1px solid {border};border-radius:4px;'
+                                 f'display:flex;align-items:center;justify-content:center;'
+                                 f'font-size:9px;font-family:monospace;color:{tc};font-weight:700;cursor:default">'
+                                 f'{day_num}</div>')
+                    else:
+                        # Check if it's a future date
+                        try:
+                            from datetime import date as _d2
+                            is_future = _date(year, month, day_num) > _date.today()
+                        except Exception:
+                            is_future = False
+                        bg = "transparent" if is_future else "var(--bg3)"
+                        html += (f'<div style="width:28px;height:28px;background:{bg};'
+                                 f'border:1px solid {"transparent" if is_future else "var(--border)"};'
+                                 f'border-radius:4px;display:flex;align-items:center;justify-content:center;'
+                                 f'font-size:9px;color:{"var(--dim)" if not is_future else "transparent"};font-family:monospace">'
+                                 f'{"" if is_future else day_num}</div>')
+                html += '</div></div>'
+
+                # Move to next month
+                if month == 12: year += 1; month = 1
+                else: month += 1
+
+            # Legend
+            html += ('<div style="display:flex;gap:16px;margin-top:8px;flex-wrap:wrap">'
+                     '<div style="display:flex;align-items:center;gap:5px">'
+                     '<div style="width:14px;height:14px;background:#166534;border:1px solid #4ade80;border-radius:3px"></div>'
+                     '<span style="font-size:11px;color:var(--muted)">Positive day</span></div>'
+                     '<div style="display:flex;align-items:center;gap:5px">'
+                     '<div style="width:14px;height:14px;background:#7f1d1d;border:1px solid #f87171;border-radius:3px"></div>'
+                     '<span style="font-size:11px;color:var(--muted)">Negative day</span></div>'
+                     '<div style="display:flex;align-items:center;gap:5px">'
+                     '<div style="width:14px;height:14px;background:#3f3f00;border:1px solid #fbbf24;border-radius:3px"></div>'
+                     '<span style="font-size:11px;color:var(--muted)">Split day</span></div>'
+                     '<div style="display:flex;align-items:center;gap:5px">'
+                     '<div style="width:14px;height:14px;background:var(--bg3);border:1px solid var(--border);border-radius:3px"></div>'
+                     '<span style="font-size:11px;color:var(--muted)">No bets</span></div>'
+                     '</div></div>')
+            return html
+
+        calendar_section = build_calendar()
+
         return (
             circles
             + hint
+            + calendar_section
             + calib_section
             + clv_feedback
             + clv_section
@@ -2687,7 +2909,8 @@ html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-fam
 .pitcher-role{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-bottom:4px}
 .pitcher-name{font-size:17px;font-weight:700;color:#fff;margin-bottom:2px}.pitcher-team{font-size:12px;color:var(--muted)}
 footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 2rem;font-size:11px;color:var(--muted);text-align:center;line-height:1.8;margin-left:var(--sidebar)}
-.mobile-bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:400;padding:6px 0 8px}
+.conf-tooltip-wrap:hover .conf-tooltip{opacity:1;pointer-events:none}
+.conf-tooltip{position:absolute;bottom:calc(100% + 6px);right:0;background:#1a1a2e;border:1px solid var(--border2);border-radius:8px;padding:7px 12px;font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--text);white-space:nowrap;opacity:0;transition:opacity 0.15s;pointer-events:none;z-index:200;min-width:180px;line-height:1.6;box-shadow:0 4px 20px rgba(0,0,0,0.4)}
 .mbn-item{display:flex;flex-direction:column;align-items:center;flex:1;cursor:pointer;padding:4px 0;color:var(--muted);transition:color 0.15s}
 .mbn-item.active{color:var(--accent)}
 .mbn-icon{font-size:18px;margin-bottom:2px}
@@ -3117,7 +3340,10 @@ def main():
     except Exception as e:
         print(f"results.json error: {e}")
 
-    html = build_html(analyzed, matchups, weather, results_data, tracking_games, all_noon_data, date_str, time_str)
+    # Fetch public betting percentages (Action Network)
+    public_betting = fetch_public_betting(mlb_date)
+
+    html = build_html(analyzed, matchups, weather, results_data, tracking_games, all_noon_data, public_betting, date_str, time_str)
     with open("index.html","w",encoding="utf-8") as f:
         f.write(html)
 
