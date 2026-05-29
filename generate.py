@@ -3561,6 +3561,10 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
 <footer>MLB Sharp Lines - The Gambling Cave - {date_str} - Enhanced model: SP quality, bullpen fatigue, injuries, park factors, umpire zone, wind - Gamble responsibly</footer>
 
 <script>
+  // ── AUTO REFRESH every 5 minutes ──
+  // Keeps the site current without manual reload
+  setTimeout(function(){{ window.location.reload(); }}, 5 * 60 * 1000);
+
   // ── NOTIFICATION BADGE ──
   (function(){{
     const playCount = {value_ct};
