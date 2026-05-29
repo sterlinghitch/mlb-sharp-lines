@@ -67,6 +67,22 @@
       "signal": "fire"
     },
     {
+      "game": "Atlanta Braves @ Cincinnati Reds",
+      "away": "Atlanta Braves",
+      "home": "Cincinnati Reds",
+      "away_id": 144,
+      "home_id": 113,
+      "play": "Over 9.5 Runs",
+      "price": "-102",
+      "book": "MyBookie.ag",
+      "type": "total",
+      "pick_team": null,
+      "side": "Over",
+      "total_line": 9.5,
+      "edge": "0.0%",
+      "signal": "watch"
+    },
+    {
       "game": "Los Angeles Angels @ Tampa Bay Rays",
       "away": "Los Angeles Angels",
       "home": "Tampa Bay Rays",
@@ -89,8 +105,8 @@
       "away_id": 146,
       "home_id": 121,
       "play": "Under 7.0 Runs",
-      "price": "+100",
-      "book": "DraftKings",
+      "price": "+102",
+      "book": "MyBookie.ag",
       "type": "total",
       "pick_team": null,
       "side": "Under",

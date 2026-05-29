@@ -107,8 +107,8 @@
     },
     "Miami Marlins @ New York Mets": {
       "play": "Under 7.0 Runs",
-      "price": "+100",
-      "book": "DraftKings",
+      "price": "+102",
+      "book": "MyBookie.ag",
       "is_pass": false,
       "edge": "+4.0%",
       "away_true": 46,
@@ -184,11 +184,11 @@
       "signal_label": ""
     },
     "Atlanta Braves @ Cincinnati Reds": {
-      "play": "No Play",
-      "price": "Best option (Atlanta Braves Moneyline) is overpriced",
-      "book": "current lines",
-      "is_pass": true,
-      "edge": "-0.2%",
+      "play": "Over 9.5 Runs",
+      "price": "-102",
+      "book": "MyBookie.ag",
+      "is_pass": false,
+      "edge": "0.0%",
       "away_true": 57,
       "home_true": 43,
       "away_fair": "-133",
