@@ -83,6 +83,16 @@ WIND_DIR_DEG = {
 # =============================================================
 # HELPERS
 # =============================================================
+def mlb_get(path, params=None):
+    try:
+        r = requests.get(MLB_BASE + path, params=params, timeout=15)
+        if r.status_code == 200:
+            return r.json()
+    except Exception:
+        pass
+    return None
+
+
 MLB_DIVISIONS = {
     # AL East
     "New York Yankees":147, "Boston Red Sox":111, "Tampa Bay Rays":139,
