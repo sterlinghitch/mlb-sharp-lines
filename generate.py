@@ -1070,21 +1070,23 @@ def analyze_game(game, context):
             adj_ht += 0.015; adj_at -= 0.015
             adjustments.append((f"Division dog: {home} familiar with {away}", -0.015, 0.015))
 
-    # 5c. Key number flag -- moneyline in -110 to -125 range (most sensitive zone)
-    # Store for display purposes (not a probability adjustment, just a signal)
+    # 5c. Key number flag
     key_number_flag = None
-    bst_away = min((b for b in book_data if b.get("away_price")),
-                   key=lambda b: abs(b["away_price"]), default=None)
-    bst_home = min((b for b in book_data if b.get("home_price")),
-                   key=lambda b: abs(b["home_price"]), default=None)
-    if bst_away and bst_away.get("away_price"):
-        ap_val = abs(bst_away["away_price"])
-        if 110 <= ap_val <= 125:
-            key_number_flag = f"{away} ML in key zone ({'+' if bst_away['away_price']>0 else ''}{bst_away['away_price']})"
-    if bst_home and bst_home.get("home_price"):
-        hp_val = abs(bst_home["home_price"])
-        if 110 <= hp_val <= 125 and not key_number_flag:
-            key_number_flag = f"{home} ML in key zone ({'+' if bst_home['home_price']>0 else ''}{bst_home['home_price']})"
+    try:
+        bst_away_ml = min((b for b in book_data if b.get("away_price")),
+                          key=lambda b: abs(b["away_price"]), default=None)
+        bst_home_ml = min((b for b in book_data if b.get("home_price")),
+                          key=lambda b: abs(b["home_price"]), default=None)
+        if bst_away_ml and bst_away_ml.get("away_price"):
+            ap_val = abs(bst_away_ml["away_price"])
+            if 110 <= ap_val <= 125:
+                key_number_flag = f"{away} ML in key zone ({'+' if bst_away_ml['away_price']>0 else ''}{bst_away_ml['away_price']})"
+        if bst_home_ml and bst_home_ml.get("home_price") and not key_number_flag:
+            hp_val = abs(bst_home_ml["home_price"])
+            if 110 <= hp_val <= 125:
+                key_number_flag = f"{home} ML in key zone ({'+' if bst_home_ml['home_price']>0 else ''}{bst_home_ml['home_price']})"
+    except Exception:
+        pass
 
     # 5. Line movement signal -- sharp money indicator
     line_movement = None
@@ -1553,6 +1555,8 @@ def fetch_game_context(game, matchup_data, weather_data, mlb_schedule_games, ope
         "home_batter_sides":  m.get("home_batter_sides",[]),
         "opening_lines":      opening_lines,
         "game_key":           game_key,
+        "away_last5":         m.get("away_last5"),
+        "home_last5":         m.get("home_last5"),
     }
 
 
@@ -2186,26 +2190,26 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
 
             # Situational angles strip
             sit_strip = ""
-            sit_parts = []
-            # Bounce-back
-            if isinstance(g.get("away_last5"),dict) and g["away_last5"].get("bounce_back"):
-                sit_parts.append(f'<span style="color:var(--green)">🔄 {g["away"]} bounce-back spot</span>')
-            if isinstance(g.get("home_last5"),dict) and g["home_last5"].get("bounce_back"):
-                sit_parts.append(f'<span style="color:var(--green)">🔄 {g["home"]} bounce-back spot</span>')
-            # Division game
-            if g.get("is_division_game"):
-                sit_parts.append(f'<span style="color:#60a5fa">⚔️ Division rivalry</span>')
-            # Key number
-            if g.get("key_number_flag"):
-                sit_parts.append(f'<span style="color:var(--amber)">🎯 {g["key_number_flag"]}</span>')
-            if sit_parts:
-                sit_strip = (
-                    f'<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;'
-                    f'padding:6px 10px;background:var(--bg3);border-radius:6px;font-size:11px;'
-                    f'font-family:monospace">'
-                    + " · ".join(sit_parts) +
-                    f'</div>'
-                )
+            try:
+                sit_parts = []
+                if isinstance(g.get("away_last5"),dict) and g["away_last5"].get("bounce_back"):
+                    sit_parts.append(f'<span style="color:var(--green)">🔄 {g["away"]} bounce-back spot</span>')
+                if isinstance(g.get("home_last5"),dict) and g["home_last5"].get("bounce_back"):
+                    sit_parts.append(f'<span style="color:var(--green)">🔄 {g["home"]} bounce-back spot</span>')
+                if g.get("is_division_game"):
+                    sit_parts.append(f'<span style="color:#60a5fa">⚔️ Division rivalry</span>')
+                if g.get("key_number_flag"):
+                    sit_parts.append(f'<span style="color:var(--amber)">🎯 {g["key_number_flag"]}</span>')
+                if sit_parts:
+                    sit_strip = (
+                        f'<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;'
+                        f'padding:6px 10px;background:var(--bg3);border-radius:6px;font-size:11px;'
+                        f'font-family:monospace">'
+                        + " · ".join(sit_parts) +
+                        f'</div>'
+                    )
+            except Exception:
+                sit_strip = ""
 
             best_bet=(f'<div class="{bb_cls}">'
                       f'<div class="bb-header">Best Bet This Game</div>'
