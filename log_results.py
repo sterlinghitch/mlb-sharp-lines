@@ -262,28 +262,29 @@ def american_to_implied(price):
 # MAIN
 # =============================================================
 def main():
-    now_et = datetime.now(EASTERN)
-
-    # We're running at 1am ET — check yesterday's games
-    # (all games including west coast have finished by then)
+    now_et        = datetime.now(EASTERN)
+    today_et      = now_et.date()
     yesterday_et  = (now_et - timedelta(days=1)).date()
+    today_str     = today_et.strftime("%Y-%m-%d")
     yesterday_str = yesterday_et.strftime("%Y-%m-%d")
-    display_date  = yesterday_et.strftime("%B %d, %Y")
 
-    print(f"log_results.py — checking results for {display_date}")
-
-    # Load picks.json
+    # Load picks.json first to determine which date to grade
     picks_data = load_json("picks.json")
     if not picks_data:
-        print("No picks.json found — nothing to grade yet. This is normal on the first run.")
-        print("picks.json is created by generate.py after each noon/4pm site update.")
-        sys.exit(0)  # exit 0 = success, not an error
+        print("No picks.json found — nothing to grade yet.")
+        sys.exit(0)
 
     picks_date = picks_data.get("date", "")
-    if picks_date != yesterday_str:
-        print(f"picks.json is from {picks_date}, expected {yesterday_str}.")
-        print("This can happen if the site ran but picks are from a different day.")
-        print("Continuing anyway — will match on team IDs not date.")
+
+    # Grade whichever date the picks are from (today or yesterday)
+    if picks_date == today_str:
+        grade_date   = today_str
+        display_date = today_et.strftime("%B %d, %Y")
+        print(f"log_results.py — grading today's picks ({display_date})")
+    else:
+        grade_date   = yesterday_str
+        display_date = yesterday_et.strftime("%B %d, %Y")
+        print(f"log_results.py — grading picks from {picks_date} (yesterday={yesterday_str})")
 
     bets = picks_data.get("bets", [])
     if not bets:
@@ -326,12 +327,14 @@ def main():
 
     print(f"Found {len(bets)} best bets to grade.")
 
-    # Fetch final scores from MLB API
-    print(f"\nFetching final scores for {yesterday_str}...")
-    scores = fetch_final_scores(yesterday_str)
-    today_str = now_et.strftime("%Y-%m-%d")
-    print(f"Also checking late games finishing today ({today_str})...")
-    scores.update(fetch_final_scores(today_str))
+    # Fetch final scores for the date the picks are from
+    print(f"\nFetching final scores for {grade_date}...")
+    scores = fetch_final_scores(grade_date)
+    # Also check next day for games finishing past midnight
+    from datetime import datetime as _dt2
+    next_day = (_dt2.strptime(grade_date, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
+    print(f"Also checking {next_day} for late finishers...")
+    scores.update(fetch_final_scores(next_day))
 
     # Load closing lines for CLV tracking
     closing_games = load_closing_lines()
