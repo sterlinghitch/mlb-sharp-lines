@@ -275,16 +275,25 @@ def main():
         sys.exit(0)
 
     picks_date = picks_data.get("date", "")
+    print(f"picks.json date: {picks_date} | today: {today_str} | yesterday: {yesterday_str}")
 
     # Grade whichever date the picks are from (today or yesterday)
     if picks_date == today_str:
         grade_date   = today_str
         display_date = today_et.strftime("%B %d, %Y")
-        print(f"log_results.py — grading today's picks ({display_date})")
-    else:
+        print(f"Grading TODAY's picks: {display_date}")
+    elif picks_date == yesterday_str:
         grade_date   = yesterday_str
         display_date = yesterday_et.strftime("%B %d, %Y")
-        print(f"log_results.py — grading picks from {picks_date} (yesterday={yesterday_str})")
+        print(f"Grading YESTERDAY's picks: {display_date}")
+    elif picks_date:
+        # picks are from a different date — still try to grade them
+        grade_date   = picks_date
+        display_date = picks_date
+        print(f"Grading picks from {picks_date} (not today or yesterday)")
+    else:
+        print("picks.json has no date field — nothing to grade")
+        sys.exit(0)
 
     bets = picks_data.get("bets", [])
     if not bets:
@@ -350,11 +359,14 @@ def main():
     # Fetch final scores for the date the picks are from
     print(f"\nFetching final scores for {grade_date}...")
     scores = fetch_final_scores(grade_date)
-    # Also check next day for games finishing past midnight
+    print(f"  Found {len(scores)} final scores for {grade_date}")
     from datetime import datetime as _dt2
     next_day = (_dt2.strptime(grade_date, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
     print(f"Also checking {next_day} for late finishers...")
-    scores.update(fetch_final_scores(next_day))
+    late = fetch_final_scores(next_day)
+    print(f"  Found {len(late)} final scores for {next_day}")
+    scores.update(late)
+    print(f"  Total scores available: {len(scores)}")
 
     # Load closing lines for CLV tracking
     closing_games = load_closing_lines()
