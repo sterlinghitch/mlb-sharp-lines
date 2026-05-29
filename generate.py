@@ -2975,6 +2975,7 @@ html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-fam
 .pitcher-role{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-bottom:4px}
 .pitcher-name{font-size:17px;font-weight:700;color:#fff;margin-bottom:2px}.pitcher-team{font-size:12px;color:var(--muted)}
 footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 2rem;font-size:11px;color:var(--muted);text-align:center;line-height:1.8;margin-left:var(--sidebar)}
+.mobile-bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:400;padding:6px 0 8px}
 .conf-tooltip-wrap:hover .conf-tooltip{opacity:1;pointer-events:none}
 .conf-tooltip{position:absolute;bottom:calc(100% + 6px);right:0;background:#1a1a2e;border:1px solid var(--border2);border-radius:8px;padding:7px 12px;font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--text);white-space:nowrap;opacity:0;transition:opacity 0.15s;pointer-events:none;z-index:200;min-width:180px;line-height:1.6;box-shadow:0 4px 20px rgba(0,0,0,0.4)}
 .mbn-item{display:flex;flex-direction:column;align-items:center;flex:1;cursor:pointer;padding:4px 0;color:var(--muted);transition:color 0.15s}
