@@ -230,7 +230,87 @@ def fetch_odds():
 # =============================================================
 # MLB DATA FETCHERS
 # =============================================================
-def fetch_pitcher_stats(pitcher_id):
+def fetch_f5_nrfi_odds():
+    """
+    Fetch First 5 innings (h2h_h1, spreads_h1, totals_h1) and
+    NRFI/YRFI (totals_q1) markets from the Odds API.
+    Returns list of game dicts with F5/NRFI bookmaker data.
+    """
+    results = {}
+    # F5 markets
+    for market_set, label in [
+        ("h2h_h1,spreads_h1,totals_h1", "F5"),
+        ("totals_q1", "NRFI"),
+    ]:
+        try:
+            r = requests.get(
+                "https://api.the-odds-api.com/v4/sports/baseball_mlb/odds/",
+                params={"apiKey":ODDS_API_KEY,"regions":"us","markets":market_set,
+                        "oddsFormat":"american","dateFormat":"iso"},
+                timeout=20,
+            )
+            if r.status_code != 200:
+                print(f"  F5/NRFI {label}: HTTP {r.status_code}")
+                continue
+            for g in r.json():
+                gid = g.get("id","")
+                if gid not in results:
+                    results[gid] = {
+                        "id":           gid,
+                        "away_team":    g.get("away_team",""),
+                        "home_team":    g.get("home_team",""),
+                        "commence_time":g.get("commence_time",""),
+                        "f5_books":     [],
+                        "nrfi_books":   [],
+                    }
+                for b in g.get("bookmakers",[]):
+                    book_name = b.get("title","")
+                    entry = {"name": book_name}
+                    for m in b.get("markets",[]):
+                        mk = m.get("key","")
+                        outs = {o["name"]: o["price"] for o in m.get("outcomes",[])}
+                        if mk == "h2h_h1":
+                            entry["f5_away_ml"] = outs.get(g.get("away_team",""))
+                            entry["f5_home_ml"] = outs.get(g.get("home_team",""))
+                        elif mk == "spreads_h1":
+                            for o in m.get("outcomes",[]):
+                                if o["name"] == g.get("away_team",""):
+                                    entry["f5_away_rl"]    = o.get("price")
+                                    entry["f5_away_spread"]= o.get("point")
+                                else:
+                                    entry["f5_home_rl"]    = o.get("price")
+                                    entry["f5_home_spread"]= o.get("point")
+                        elif mk == "totals_h1":
+                            for o in m.get("outcomes",[]):
+                                if o["name"] == "Over":
+                                    entry["f5_over_line"]  = o.get("point")
+                                    entry["f5_over_price"] = o.get("price")
+                                else:
+                                    entry["f5_under_line"]  = o.get("point")
+                                    entry["f5_under_price"] = o.get("price")
+                        elif mk == "totals_q1":
+                            for o in m.get("outcomes",[]):
+                                if o.get("point") is not None and abs(float(o.get("point",0))) < 1:
+                                    # 0.5 line = NRFI/YRFI
+                                    if o["name"] == "Under":
+                                        entry["nrfi_price"] = o.get("price")
+                                        entry["nrfi_line"]  = o.get("point")
+                                    else:
+                                        entry["yrfi_price"] = o.get("price")
+                    if label == "NRFI":
+                        if entry.get("nrfi_price") or entry.get("yrfi_price"):
+                            results[gid]["nrfi_books"].append(entry)
+                    else:
+                        if any(k.startswith("f5_") for k in entry):
+                            results[gid]["f5_books"].append(entry)
+        except Exception as e:
+            print(f"  F5/NRFI {label} error: {e}")
+
+    games = list(results.values())
+    f5_ct   = sum(1 for g in games if g["f5_books"])
+    nrfi_ct = sum(1 for g in games if g["nrfi_books"])
+    print(f"  F5 data: {f5_ct} games | NRFI data: {nrfi_ct} games")
+    return games
     if not pitcher_id:
         return {"name":"TBD","era":"N/A","whip":"N/A","k9":"N/A","id":None,"quality":0.0,
                 "pitch_hand":"R","last3_era":None,"days_rest":None,"last_pitch_count":None,"fatigue_adj":0.0}
@@ -1574,7 +1654,186 @@ def fetch_game_context(game, matchup_data, weather_data, mlb_schedule_games, ope
 # =============================================================
 # HTML BUILDER
 # =============================================================
-def build_why_this_bet(game):
+def analyze_f5_nrfi(f5_games, matchups_by_game):
+    """
+    Analyze First 5 innings and NRFI/YRFI bets.
+    Uses SP quality as the dominant factor since starters
+    control all 5 innings — bullpen is largely irrelevant.
+    Returns list of play dicts.
+    """
+    plays = []
+    now_utc = datetime.now(timezone.utc)
+
+    for g in f5_games:
+        try:
+            # Skip started games
+            ct = g.get("commence_time","")
+            if ct:
+                start = datetime.fromisoformat(ct.replace("Z","+00:00"))
+                if start <= now_utc:
+                    continue
+
+            away = g.get("away_team",""); home = g.get("home_team","")
+            game_key = f"{away} @ {home}"
+            m = matchups_by_game.get(game_key, {})
+            ap = m.get("away_pitcher",{}); hp = m.get("home_pitcher",{})
+
+            def sp_quality(pitcher):
+                """Convert ERA to a probability adjustment. F5 weights SP 2x full-game."""
+                try:
+                    era = float(pitcher.get("era","4.20") or "4.20")
+                    diff = 4.20 - era  # positive = better than avg
+                    return max(-0.06, min(0.06, diff * 0.015))
+                except Exception:
+                    return 0.0
+
+            away_sp_adj = sp_quality(ap)
+            home_sp_adj = sp_quality(hp)
+
+            # ── F5 MONEYLINE ─────────────────────────────
+            f5_books = g.get("f5_books",[])
+            if f5_books:
+                away_mls = [b["f5_away_ml"] for b in f5_books if b.get("f5_away_ml")]
+                home_mls = [b["f5_home_ml"] for b in f5_books if b.get("f5_home_ml")]
+                if away_mls and home_mls:
+                    med_a = sorted(away_mls)[len(away_mls)//2]
+                    med_h = sorted(home_mls)[len(home_mls)//2]
+                    imp_a = american_to_implied(med_a)
+                    imp_h = american_to_implied(med_h)
+                    true_a, true_h = remove_vig(imp_a, imp_h)
+                    if true_a and true_h:
+                        # Adjust for SP quality
+                        adj_a = true_a + away_sp_adj - home_sp_adj
+                        adj_h = true_h + home_sp_adj - away_sp_adj
+                        # Renormalize
+                        tot = adj_a + adj_h
+                        adj_a /= tot; adj_h /= tot
+                        # Find best price
+                        best_away_b = max(f5_books, key=lambda b: b.get("f5_away_ml",  -999) or -999)
+                        best_home_b = max(f5_books, key=lambda b: b.get("f5_home_ml",  -999) or -999)
+                        # Edge calculation
+                        for team, true_p, mkt_p, best_price, best_book_name in [
+                            (away, adj_a, imp_a, best_away_b.get("f5_away_ml"), best_away_b["name"]),
+                            (home, adj_h, imp_h, best_price_h := best_home_b.get("f5_home_ml"), best_home_b["name"]),
+                        ]:
+                            if best_price is None: continue
+                            book_imp = american_to_implied(best_price)
+                            if not book_imp: continue
+                            edge = round((true_p - book_imp) * 100, 1)
+                            if edge >= 1.5:
+                                plays.append({
+                                    "type":       "f5_ml",
+                                    "game":       game_key,
+                                    "away":       away,
+                                    "home":       home,
+                                    "play":       f"{team} F5 ML",
+                                    "price":      f"+{best_price}" if best_price > 0 else str(best_price),
+                                    "book":       best_book_name,
+                                    "true_pct":   round(true_p * 100, 1),
+                                    "implied_pct":round(book_imp * 100, 1),
+                                    "edge":       edge,
+                                    "away_sp":    ap.get("name","TBD"),
+                                    "home_sp":    hp.get("name","TBD"),
+                                    "away_era":   ap.get("era","N/A"),
+                                    "home_era":   hp.get("era","N/A"),
+                                    "signal":     "fire" if edge >= 4 else ("value" if edge >= 2.5 else "watch"),
+                                })
+
+            # ── F5 TOTALS ────────────────────────────────
+            f5_overs  = [b for b in f5_books if b.get("f5_over_price") and b.get("f5_over_line")]
+            if f5_overs:
+                cons_line = sorted([b["f5_over_line"] for b in f5_overs])[len(f5_overs)//2]
+                filtered  = [b for b in f5_overs if b["f5_over_line"] == cons_line]
+                ov_prices = [b["f5_over_price"] for b in filtered]
+                un_prices = [b["f5_under_price"] for b in filtered if b.get("f5_under_price")]
+                if ov_prices and un_prices:
+                    med_ov = sorted(ov_prices)[len(ov_prices)//2]
+                    med_un = sorted(un_prices)[len(un_prices)//2]
+                    true_ov, true_un = remove_vig(american_to_implied(med_ov), american_to_implied(med_un))
+                    if true_ov:
+                        # SP quality affects totals — better SPs = Under lean
+                        total_sp_adj = -(away_sp_adj + home_sp_adj) * 0.5
+                        adj_ov = true_ov + total_sp_adj
+                        adj_un = true_un - total_sp_adj
+                        tot = adj_ov + adj_un; adj_ov /= tot; adj_un /= tot
+                        best_ov_b = max(filtered, key=lambda b: b.get("f5_over_price",-999))
+                        best_un_b = max(filtered, key=lambda b: b.get("f5_under_price",-999))
+                        for side, true_p, best_price, best_bk in [
+                            ("Over",  adj_ov, best_ov_b.get("f5_over_price"),  best_ov_b["name"]),
+                            ("Under", adj_un, best_un_b.get("f5_under_price"), best_un_b["name"]),
+                        ]:
+                            if best_price is None: continue
+                            book_imp = american_to_implied(best_price)
+                            if not book_imp: continue
+                            edge = round((true_p - book_imp) * 100, 1)
+                            if edge >= 1.5:
+                                plays.append({
+                                    "type":       "f5_total",
+                                    "game":       game_key,
+                                    "away":       away,
+                                    "home":       home,
+                                    "play":       f"F5 {side} {cons_line}",
+                                    "price":      f"+{best_price}" if best_price > 0 else str(best_price),
+                                    "book":       best_bk,
+                                    "true_pct":   round(true_p * 100, 1),
+                                    "implied_pct":round(book_imp * 100, 1),
+                                    "edge":       edge,
+                                    "away_sp":    ap.get("name","TBD"),
+                                    "home_sp":    hp.get("name","TBD"),
+                                    "away_era":   ap.get("era","N/A"),
+                                    "home_era":   hp.get("era","N/A"),
+                                    "signal":     "fire" if edge >= 4 else ("value" if edge >= 2.5 else "watch"),
+                                })
+
+            # ── NRFI / YRFI ──────────────────────────────
+            nrfi_books = g.get("nrfi_books",[])
+            if nrfi_books:
+                nrfi_prices = [b.get("nrfi_price") for b in nrfi_books if b.get("nrfi_price")]
+                yrfi_prices = [b.get("yrfi_price") for b in nrfi_books if b.get("yrfi_price")]
+                if nrfi_prices and yrfi_prices:
+                    med_nrfi = sorted(nrfi_prices)[len(nrfi_prices)//2]
+                    med_yrfi = sorted(yrfi_prices)[len(yrfi_prices)//2]
+                    true_nrfi, true_yrfi = remove_vig(
+                        american_to_implied(med_nrfi), american_to_implied(med_yrfi))
+                    if true_nrfi:
+                        # Both SPs being good = lean NRFI
+                        # Both SPs bad = lean YRFI
+                        nrfi_adj = (away_sp_adj + home_sp_adj) * 0.8
+                        adj_nrfi = min(0.85, max(0.15, true_nrfi + nrfi_adj))
+                        adj_yrfi = 1 - adj_nrfi
+                        best_nrfi_b = max(nrfi_books, key=lambda b: b.get("nrfi_price",-999) or -999)
+                        best_yrfi_b = max(nrfi_books, key=lambda b: b.get("yrfi_price",-999) or -999)
+                        for bet_name, true_p, best_price, best_bk in [
+                            ("NRFI", adj_nrfi, best_nrfi_b.get("nrfi_price"), best_nrfi_b["name"]),
+                            ("YRFI", adj_yrfi, best_yrfi_b.get("yrfi_price"), best_yrfi_b["name"]),
+                        ]:
+                            if best_price is None: continue
+                            book_imp = american_to_implied(best_price)
+                            if not book_imp: continue
+                            edge = round((true_p - book_imp) * 100, 1)
+                            if edge >= 1.5:
+                                plays.append({
+                                    "type":       "nrfi",
+                                    "game":       game_key,
+                                    "away":       away,
+                                    "home":       home,
+                                    "play":       bet_name,
+                                    "price":      f"+{best_price}" if best_price > 0 else str(best_price),
+                                    "book":       best_bk,
+                                    "true_pct":   round(true_p * 100, 1),
+                                    "implied_pct":round(book_imp * 100, 1),
+                                    "edge":       edge,
+                                    "away_sp":    ap.get("name","TBD"),
+                                    "home_sp":    hp.get("name","TBD"),
+                                    "away_era":   ap.get("era","N/A"),
+                                    "home_era":   hp.get("era","N/A"),
+                                    "signal":     "fire" if edge >= 4 else ("value" if edge >= 2.5 else "watch"),
+                                })
+        except Exception as e:
+            print(f"  F5/NRFI analyze error for {g.get('away_team','?')} @ {g.get('home_team','?')}: {e}")
+
+    plays.sort(key=lambda x: -x.get("edge",0))
+    return plays
     """Build structured checklist of factors for/against the best bet."""
     items = []
     ap = game.get("away_pitcher",{}); hp = game.get("home_pitcher",{})
@@ -1691,7 +1950,7 @@ def build_why_this_bet(game):
     return items
 
 
-def build_html(analyzed_games, matchups, weather, results_data, tracking_games, all_noon_data, public_betting, pending_picks, date_str, time_str):
+def build_html(analyzed_games, matchups, weather, results_data, tracking_games, all_noon_data, public_betting, pending_picks, f5_plays, date_str, time_str):
     all_disc=[]; all_plays=[]; sharp_ct=0; value_ct=0
     for g in analyzed_games:
         for d in g["discrepancies"]: all_disc.append({**d,"game":g["game"]})
@@ -2630,6 +2889,117 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                    f'</div></div>')
         return html or '<p style="color:var(--muted);text-align:center;padding:2rem">No weather data.</p>'
 
+
+    def f5_page():
+        sig_cls  = {"fire":"b-fire","sharp":"b-sharp","value":"b-value","watch":"b-watch"}
+        sig_col  = {"fire":"var(--red)","sharp":"var(--blue)","value":"var(--green)","watch":"var(--amber)"}
+        type_lbl = {"f5_ml":"F5 Moneyline","f5_total":"F5 Total","nrfi":"1st Inning"}
+
+        nrfi_plays = [p for p in f5_plays if p["type"] == "nrfi"]
+        f5_ml_plays= [p for p in f5_plays if p["type"] == "f5_ml"]
+        f5_tot_plays=[p for p in f5_plays if p["type"] == "f5_total"]
+
+        def play_card(p):
+            sig   = p.get("signal","watch")
+            edge  = p.get("edge",0)
+            ec    = "var(--green)" if edge > 0 else "var(--muted)"
+            away_era = p.get("away_era","N/A"); home_era = p.get("home_era","N/A")
+            away_sp  = p.get("away_sp","TBD");  home_sp  = p.get("home_sp","TBD")
+            sp_note  = f"{away_sp} ({away_era} ERA) vs {home_sp} ({home_era} ERA)"
+            return (
+                f'<div style="background:var(--bg2);border:1px solid var(--border);'
+                f'border-left:3px solid {sig_col.get(sig,"var(--amber)")};'
+                f'border-radius:10px;padding:14px 16px;margin-bottom:8px">'
+                f'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">'
+                f'<div>'
+                f'<div style="font-size:11px;color:var(--muted);margin-bottom:2px">{p["game"]}</div>'
+                f'<div style="font-size:16px;font-weight:700;color:#fff">{p["play"]}</div>'
+                f'</div>'
+                f'<div style="text-align:right">'
+                f'<div style="font-family:monospace;font-size:16px;font-weight:700;color:var(--accent)">{p["price"]}</div>'
+                f'<div style="font-size:11px;color:var(--muted)">{p["book"]}</div>'
+                f'</div>'
+                f'</div>'
+                f'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">'
+                f'<div style="background:var(--bg3);border-radius:6px;padding:5px 10px;text-align:center">'
+                f'<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px">True %</div>'
+                f'<div style="font-family:monospace;font-size:13px;font-weight:700;color:#fff">{p["true_pct"]}%</div>'
+                f'</div>'
+                f'<div style="background:var(--bg3);border-radius:6px;padding:5px 10px;text-align:center">'
+                f'<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px">Implied %</div>'
+                f'<div style="font-family:monospace;font-size:13px;font-weight:700;color:#fff">{p["implied_pct"]}%</div>'
+                f'</div>'
+                f'<div style="background:var(--bg3);border-radius:6px;padding:5px 10px;text-align:center">'
+                f'<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px">Edge</div>'
+                f'<div style="font-family:monospace;font-size:13px;font-weight:700;color:{ec}">'
+                f'{("+" if edge>0 else "")}{edge}%</div>'
+                f'</div>'
+                f'<span class="badge {sig_cls.get(sig,"b-watch")}" style="align-self:center">{sig.upper()}</span>'
+                f'</div>'
+                f'<div style="font-size:11px;color:var(--muted);font-family:monospace">'
+                f'SP: {sp_note}</div>'
+                f'</div>'
+            )
+
+        def section(plays, title, icon, description):
+            if not plays:
+                return (f'<div class="sec-header"><h2>{icon} {title}</h2><div class="sec-line"></div></div>'
+                        f'<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;'
+                        f'padding:1.5rem;text-align:center;color:var(--muted);margin-bottom:1.5rem">'
+                        f'No qualifying {title} plays today (1.5%+ edge required)</div>')
+            html = (f'<div class="sec-header"><h2>{icon} {title}</h2><div class="sec-line"></div></div>'
+                    f'<div style="font-size:12px;color:var(--muted);margin-bottom:1rem;line-height:1.6">'
+                    f'{description}</div>')
+            for p in plays:
+                html += play_card(p)
+            return html
+
+        if not f5_plays:
+            return (f'<div style="text-align:center;padding:4rem 2rem">'
+                    f'<div style="font-size:48px;margin-bottom:1rem">⏱️</div>'
+                    f'<div style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px">'
+                    f'No F5 / NRFI data yet</div>'
+                    f'<div style="font-size:13px;color:var(--muted);max-width:400px;margin:0 auto;line-height:1.7">'
+                    f'F5 and NRFI/YRFI markets typically open 2-3 hours before first pitch. '
+                    f'Check back closer to game time. The 4pm workflow will catch them.</div>'
+                    f'</div>')
+
+        html = (f'<div style="margin-bottom:1.5rem">'
+                f'<div style="font-family:\'IBM Plex Mono\',monospace;font-size:22px;font-weight:700;'
+                f'color:#fff;margin-bottom:4px">⏱️ F5 & 1st Inning Bets</div>'
+                f'<div style="font-size:13px;color:var(--muted);line-height:1.6">'
+                f'First 5 innings and NRFI/YRFI plays. F5 model weights starting pitcher quality '
+                f'2x higher than the full-game model since starters control all 5 innings. '
+                f'Bullpen fatigue is excluded. Only plays with +1.5% edge shown.</div>'
+                f'</div>')
+
+        # Summary bar
+        total_plays = len(f5_plays)
+        fire_ct = sum(1 for p in f5_plays if p["signal"]=="fire")
+        best_edge = max((p["edge"] for p in f5_plays), default=0)
+        html += (f'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:2rem">'
+                 f'<div class="metric-card" style="text-align:center">'
+                 f'<div class="metric-label">Total Plays</div>'
+                 f'<div class="metric-val">{total_plays}</div></div>'
+                 f'<div class="metric-card" style="text-align:center">'
+                 f'<div class="metric-label">Fire Signals</div>'
+                 f'<div class="metric-val" style="color:var(--red)">{fire_ct}</div></div>'
+                 f'<div class="metric-card" style="text-align:center">'
+                 f'<div class="metric-label">Best Edge</div>'
+                 f'<div class="metric-val" style="color:var(--green)">+{best_edge}%</div></div>'
+                 f'</div>')
+
+        html += section(nrfi_plays,   "NRFI / YRFI",     "🎯",
+                        "First inning only. No Run First Inning (NRFI) benefits from elite starting pitchers "
+                        "— both starters being above average ERA creates a strong NRFI lean. "
+                        "YRFI benefits from weak starters or hitter-friendly parks.")
+        html += section(f5_ml_plays,  "F5 Moneyline",    "📋",
+                        "First 5 innings winner. SP quality weighted heavily — the starter who "
+                        "pitches deeper into the game with lower ERA has a compounding advantage.")
+        html += section(f5_tot_plays, "F5 Totals",       "📊",
+                        "First 5 innings over/under. Two dominant starters = Under lean. "
+                        "Weak starters or Coors/hitter parks = Over lean.")
+        return html
 
     def betting_trends_page(results_data):
         days     = results_data.get("days",[])
@@ -3597,6 +3967,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
   <div class="nav-item" onclick="showPage('matchups',this)"><span class="nav-icon">&#9889;</span><span class="nav-label">Pitcher / Batter</span><span class="nav-count">{lm}</span></div>
   <div class="nav-item" onclick="showPage('weather',this)"><span class="nav-icon">&#127780;</span><span class="nav-label">Weather</span><span class="nav-count">{lw}</span></div>
   <div class="nav-item" onclick="showPage('parlay',this)"><span class="nav-icon">&#127922;</span><span class="nav-label">Parlay Analyzer</span></div>
+  <div class="nav-item" onclick="showPage('f5',this)"><span class="nav-icon">&#9201;</span><span class="nav-label">F5 & 1st Inning</span><span class="nav-count">{len(f5_plays)}</span></div>
   <div class="nav-item" onclick="showPage('trends',this)"><span class="nav-icon">&#128200;</span><span class="nav-label">Betting Trends</span></div>
   <div class="nav-item" onclick="showPage('accuracy',this)"><span class="nav-icon">&#127919;</span><span class="nav-label">Model Accuracy</span></div>
   <div class="sidebar-section" style="margin-top:8px">Today</div>
@@ -3698,6 +4069,10 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
     {weather_page()}
   </div></div>
 
+  <div class="page" id="page-f5"><div class="page-inner">
+    {f5_page()}
+  </div></div>
+
   <div class="page" id="page-trends"><div class="page-inner">
     {betting_trends_page(results_data)}
   </div></div>
@@ -3762,7 +4137,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
     document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
     document.getElementById('page-'+name).classList.add('active');
     if(el)el.classList.add('active');
-    const t={{home:'Home',plays:'Top Value Plays',games:'All Games',matchups:'Pitcher / Batter',weather:'Weather & Wind',parlay:'Parlay Analyzer',trends:'Betting Trends',accuracy:'Model Accuracy'}};
+    const t={{home:'Home',plays:'Top Value Plays',games:'All Games',matchups:'Pitcher / Batter',weather:'Weather & Wind',parlay:'Parlay Analyzer',f5:'F5 & 1st Inning',trends:'Betting Trends',accuracy:'Model Accuracy'}};
     document.getElementById('topbar-title').textContent=t[name]||name;
     window.scrollTo(0,0);closeSidebar();
   }}
@@ -4037,7 +4412,18 @@ def main():
 
     print(f"Pending picks for display: {len(pending_picks_for_display)}")
 
-    html = build_html(analyzed, matchups, weather, results_data, tracking_games, all_noon_data, public_betting, pending_picks_for_display, date_str, time_str)
+    # Fetch F5 and NRFI/YRFI odds
+    print("Fetching F5 / NRFI odds...")
+    try:
+        f5_raw = fetch_f5_nrfi_odds()
+        matchups_by_game = {m["game"]: m for m in matchups}
+        f5_plays = analyze_f5_nrfi(f5_raw, matchups_by_game)
+        print(f"  F5/NRFI plays found: {len(f5_plays)}")
+    except Exception as e:
+        print(f"  F5/NRFI error: {e}")
+        f5_plays = []
+
+    html = build_html(analyzed, matchups, weather, results_data, tracking_games, all_noon_data, public_betting, pending_picks_for_display, f5_plays, date_str, time_str)
     with open("index.html","w",encoding="utf-8") as f:
         f.write(html)
 
