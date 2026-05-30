@@ -2385,7 +2385,151 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                          f'</div>')
         return rows
 
-    def best_bet_of_day():
+    def dog_of_day():
+        """
+        Find the best underdog pick of the day — and tomorrow's if available.
+        Underdog = positive moneyline. Pick the one with highest model edge.
+        """
+        date_lookup = {g["game"]: g.get("date_et","Today") for g in analyzed_games}
+        _today = datetime.now(EASTERN).strftime("%A, %B %d")
+
+        # Collect all underdog ML candidates from analyzed games
+        today_dogs = []
+        tmrw_dogs  = []
+
+        for g in analyzed_games:
+            if g.get("bet_is_pass"): continue
+            game_date = date_lookup.get(g["game"],"")
+            is_today  = game_date in (_today, "Today")
+
+            # Check away and home ML candidates for underdogs
+            for side, team, true_pct, best_book_data in [
+                ("away", g["away"], g.get("away_true",0), g.get("best_away")),
+                ("home", g["home"], g.get("home_true",0), g.get("best_home")),
+            ]:
+                if not best_book_data: continue
+                price_key = "away_price" if side=="away" else "home_price"
+                price = best_book_data.get(price_key)
+                if price is None or price <= 0: continue  # must be positive (underdog)
+                if price < 105: continue  # skip near-even lines — true underdogs only
+
+                # Calculate edge
+                book_imp = american_to_implied(price)
+                if not book_imp: continue
+                model_true = (true_pct or 0) / 100
+                edge = round((model_true - book_imp) * 100, 1)
+                if edge < 0: continue  # model must agree it's worth it
+
+                entry = {
+                    "game":      g["game"],
+                    "team":      team,
+                    "price":     f"+{price}",
+                    "book":      best_book_data.get("name","?"),
+                    "true_pct":  true_pct,
+                    "implied_pct": round(book_imp * 100, 1),
+                    "edge":      edge,
+                    "signal":    g["signal"],
+                    "away_sp":   g.get("away_pitcher",{}).get("name","TBD"),
+                    "home_sp":   g.get("home_pitcher",{}).get("name","TBD"),
+                    "away_era":  g.get("away_pitcher",{}).get("era","N/A"),
+                    "home_era":  g.get("home_pitcher",{}).get("era","N/A"),
+                    "reasoning": g.get("value_play",{}).get("reasoning","") if g.get("value_play") else "",
+                }
+                if is_today:
+                    today_dogs.append(entry)
+                else:
+                    tmrw_dogs.append(entry)
+
+        # Sort by edge descending — highest edge underdog wins
+        today_dogs.sort(key=lambda x: -x["edge"])
+        tmrw_dogs.sort(key=lambda x: -x["edge"])
+
+        def render_dog(dog):
+            sig     = dog["signal"]
+            sig_col = {"fire":"var(--red)","sharp":"var(--blue)","value":"var(--green)","watch":"var(--amber)"}.get(sig,"var(--amber)")
+            sig_cls = {"fire":"b-fire","sharp":"b-sharp","value":"b-value","watch":"b-watch"}.get(sig,"b-watch")
+            edge    = dog["edge"]
+            away_sp = dog["away_sp"]; home_sp = dog["home_sp"]
+            away_era= dog["away_era"]; home_era= dog["home_era"]
+            reasoning = dog.get("reasoning","")
+            return (
+                f'<div style="background:linear-gradient(135deg,rgba(251,191,36,0.06),rgba(251,191,36,0.01));'
+                f'border:2px solid rgba(251,191,36,0.3);border-radius:12px;padding:18px 20px;margin-bottom:1rem">'
+                # Header
+                f'<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">'
+                f'<span style="font-size:24px">🐶</span>'
+                f'<div style="flex:1">'
+                f'<div style="font-size:11px;color:var(--muted);margin-bottom:2px">{dog["game"]}</div>'
+                f'<div style="font-size:20px;font-weight:700;color:#fff">{dog["team"]}</div>'
+                f'</div>'
+                f'<div style="text-align:right">'
+                f'<div style="font-family:monospace;font-size:22px;font-weight:700;color:var(--amber)">{dog["price"]}</div>'
+                f'<div style="font-size:11px;color:var(--muted)">{dog["book"]}</div>'
+                f'</div>'
+                f'</div>'
+                # Stats row
+                f'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">'
+                f'<div style="background:rgba(0,0,0,0.25);border-radius:6px;padding:6px 12px;text-align:center">'
+                f'<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px">Model True %</div>'
+                f'<div style="font-family:monospace;font-size:14px;font-weight:700;color:#fff">{dog["true_pct"]}%</div>'
+                f'</div>'
+                f'<div style="background:rgba(0,0,0,0.25);border-radius:6px;padding:6px 12px;text-align:center">'
+                f'<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px">Book Implied %</div>'
+                f'<div style="font-family:monospace;font-size:14px;font-weight:700;color:#fff">{dog["implied_pct"]}%</div>'
+                f'</div>'
+                f'<div style="background:rgba(0,0,0,0.25);border-radius:6px;padding:6px 12px;text-align:center">'
+                f'<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px">Edge</div>'
+                f'<div style="font-family:monospace;font-size:14px;font-weight:700;color:var(--green)">+{edge}%</div>'
+                f'</div>'
+                f'<span class="badge {sig_cls}" style="align-self:center">{sig.upper()}</span>'
+                f'</div>'
+                # SP matchup
+                f'<div style="font-size:11px;color:var(--muted);font-family:monospace;margin-bottom:{"10px" if reasoning else "0"}">'
+                f'SP: {away_sp} ({away_era} ERA) vs {home_sp} ({home_era} ERA)</div>'
+                # Reasoning
+                + (f'<div style="font-size:12.5px;color:#aaa;line-height:1.75;border-top:1px solid rgba(251,191,36,0.2);'
+                   f'padding-top:10px;margin-top:8px;font-style:italic">{reasoning}</div>' if reasoning else "")
+                + f'</div>'
+            )
+
+        html = ""
+
+        if today_dogs:
+            html += (
+                f'<div class="sec-header"><h2>🐶 Dog of the Day</h2><div class="sec-line"></div></div>'
+                f'<div style="font-size:12px;color:var(--muted);margin-bottom:1rem;line-height:1.6">'
+                f'Best underdog value play today — positive ML where the model gives them a higher true '
+                f'win probability than the book implies. Sorted by edge.</div>'
+            )
+            html += render_dog(today_dogs[0])
+            # Show runners-up if there are more
+            if len(today_dogs) > 1:
+                html += (f'<div style="font-size:11px;color:var(--muted);font-family:monospace;'
+                         f'margin-bottom:1rem">Also watching: ')
+                runners = []
+                for d in today_dogs[1:3]:
+                    runners.append(f'{d["team"]} {d["price"]} (+{d["edge"]}% edge @ {d["book"]})')
+                html += " · ".join(runners) + "</div>"
+        else:
+            html += (
+                f'<div class="sec-header"><h2>🐶 Dog of the Day</h2><div class="sec-line"></div></div>'
+                f'<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;'
+                f'padding:1.5rem;text-align:center;color:var(--muted);margin-bottom:1rem">'
+                f'No qualifying underdogs today — all underdogs where the model agrees are filtered out '
+                f'or the model doesn\'t see value at current prices.</div>'
+            )
+
+        # Tomorrow's dog if available
+        if tmrw_dogs:
+            tmrw_date = date_lookup.get(tmrw_dogs[0]["game"], "Tomorrow")
+            html += (
+                f'<div class="sec-header" style="margin-top:1.5rem">'
+                f'<h2>🐶 Tomorrow\'s Dog</h2><div class="sec-line"></div></div>'
+                f'<div style="font-size:12px;color:var(--muted);margin-bottom:1rem">{tmrw_date}</div>'
+            )
+            html += render_dog(tmrw_dogs[0])
+
+        return html
         if not all_plays:
             return ""
 
@@ -4378,6 +4522,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
     {plays_table()}
     <div class="sec-header"><h2>Line Discrepancies</h2><div class="sec-line"></div></div>
     {disc_table()}
+    {dog_of_day()}
   </div></div>
 
   <div class="page" id="page-games"><div class="page-inner">{game_blocks()}{tracking_cards()}</div></div>
