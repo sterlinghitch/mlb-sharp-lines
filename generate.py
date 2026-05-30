@@ -2088,20 +2088,43 @@ def analyze_f5_nrfi(f5_games, matchups_by_game):
 
 
 def build_html(analyzed_games, matchups, weather, results_data, tracking_games, all_noon_data, public_betting, pending_picks, f5_plays, date_str, time_str):
-    all_disc=[]; all_plays=[]; sharp_ct=0; value_ct=0
+    all_disc=[]; sharp_ct=0; value_ct=0
+
+    # Dedup analyzed_games by game key — keep today's game if duplicate exists
+    _today_et_str = datetime.now(EASTERN).strftime("%A, %B %d")
+    seen_games = {}
+    for g in analyzed_games:
+        key = g["game"]
+        if key not in seen_games:
+            seen_games[key] = g
+        else:
+            # Prefer today's version over tomorrow's
+            existing_date = seen_games[key].get("date_et","")
+            new_date = g.get("date_et","")
+            if new_date in (_today_et_str, "Today") and existing_date not in (_today_et_str, "Today"):
+                seen_games[key] = g
+    analyzed_games = list(seen_games.values())
+
+    all_plays = []
     for g in analyzed_games:
         for d in g["discrepancies"]: all_disc.append({**d,"game":g["game"]})
         if g["value_play"]: all_plays.append(g["value_play"])
         if g["signal"]=="fire": sharp_ct+=1
-    # Use actual ET date for today/tomorrow separation — don't rely on first game
-    _today_et_str = datetime.now(EASTERN).strftime("%A, %B %d")
-    today_date_val = _today_et_str
+
+    # Dedup all_plays by game key too — keep highest edge
+    plays_by_game = {}
+    for p in all_plays:
+        key = p.get("game","")
+        if key not in plays_by_game or (p.get("edge") or 0) > (plays_by_game[key].get("edge") or 0):
+            plays_by_game[key] = p
+    all_plays = list(plays_by_game.values())
+
     date_lookup_sort = {g["game"]: g.get("date_et","Today") for g in analyzed_games}
     all_plays.sort(key=lambda x: (
         0 if date_lookup_sort.get(x.get("game",""),"") in (_today_et_str,"Today") else 1,
         -(x.get("edge") or 0)
     ))
-    value_ct = len(all_plays)
+    value_ct = len([p for p in all_plays if date_lookup_sort.get(p.get("game",""),"") in (_today_et_str,"Today")])
     all_disc.sort(key=lambda x:-(x.get("gap",0)))
     sig_cls={"fire":"b-fire","sharp":"b-sharp","value":"b-value","watch":"b-watch","pass":"b-pass"}
     alert_cls={"fire":"fire","sharp":"sharp","value":"value","watch":"watch"}
