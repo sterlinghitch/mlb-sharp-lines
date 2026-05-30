@@ -3,6 +3,38 @@
   "date_display": "May 30, 2026",
   "bets": [
     {
+      "game": "Minnesota Twins @ Pittsburgh Pirates",
+      "away": "Minnesota Twins",
+      "home": "Pittsburgh Pirates",
+      "away_id": 142,
+      "home_id": 134,
+      "play": "Pittsburgh Pirates Moneyline",
+      "price": "-133",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "pick_team": "Pittsburgh Pirates",
+      "side": null,
+      "total_line": null,
+      "edge": "+1.0%",
+      "signal": "watch"
+    },
+    {
+      "game": "Miami Marlins @ New York Mets",
+      "away": "Miami Marlins",
+      "home": "New York Mets",
+      "away_id": 146,
+      "home_id": 121,
+      "play": "Under 7.0 Runs",
+      "price": "+100",
+      "book": "BetUS",
+      "type": "total",
+      "pick_team": null,
+      "side": "Under",
+      "total_line": 7.0,
+      "edge": "+6.0%",
+      "signal": "watch"
+    },
+    {
       "game": "Milwaukee Brewers @ Houston Astros",
       "away": "Milwaukee Brewers",
       "home": "Houston Astros",
