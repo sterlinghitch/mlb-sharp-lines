@@ -28,11 +28,11 @@
       "signal_label": ""
     },
     "Detroit Tigers @ Chicago White Sox": {
-      "play": "Over 8.0 Runs",
-      "price": "+105",
-      "book": "BetOnline.ag",
+      "play": "Under 8.0 Runs",
+      "price": "-109",
+      "book": "MyBookie.ag",
       "is_pass": false,
-      "edge": "+0.9%",
+      "edge": "+2.7%",
       "away_true": 44,
       "home_true": 56,
       "away_fair": "+127",
