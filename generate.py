@@ -291,6 +291,168 @@ def fetch_pitcher_stats(pitcher_id):
 
 def fetch_f5_nrfi_odds():
     """
+    Fetch F5 and NRFI/YRFI lines from Action Network.
+    Uses period=firsthalf for F5 lines and period=1 for 1st inning (NRFI/YRFI).
+    """
+    results = {}
+    now_et   = datetime.now(EASTERN)
+    date_str = now_et.strftime("%Y%m%d")
+    headers  = {"User-Agent":"Mozilla/5.0","Accept":"application/json"}
+    book_map = {15:"DraftKings",16:"FanDuel",3:"BetMGM",283:"Caesars",
+                69:"PointsBet",19:"BetOnline.ag",4:"Pinnacle",347:"ESPNBet",68:"MyBookie"}
+
+    for period, label in [("firsthalf","F5"),("1","1stinning")]:
+        try:
+            r = requests.get(
+                "https://api.actionnetwork.com/web/v1/scoreboard/mlb",
+                params={"period":period,"date":date_str},
+                headers=headers, timeout=15,
+            )
+            if r.status_code != 200:
+                print(f"  Action Network {label}: HTTP {r.status_code}")
+                continue
+            games = r.json().get("games",[])
+            if not games:
+                continue
+            print(f"  Action Network {label}: {len(games)} games")
+
+            for game in games:
+                teams = game.get("teams",[])
+                if len(teams) < 2: continue
+                away_t    = next((t for t in teams if not t.get("is_home",True)), teams[0])
+                home_t    = next((t for t in teams if t.get("is_home",False)), teams[1])
+                away_name = away_t.get("full_name","")
+                home_name = home_t.get("full_name","")
+                game_key  = f"{away_name} @ {home_name}"
+
+                # Skip started games
+                start_time = game.get("start_time","")
+                if start_time:
+                    try:
+                        st = datetime.fromisoformat(start_time.replace("Z","+00:00"))
+                        if st.astimezone(EASTERN) <= now_et:
+                            continue
+                    except Exception:
+                        pass
+
+                if game_key not in results:
+                    results[game_key] = {
+                        "game_key":  game_key,
+                        "away_team": away_name,
+                        "home_team": home_name,
+                        "f5_books":  [],
+                        "nrfi_books":[],
+                    }
+
+                for odds in game.get("odds",[]):
+                    bid = odds.get("book_id")
+                    book = book_map.get(bid, str(bid))
+                    entry = {"name": book}
+
+                    if label == "F5":
+                        if odds.get("ml_away") is not None:
+                            entry["f5_away_ml"] = int(odds["ml_away"])
+                        if odds.get("ml_home") is not None:
+                            entry["f5_home_ml"] = int(odds["ml_home"])
+                        if odds.get("spread_away") is not None:
+                            entry["f5_away_rl"]     = int(odds["spread_away"])
+                            entry["f5_away_spread"] = float(odds.get("spread_away_line") or -1.5)
+                        if odds.get("spread_home") is not None:
+                            entry["f5_home_rl"]     = int(odds["spread_home"])
+                            entry["f5_home_spread"] = float(odds.get("spread_home_line") or 1.5)
+                        if odds.get("over") is not None:
+                            entry["f5_over_price"] = int(odds["over"])
+                            entry["f5_over_line"]  = float(odds.get("total") or 0)
+                        if odds.get("under") is not None:
+                            entry["f5_under_price"] = int(odds["under"])
+                            entry["f5_under_line"]  = float(odds.get("total") or 0)
+                        if any(k.startswith("f5_") for k in entry):
+                            results[game_key]["f5_books"].append(entry)
+
+                    elif label == "1stinning":
+                        total = float(odds.get("total") or 0)
+                        if abs(total - 0.5) < 0.1:
+                            if odds.get("under") is not None:
+                                entry["nrfi_price"] = int(odds["under"])
+                            if odds.get("over") is not None:
+                                entry["yrfi_price"] = int(odds["over"])
+                        if entry.get("nrfi_price") or entry.get("yrfi_price"):
+                            results[game_key]["nrfi_books"].append(entry)
+
+        except Exception as e:
+            print(f"  Action Network {label} error: {e}")
+
+    games_out = list(results.values())
+    f5_ct   = sum(1 for g in games_out if g["f5_books"])
+    nrfi_ct = sum(1 for g in games_out if g["nrfi_books"])
+    if f5_ct or nrfi_ct:
+        print(f"  F5 data: {f5_ct} games | NRFI data: {nrfi_ct} games")
+    else:
+        print("  Action Network: no F5/NRFI lines yet (post ~2-3hrs before first pitch)")
+    return games_out
+
+
+def fetch_pitcher_stats(pitcher_id):
+    if not pitcher_id:
+        return {"name":"TBD","era":"N/A","whip":"N/A","k9":"N/A","id":None,"quality":0.0,
+                "pitch_hand":"R","last3_era":None,"days_rest":None,"last_pitch_count":None,"fatigue_adj":0.0}
+    data = mlb_get(f"/people/{pitcher_id}", {
+        "hydrate": "stats(group=pitching,type=season,season=2026),stats(group=pitching,type=lastXGames,limit=3)"
+    })
+    if not data:
+        return {"name":"TBD","era":"N/A","whip":"N/A","k9":"N/A","id":pitcher_id,"quality":0.0,
+                "pitch_hand":"R","last3_era":None,"days_rest":None,"last_pitch_count":None,"fatigue_adj":0.0}
+    person      = data.get("people",[{}])[0]
+    name        = person.get("fullName","TBD")
+    pitch_hand  = person.get("pitchHand",{}).get("code","R")
+    era = whip = k9 = "N/A"
+    season_quality = 0.0
+    last3_era      = None
+
+    for sg in person.get("stats",[]):
+        stype  = sg.get("type",{}).get("displayName","")
+        splits = sg.get("splits",[])
+        if not splits: continue
+        s = splits[0].get("stat",{})
+        if "season" in stype.lower() or stype == "":
+            era  = str(s.get("era","N/A"))
+            whip = str(s.get("whip","N/A"))
+            ip   = float(s.get("inningsPitched",0) or 0)
+            k    = float(s.get("strikeOuts",0) or 0)
+            k9   = f"{round(k/ip*9,1)}" if ip>0 else "N/A"
+            try: season_quality = max(-0.08, min(0.08, (4.20-float(era))*0.04))
+            except Exception: pass
+        elif "last" in stype.lower() or "lastX" in stype:
+            raw = s.get("era")
+            if raw is not None:
+                try: last3_era = float(raw)
+                except Exception: pass
+
+    quality = season_quality
+    if last3_era is not None:
+        try:
+            last3_quality = max(-0.08, min(0.08, (4.20-last3_era)*0.04))
+            quality = 0.6*last3_quality + 0.4*season_quality
+        except Exception:
+            pass
+
+    return {
+        "name":       name,
+        "era":        era,
+        "whip":       whip,
+        "k9":         k9,
+        "id":         pitcher_id,
+        "quality":    round(quality,3),
+        "pitch_hand": pitch_hand,
+        "last3_era":  f"{last3_era:.2f}" if last3_era is not None else None,
+        "days_rest":  None,
+        "last_pitch_count": None,
+        "fatigue_adj": 0.0,
+    }
+
+
+def fetch_f5_nrfi_odds():
+    """
     Fetch First 5 innings (h2h_h1, spreads_h1, totals_h1) and
     NRFI/YRFI (totals_q1) markets from the Odds API.
     Returns list of game dicts with F5/NRFI bookmaker data.
