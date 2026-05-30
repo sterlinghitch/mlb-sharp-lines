@@ -98,6 +98,83 @@
       "type": "ml",
       "edge": "+1.3%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-05-30",
+      "date_display": "May 30, 2026",
+      "game": "Milwaukee Brewers @ Houston Astros",
+      "play": "Milwaukee Brewers Moneyline",
+      "price": "-108",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+1.5%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-05-30",
+      "date_display": "May 30, 2026",
+      "game": "Boston Red Sox @ Cleveland Guardians",
+      "play": "Under 6.5 Runs",
+      "price": "+100",
+      "book": "FanDuel",
+      "type": "total",
+      "edge": "+2.2%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-05-30",
+      "date_display": "May 30, 2026",
+      "game": "Los Angeles Angels @ Tampa Bay Rays",
+      "play": "Tampa Bay Rays Moneyline",
+      "price": "-156",
+      "book": "FanDuel",
+      "type": "ml",
+      "edge": "+1.8%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-05-30",
+      "date_display": "May 30, 2026",
+      "game": "Atlanta Braves @ Cincinnati Reds",
+      "play": "Cincinnati Reds Moneyline",
+      "price": "+124",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+0.4%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-05-30",
+      "date_display": "May 30, 2026",
+      "game": "Chicago Cubs @ St. Louis Cardinals",
+      "play": "St. Louis Cardinals Moneyline",
+      "price": "+125",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+2.2%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-05-30",
+      "date_display": "May 30, 2026",
+      "game": "New York Yankees @ Athletics",
+      "play": "Under 9.5 Runs",
+      "price": "-105",
+      "book": "FanDuel",
+      "type": "total",
+      "edge": "+0.2%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-05-30",
+      "date_display": "May 30, 2026",
+      "game": "Arizona Diamondbacks @ Seattle Mariners",
+      "play": "Seattle Mariners Moneyline",
+      "price": "-149",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+1.1%",
+      "signal": "watch"
     }
   ]
 }
