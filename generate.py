@@ -299,9 +299,9 @@ def fetch_f5_nrfi_odds():
     # F5 markets
     # Try different market key formats — Odds API support varies by plan
     market_attempts = [
-        ("h2h_h1,spreads_h1,totals_h1", "F5"),
-        ("totals_q1", "NRFI"),
-        ("h2h_1st_half,totals_1st_half", "F5_alt"),
+        ("h2h_h1", "F5_h2h"),
+        ("totals_h1", "F5_totals"),
+        ("spreads_h1", "F5_spreads"),
     ]
     for market_set, label in market_attempts:
         try:
@@ -2093,11 +2093,12 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
         for d in g["discrepancies"]: all_disc.append({**d,"game":g["game"]})
         if g["value_play"]: all_plays.append(g["value_play"])
         if g["signal"]=="fire": sharp_ct+=1
-    # Sort: today's plays by edge first, then tomorrow's by edge
-    today_date_val = analyzed_games[0].get("date_et","Today") if analyzed_games else "Today"
+    # Use actual ET date for today/tomorrow separation — don't rely on first game
+    _today_et_str = datetime.now(EASTERN).strftime("%A, %B %d")
+    today_date_val = _today_et_str
     date_lookup_sort = {g["game"]: g.get("date_et","Today") for g in analyzed_games}
     all_plays.sort(key=lambda x: (
-        0 if date_lookup_sort.get(x.get("game",""),"") == today_date_val else 1,
+        0 if date_lookup_sort.get(x.get("game",""),"") in (_today_et_str,"Today") else 1,
         -(x.get("edge") or 0)
     ))
     value_ct = len(all_plays)
@@ -2111,9 +2112,9 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
         if not all_plays: return '<p style="color:var(--muted);font-size:13px;padding:1rem 0">No sharp alerts today.</p>'
         date_lookup = {g["game"]: g.get("date_et","Today") for g in analyzed_games}
         time_lookup = {g["game"]: g.get("time","") for g in analyzed_games}
-        today_d = analyzed_games[0].get("date_et","Today") if analyzed_games else "Today"
-        today_plays    = [p for p in all_plays if date_lookup.get(p.get("game",""),today_d) == today_d]
-        tomorrow_plays = [p for p in all_plays if date_lookup.get(p.get("game",""),today_d) != today_d]
+        today_d = datetime.now(EASTERN).strftime("%A, %B %d")
+        today_plays    = [p for p in all_plays if date_lookup.get(p.get("game",""),"") in (today_d,"Today")]
+        tomorrow_plays = [p for p in all_plays if date_lookup.get(p.get("game",""),"") not in (today_d,"Today")]
         html = ""
 
         def render_card(p):
@@ -2206,13 +2207,13 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
         # Build game date/time lookup from analyzed_games
         date_lookup = {g["game"]: g.get("date_et","Today") for g in analyzed_games}
         time_lookup = {g["game"]: g.get("time","") for g in analyzed_games}
-        today_date  = analyzed_games[0].get("date_et","Today") if analyzed_games else "Today"
+        today_date  = datetime.now(EASTERN).strftime("%A, %B %d")
 
         # Only consider today's games with positive edge
         positive = [
             p for p in all_plays
             if (p.get("edge") or 0) > 0
-            and date_lookup.get(p.get("game",""), today_date) == today_date
+            and date_lookup.get(p.get("game",""), "") in (today_date,"Today")
         ]
         # If no today plays, fall back to any positive-edge play but note it
         if not positive:
@@ -3095,10 +3096,16 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
             return (f'<div style="text-align:center;padding:4rem 2rem">'
                     f'<div style="font-size:48px;margin-bottom:1rem">⏱️</div>'
                     f'<div style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px">'
-                    f'No F5 / NRFI data yet</div>'
-                    f'<div style="font-size:13px;color:var(--muted);max-width:400px;margin:0 auto;line-height:1.7">'
-                    f'F5 and NRFI/YRFI markets typically open 2-3 hours before first pitch. '
-                    f'Check back closer to game time. The 4pm workflow will catch them.</div>'
+                    f'No F5 / NRFI plays found</div>'
+                    f'<div style="font-size:13px;color:var(--muted);max-width:480px;margin:0 auto;line-height:1.8">'
+                    f'This could mean:<br>'
+                    f'<strong style="color:var(--text)">1.</strong> Your Odds API plan doesn\'t include half-game markets '
+                    f'(h2h_h1, totals_h1). These require a paid tier upgrade.<br>'
+                    f'<strong style="color:var(--text)">2.</strong> F5 lines haven\'t been posted yet '
+                    f'(typically 2-3 hours before first pitch).<br>'
+                    f'<strong style="color:var(--text)">3.</strong> No plays cleared the +1.5% edge threshold today.<br><br>'
+                    f'<span style="color:var(--accent)">The main game model is completely unaffected.</span>'
+                    f'</div>'
                     f'</div>')
 
         html = (f'<div style="margin-bottom:1.5rem">'
