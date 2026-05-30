@@ -230,6 +230,65 @@ def fetch_odds():
 # =============================================================
 # MLB DATA FETCHERS
 # =============================================================
+def fetch_pitcher_stats(pitcher_id):
+    if not pitcher_id:
+        return {"name":"TBD","era":"N/A","whip":"N/A","k9":"N/A","id":None,"quality":0.0,
+                "pitch_hand":"R","last3_era":None,"days_rest":None,"last_pitch_count":None,"fatigue_adj":0.0}
+    data = mlb_get(f"/people/{pitcher_id}", {
+        "hydrate": "stats(group=pitching,type=season,season=2026),stats(group=pitching,type=lastXGames,limit=3)"
+    })
+    if not data:
+        return {"name":"TBD","era":"N/A","whip":"N/A","k9":"N/A","id":pitcher_id,"quality":0.0,
+                "pitch_hand":"R","last3_era":None,"days_rest":None,"last_pitch_count":None,"fatigue_adj":0.0}
+    person      = data.get("people",[{}])[0]
+    name        = person.get("fullName","TBD")
+    pitch_hand  = person.get("pitchHand",{}).get("code","R")
+    era = whip = k9 = "N/A"
+    season_quality = 0.0
+    last3_era      = None
+
+    for sg in person.get("stats",[]):
+        stype  = sg.get("type",{}).get("displayName","")
+        splits = sg.get("splits",[])
+        if not splits: continue
+        s = splits[0].get("stat",{})
+        if "season" in stype.lower() or stype == "":
+            era  = str(s.get("era","N/A"))
+            whip = str(s.get("whip","N/A"))
+            ip   = float(s.get("inningsPitched",0) or 0)
+            k    = float(s.get("strikeOuts",0) or 0)
+            k9   = f"{round(k/ip*9,1)}" if ip>0 else "N/A"
+            try: season_quality = max(-0.08, min(0.08, (4.20-float(era))*0.04))
+            except Exception: pass
+        elif "last" in stype.lower() or "lastX" in stype:
+            raw = s.get("era")
+            if raw is not None:
+                try: last3_era = float(raw)
+                except Exception: pass
+
+    quality = season_quality
+    if last3_era is not None:
+        try:
+            last3_quality = max(-0.08, min(0.08, (4.20-last3_era)*0.04))
+            quality = 0.6*last3_quality + 0.4*season_quality
+        except Exception:
+            pass
+
+    return {
+        "name":       name,
+        "era":        era,
+        "whip":       whip,
+        "k9":         k9,
+        "id":         pitcher_id,
+        "quality":    round(quality,3),
+        "pitch_hand": pitch_hand,
+        "last3_era":  f"{last3_era:.2f}" if last3_era is not None else None,
+        "days_rest":  None,
+        "last_pitch_count": None,
+        "fatigue_adj": 0.0,
+    }
+
+
 def fetch_f5_nrfi_odds():
     """
     Fetch First 5 innings (h2h_h1, spreads_h1, totals_h1) and
@@ -238,10 +297,13 @@ def fetch_f5_nrfi_odds():
     """
     results = {}
     # F5 markets
-    for market_set, label in [
+    # Try different market key formats — Odds API support varies by plan
+    market_attempts = [
         ("h2h_h1,spreads_h1,totals_h1", "F5"),
         ("totals_q1", "NRFI"),
-    ]:
+        ("h2h_1st_half,totals_1st_half", "F5_alt"),
+    ]
+    for market_set, label in market_attempts:
         try:
             r = requests.get(
                 "https://api.the-odds-api.com/v4/sports/baseball_mlb/odds/",
@@ -1654,6 +1716,81 @@ def fetch_game_context(game, matchup_data, weather_data, mlb_schedule_games, ope
 # =============================================================
 # HTML BUILDER
 # =============================================================
+def build_why_this_bet(game):
+    """Build structured checklist of factors for/against the best bet."""
+    items = []
+    ap = game.get("away_pitcher",{}); hp = game.get("home_pitcher",{})
+    away = game.get("away",""); home = game.get("home","")
+    bet_play = game.get("bet_play","")
+    is_total = "Runs" in bet_play
+    is_over  = "Over" in bet_play
+
+    # SP quality + fatigue
+    for pitcher, side in [(ap,"away"),(hp,"home")]:
+        if pitcher.get("era","N/A") != "N/A":
+            try:
+                era=float(pitcher["era"]); name=pitcher.get("name","SP")
+                dr=pitcher.get("days_rest"); pc=pitcher.get("last_pitch_count")
+                own_team = away if side=="away" else home
+                helps_bet = own_team in bet_play or (is_total and era < 3.50 and not is_over)
+                if era < 3.50:
+                    items.append((f"{name} ERA {era}", "for" if helps_bet else "against",
+                                  "Elite pitcher -- well below 4.20 avg"))
+                elif era > 5.00:
+                    items.append((f"{name} ERA {era}", "against" if helps_bet else "for",
+                                  "Struggling pitcher -- above 4.20 avg"))
+                if dr is not None and dr<=3:
+                    items.append((f"{name} short rest ({dr}d)", "against", "3-day rest penalty applied"))
+                if pc and pc>=110:
+                    items.append((f"{name} {pc} pitches last start", "against", "High pitch count fatigue"))
+            except Exception: pass
+
+    # Bullpen
+    abp=game.get("away_bullpen",{}); hbp=game.get("home_bullpen",{})
+    if abp.get("fatigue",0)>0.5:
+        items.append((f"{away} bullpen ({abp.get('label','?')})",
+                      "against" if away in bet_play else "for",
+                      f"{abp.get('ip','?')} relief IP last 3 days"))
+    if hbp.get("fatigue",0)>0.5:
+        items.append((f"{home} bullpen ({hbp.get('label','?')})",
+                      "against" if home in bet_play else "for",
+                      f"{hbp.get('ip','?')} relief IP last 3 days"))
+
+    # Discrepancy
+    max_gap=max(game.get("away_gap",0),game.get("home_gap",0))
+    if max_gap>=18: items.append((f"Book discrepancy {max_gap}c","for","Major price disagreement"))
+    elif max_gap>=10: items.append((f"Book discrepancy {max_gap}c","for","Worth shopping books"))
+
+    # Sharp line movement
+    lm=game.get("line_movement")
+    if lm and lm.get("significant"):
+        mt=lm.get("moved_team",""); mc=abs(lm.get("move_cents",0))
+        items.append((f"Sharp money: {mt} +{mc:.0f}c",
+                      "for" if mt.lower() in bet_play.lower() else "against",
+                      "10c+ move = professional money"))
+
+    # Umpire
+    ump=game.get("umpire",{}); ri=ump.get("run_impact",0) or 0
+    if abs(ri)>=0.3 and is_total:
+        ump_helps=(ri>0 and is_over) or (ri<0 and not is_over)
+        items.append((f"Ump {ump.get('name','?')} ({ri:+.1f} runs)",
+                      "for" if ump_helps else "against",
+                      "Hitter-friendly" if ri>0 else "Pitcher-friendly zone"))
+
+    # Injuries
+    for inj in game.get("away_injuries",[])[:2]:
+        if "out" in inj.get("status","").lower():
+            items.append((f"{away} {inj['name'].split()[-1]} OUT",
+                          "against" if away in bet_play else "for",
+                          inj.get("pos","?")))
+    for inj in game.get("home_injuries",[])[:2]:
+        if "out" in inj.get("status","").lower():
+            items.append((f"{home} {inj['name'].split()[-1]} OUT",
+                          "against" if home in bet_play else "for",
+                          inj.get("pos","?")))
+    return items
+
+
 def analyze_f5_nrfi(f5_games, matchups_by_game):
     """
     Analyze First 5 innings and NRFI/YRFI bets.
