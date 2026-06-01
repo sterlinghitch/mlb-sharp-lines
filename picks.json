@@ -3,6 +3,38 @@
   "date_display": "June 01, 2026",
   "bets": [
     {
+      "game": "Texas Rangers @ St. Louis Cardinals",
+      "away": "Texas Rangers",
+      "home": "St. Louis Cardinals",
+      "away_id": 140,
+      "home_id": 138,
+      "play": "Over 7.5 Runs",
+      "price": "+107",
+      "book": "BetOnline.ag",
+      "type": "total",
+      "pick_team": null,
+      "side": "Over",
+      "total_line": 7.5,
+      "edge": "+0.3%",
+      "signal": "watch"
+    },
+    {
+      "game": "Los Angeles Dodgers @ Arizona Diamondbacks",
+      "away": "Los Angeles Dodgers",
+      "home": "Arizona Diamondbacks",
+      "away_id": 119,
+      "home_id": 109,
+      "play": "Arizona Diamondbacks Moneyline",
+      "price": "+146",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "pick_team": "Arizona Diamondbacks",
+      "side": null,
+      "total_line": null,
+      "edge": "+1.0%",
+      "signal": "watch"
+    },
+    {
       "game": "Chicago White Sox @ Minnesota Twins",
       "away": "Chicago White Sox",
       "home": "Minnesota Twins",
