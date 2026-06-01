@@ -263,6 +263,72 @@
       "type": "ml",
       "edge": "+1.1%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-06-01",
+      "date_display": "June 01, 2026",
+      "game": "Detroit Tigers @ Tampa Bay Rays",
+      "play": "Tampa Bay Rays Moneyline",
+      "price": "-160",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+1.2%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-01",
+      "date_display": "June 01, 2026",
+      "game": "Miami Marlins @ Washington Nationals",
+      "play": "Miami Marlins Moneyline",
+      "price": "+127",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+0.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-01",
+      "date_display": "June 01, 2026",
+      "game": "Kansas City Royals @ Cincinnati Reds",
+      "play": "Kansas City Royals Moneyline",
+      "price": "+171",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+0.3%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-01",
+      "date_display": "June 01, 2026",
+      "game": "San Francisco Giants @ Milwaukee Brewers",
+      "play": "Milwaukee Brewers Moneyline",
+      "price": "-142",
+      "book": "FanDuel",
+      "type": "ml",
+      "edge": "+0.6%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-01",
+      "date_display": "June 01, 2026",
+      "game": "Colorado Rockies @ Los Angeles Angels",
+      "play": "Colorado Rockies Moneyline",
+      "price": "+180",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+4.4%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-01",
+      "date_display": "June 01, 2026",
+      "game": "New York Mets @ Seattle Mariners",
+      "play": "Under 7.0 Runs",
+      "price": "-114",
+      "book": "FanDuel",
+      "type": "total",
+      "edge": "+0.6%",
+      "signal": "watch"
     }
   ]
 }
