@@ -3,6 +3,38 @@
   "date_display": "June 02, 2026",
   "bets": [
     {
+      "game": "Pittsburgh Pirates @ Houston Astros",
+      "away": "Pittsburgh Pirates",
+      "home": "Houston Astros",
+      "away_id": 134,
+      "home_id": 117,
+      "play": "Pittsburgh Pirates Moneyline",
+      "price": "+103",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "pick_team": "Pittsburgh Pirates",
+      "side": null,
+      "total_line": null,
+      "edge": "+3.1%",
+      "signal": "fire"
+    },
+    {
+      "game": "Pittsburgh Pirates @ Houston Astros",
+      "away": "Pittsburgh Pirates",
+      "home": "Houston Astros",
+      "away_id": 134,
+      "home_id": 117,
+      "play": "Pittsburgh Pirates Moneyline",
+      "price": "-142",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "pick_team": "Pittsburgh Pirates",
+      "side": null,
+      "total_line": null,
+      "edge": "+6.7%",
+      "signal": "watch"
+    },
+    {
       "game": "Toronto Blue Jays @ Atlanta Braves",
       "away": "Toronto Blue Jays",
       "home": "Atlanta Braves",
