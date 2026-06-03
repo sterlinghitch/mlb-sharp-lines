@@ -3,6 +3,38 @@
   "date_display": "June 03, 2026",
   "bets": [
     {
+      "game": "Colorado Rockies @ Los Angeles Angels",
+      "away": "Colorado Rockies",
+      "home": "Los Angeles Angels",
+      "away_id": 115,
+      "home_id": 108,
+      "play": "Over 8.5 Runs",
+      "price": "-115",
+      "book": "FanDuel",
+      "type": "total",
+      "pick_team": null,
+      "side": "Over",
+      "total_line": 8.5,
+      "edge": "+1.0%",
+      "signal": "watch"
+    },
+    {
+      "game": "Kansas City Royals @ Minnesota Twins",
+      "away": "Kansas City Royals",
+      "home": "Minnesota Twins",
+      "away_id": 118,
+      "home_id": 142,
+      "play": "Over 9.0 Runs",
+      "price": "-105",
+      "book": "FanDuel",
+      "type": "total",
+      "pick_team": null,
+      "side": "Over",
+      "total_line": 9.0,
+      "edge": "+2.5%",
+      "signal": "fire"
+    },
+    {
       "game": "Kansas City Royals @ Cincinnati Reds",
       "away": "Kansas City Royals",
       "home": "Cincinnati Reds",
