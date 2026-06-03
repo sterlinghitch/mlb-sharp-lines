@@ -3,6 +3,38 @@
   "date_display": "June 03, 2026",
   "bets": [
     {
+      "game": "Kansas City Royals @ Cincinnati Reds",
+      "away": "Kansas City Royals",
+      "home": "Cincinnati Reds",
+      "away_id": 118,
+      "home_id": 113,
+      "play": "Kansas City Royals Moneyline",
+      "price": "+139",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "pick_team": "Kansas City Royals",
+      "side": null,
+      "total_line": null,
+      "edge": "+2.6%",
+      "signal": "watch"
+    },
+    {
+      "game": "Athletics @ Chicago Cubs",
+      "away": "Athletics",
+      "home": "Chicago Cubs",
+      "away_id": 133,
+      "home_id": 112,
+      "play": "Over 8.5 Runs",
+      "price": "-114",
+      "book": "BetOnline.ag",
+      "type": "total",
+      "pick_team": null,
+      "side": "Over",
+      "total_line": 8.5,
+      "edge": "+2.1%",
+      "signal": "watch"
+    },
+    {
       "game": "Miami Marlins @ Washington Nationals",
       "away": "Miami Marlins",
       "home": "Washington Nationals",
