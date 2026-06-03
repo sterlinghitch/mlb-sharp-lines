@@ -417,6 +417,116 @@
       "type": "ml",
       "edge": "+1.9%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-06-03",
+      "date_display": "June 03, 2026",
+      "game": "Miami Marlins @ Washington Nationals",
+      "play": "Washington Nationals Moneyline",
+      "price": "-108",
+      "book": "FanDuel",
+      "type": "ml",
+      "edge": "+1.8%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-03",
+      "date_display": "June 03, 2026",
+      "game": "Texas Rangers @ St. Louis Cardinals",
+      "play": "St. Louis Cardinals Moneyline",
+      "price": "-110",
+      "book": "BetMGM",
+      "type": "ml",
+      "edge": "+0.2%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-03",
+      "date_display": "June 03, 2026",
+      "game": "Detroit Tigers @ Tampa Bay Rays",
+      "play": "Tampa Bay Rays Moneyline",
+      "price": "-145",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+3.3%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-03",
+      "date_display": "June 03, 2026",
+      "game": "Chicago White Sox @ Minnesota Twins",
+      "play": "Chicago White Sox Moneyline",
+      "price": "+130",
+      "book": "FanDuel",
+      "type": "ml",
+      "edge": "+4.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-03",
+      "date_display": "June 03, 2026",
+      "game": "New York Mets @ Seattle Mariners",
+      "play": "New York Mets Moneyline",
+      "price": "+128",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+1.7%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-03",
+      "date_display": "June 03, 2026",
+      "game": "San Diego Padres @ Philadelphia Phillies",
+      "play": "Philadelphia Phillies Moneyline",
+      "price": "-210",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+0.7%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-03",
+      "date_display": "June 03, 2026",
+      "game": "Baltimore Orioles @ Boston Red Sox",
+      "play": "Baltimore Orioles Moneyline",
+      "price": "+134",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+0.7%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-03",
+      "date_display": "June 03, 2026",
+      "game": "Cleveland Guardians @ New York Yankees",
+      "play": "New York Yankees Moneyline",
+      "price": "-148",
+      "book": "FanDuel",
+      "type": "ml",
+      "edge": "+0.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-03",
+      "date_display": "June 03, 2026",
+      "game": "Toronto Blue Jays @ Atlanta Braves",
+      "play": "Toronto Blue Jays Moneyline",
+      "price": "+128",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+0.6%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-03",
+      "date_display": "June 03, 2026",
+      "game": "Pittsburgh Pirates @ Houston Astros",
+      "play": "Pittsburgh Pirates Moneyline",
+      "price": "-147",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+1.3%",
+      "signal": "watch"
     }
   ]
 }
