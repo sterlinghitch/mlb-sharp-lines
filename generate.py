@@ -556,7 +556,77 @@ def fetch_roster(team_id):
             for p in data.get("roster",[])
             if p.get("position",{}).get("abbreviation","") not in ("P","TWP")]
 
-def fetch_batter_vs_pitcher(batter_id, pitcher_id):
+HR_PARK_FACTORS = {
+    "Coors Field":             1.40,
+    "Great American Ball Park":1.22,
+    "Minute Maid Park":        1.18,
+    "Yankee Stadium":          1.16,
+    "Citizens Bank Park":      1.14,
+    "Globe Life Field":        1.12,
+    "Truist Park":             1.08,
+    "Wrigley Field":           1.07,
+    "Dodger Stadium":          1.05,
+    "Fenway Park":             1.05,
+    "American Family Field":   1.04,
+    "Busch Stadium":           1.00,
+    "Camden Yards":            1.00,
+    "Citi Field":              0.98,
+    "Chase Field":             0.97,
+    "Progressive Field":       0.96,
+    "Target Field":            0.95,
+    "Kauffman Stadium":        0.94,
+    "LoanDepot Park":          0.93,
+    "PNC Park":                0.93,
+    "Nationals Park":          0.92,
+    "Guaranteed Rate Field":   0.92,
+    "Comerica Park":           0.91,
+    "T-Mobile Park":           0.88,
+    "Petco Park":              0.87,
+    "Oracle Park":             0.85,
+    "Sutter Health Park":      0.90,
+    "Tropicana Field":         0.86,
+}
+
+def fetch_batter_season_stats(batter_id):
+    """Fetch 2026 season hitting stats for a batter. Returns HR, PA, HR rate."""
+    data = mlb_get(f"/people/{batter_id}/stats",
+                   {"stats":"season","group":"hitting","season":"2026","sportId":1})
+    if not data: return None
+    for sg in data.get("stats",[]):
+        splits = sg.get("splits",[])
+        if not splits: continue
+        s = splits[0].get("stat",{})
+        pa = s.get("plateAppearances",0) or s.get("atBats",0)
+        hr = s.get("homeRuns",0)
+        ab = s.get("atBats",0)
+        slg= float(s.get("slugging","0") or 0)
+        iso= float(s.get("ops","0") or 0) - float(s.get("onBasePercentage","0") or 0)
+        if pa > 0:
+            return {
+                "hr":       hr,
+                "pa":       pa,
+                "ab":       ab,
+                "hr_rate":  hr / pa,
+                "slg":      slg,
+            }
+    return None
+
+def fetch_pitcher_hr_rate(pitcher_id):
+    """Fetch pitcher's 2026 HR allowed per 9 innings."""
+    data = mlb_get(f"/people/{pitcher_id}/stats",
+                   {"stats":"season","group":"pitching","season":"2026","sportId":1})
+    if not data: return 1.0  # league average multiplier
+    for sg in data.get("stats",[]):
+        splits = sg.get("splits",[])
+        if not splits: continue
+        s = splits[0].get("stat",{})
+        ip  = float(s.get("inningsPitched",0) or 0)
+        hrs = s.get("homeRunsAllowed",0) or s.get("homeRuns",0)
+        if ip > 20:
+            hr9 = (hrs / ip) * 9
+            # League avg HR/9 for SP is ~1.2 — return as multiplier
+            return round(hr9 / 1.2, 2)
+    return 1.0
     data = mlb_get(f"/people/{batter_id}/stats",
                    {"stats":"vsPlayer","opposingPlayerId":pitcher_id,"group":"hitting","sportId":1})
     if not data: return None
@@ -1691,6 +1761,93 @@ def fetch_game_context(game, matchup_data, weather_data, mlb_schedule_games, ope
 # =============================================================
 # HTML BUILDER
 # =============================================================
+def build_hr_candidates(matchups, weather_data):
+    """
+    Score every batter in today's lineup for HR probability.
+    Formula: base_hr_rate * pitcher_hr_multiplier * park_hr_factor * wind_factor
+    Returns sorted list of top candidates.
+    """
+    candidates = []
+    seen_batters = set()
+
+    for m in matchups:
+        if m.get("date_et","") not in ("Today","") and "Tomorrow" in m.get("date_et",""):
+            continue  # only today's games
+        game_key = m.get("game","")
+        away = m.get("away",""); home = m.get("home","")
+        ap   = m.get("away_pitcher",{}); hp = m.get("home_pitcher",{})
+        ap_id= ap.get("id"); hp_id = hp.get("id")
+        wx   = weather_data.get(home,{})
+
+        # Ballpark HR factor
+        stadium   = wx.get("stadium","")
+        park_hr   = HR_PARK_FACTORS.get(stadium, 1.0)
+
+        # Wind factor for HR
+        wind_spd  = int(wx.get("wind_speed",0) or 0)
+        wind_eff  = wx.get("wind_effect","")
+        wind_hr   = 1.0
+        if wind_spd >= 10:
+            if wind_eff == "blowing_out":  wind_hr = 1.0 + min(0.15, wind_spd * 0.008)
+            elif wind_eff == "blowing_in": wind_hr = 1.0 - min(0.12, wind_spd * 0.006)
+
+        # Pitcher HR allowed rates
+        ap_hr_mult = fetch_pitcher_hr_rate(ap_id) if ap_id else 1.0
+        hp_hr_mult = fetch_pitcher_hr_rate(hp_id) if hp_id else 1.0
+
+        # Score home batters facing away pitcher
+        for batter_list, pitcher_id, pitcher_mult, pitcher_name, team in [
+            (m.get("home_batters",[]), ap_id, ap_hr_mult, ap.get("name","TBD"), home),
+            (m.get("away_batters",[]), hp_id, hp_hr_mult, hp.get("name","TBD"), away),
+        ]:
+            for b in batter_list:
+                batter_id = b.get("id")
+                if not batter_id or batter_id in seen_batters: continue
+                seen_batters.add(batter_id)
+
+                # Fetch season stats
+                season = fetch_batter_season_stats(batter_id)
+                if not season or season["pa"] < 30: continue
+                base_hr_rate = season["hr_rate"]
+                if base_hr_rate <= 0: continue
+
+                # Career matchup HR bonus
+                matchup_hr = b.get("hr", 0)
+                matchup_ab = b.get("ab", 0)
+                matchup_bonus = 0.0
+                if matchup_ab >= 5 and matchup_hr > 0:
+                    matchup_hr_rate = matchup_hr / matchup_ab
+                    # Blend: mostly season rate, small matchup bump
+                    matchup_bonus = (matchup_hr_rate - base_hr_rate) * 0.2
+
+                # Final HR probability per game (rough — ~3.5 PA per game avg)
+                pa_per_game  = 3.5
+                raw_hr_rate  = (base_hr_rate + matchup_bonus) * pitcher_mult * park_hr * wind_hr
+                hr_prob_game = round(raw_hr_rate * pa_per_game * 100, 1)
+
+                candidates.append({
+                    "name":         b.get("name","?"),
+                    "team":         team,
+                    "pos":          b.get("pos",""),
+                    "game":         game_key,
+                    "vs_pitcher":   pitcher_name,
+                    "season_hr":    season["hr"],
+                    "season_pa":    season["pa"],
+                    "hr_rate_pct":  round(base_hr_rate * 100, 2),
+                    "matchup_hr":   matchup_hr,
+                    "matchup_ab":   matchup_ab,
+                    "park":         stadium,
+                    "park_factor":  park_hr,
+                    "wind_effect":  wind_eff if wind_spd >= 8 else "",
+                    "wind_spd":     wind_spd,
+                    "pitcher_mult": pitcher_mult,
+                    "hr_prob":      hr_prob_game,
+                })
+
+    candidates.sort(key=lambda x: -x["hr_prob"])
+    return candidates[:20]  # top 20, display shows top 10
+
+
 def build_why_this_bet(game):
     """Build structured checklist of factors for/against the best bet."""
     items = []
@@ -2062,7 +2219,7 @@ def analyze_f5_nrfi(f5_games, matchups_by_game):
     return items
 
 
-def build_html(analyzed_games, matchups, weather, results_data, tracking_games, all_noon_data, public_betting, pending_picks, f5_plays, date_str, time_str):
+def build_html(analyzed_games, matchups, weather, results_data, tracking_games, all_noon_data, public_betting, pending_picks, f5_plays, hr_candidates, date_str, time_str):
     all_disc=[]; sharp_ct=0; value_ct=0
 
     # Dedup analyzed_games by game key — keep today's game if duplicate exists
@@ -3343,6 +3500,97 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                         "Weak starters or Coors/hitter parks = Over lean.")
         return html
 
+    def hr_page():
+        top10 = hr_candidates[:10]
+        if not top10:
+            return (f'<div style="text-align:center;padding:4rem 2rem">'
+                    f'<div style="font-size:48px;margin-bottom:1rem">💣</div>'
+                    f'<div style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px">HR Watch loading...</div>'
+                    f'<div style="font-size:13px;color:var(--muted);max-width:420px;margin:0 auto;line-height:1.7">'
+                    f'Lineup data and batter season stats are required to rank HR candidates. '
+                    f'This populates once lineups are posted (typically 2-3 hours before first pitch).</div>'
+                    f'</div>')
+
+        header = (f'<div style="margin-bottom:1.5rem">'
+                  f'<div style="font-family:\'IBM Plex Mono\',monospace;font-size:22px;font-weight:700;color:#fff;margin-bottom:4px">💣 HR Watch — Top 10 Today</div>'
+                  f'<div style="font-size:13px;color:var(--muted);line-height:1.6">'
+                  f'Ranked by model HR probability per game. Formula: batter HR rate × pitcher HR allowed factor × park factor × wind. '
+                  f'Career matchup HR history adds a small bonus. Min 30 PA season sample required.</div>'
+                  f'</div>')
+
+        medal = ["🥇","🥈","🥉","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟"]
+        rows  = ""
+
+        for rank, c in enumerate(top10):
+            prob     = c["hr_prob"]
+            prob_col = "var(--red)" if prob >= 15 else ("var(--amber)" if prob >= 10 else "var(--accent)")
+            bar_w    = min(100, int(prob * 4))  # scale: 25% prob = full bar
+
+            # Park + wind badges
+            badges = ""
+            if c["park_factor"] >= 1.15:
+                badges += f'<span style="background:rgba(248,113,113,0.15);border:1px solid rgba(248,113,113,0.4);border-radius:4px;padding:2px 7px;font-size:10px;color:var(--red);font-family:monospace;margin-right:4px">🏟 HR park</span>'
+            if c["wind_effect"] == "blowing_out" and c["wind_spd"] >= 8:
+                badges += f'<span style="background:rgba(96,165,250,0.15);border:1px solid rgba(96,165,250,0.4);border-radius:4px;padding:2px 7px;font-size:10px;color:#60a5fa;font-family:monospace;margin-right:4px">💨 Blowing out {c["wind_spd"]}mph</span>'
+            if c["matchup_hr"] >= 2:
+                badges += f'<span style="background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.4);border-radius:4px;padding:2px 7px;font-size:10px;color:var(--amber);font-family:monospace">{c["matchup_hr"]} career HR vs pitcher</span>'
+            elif c["matchup_hr"] == 1:
+                badges += f'<span style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:4px;padding:2px 7px;font-size:10px;color:var(--amber);font-family:monospace">1 career HR vs pitcher</span>'
+
+            rows += (
+                f'<div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;'
+                f'padding:14px 16px;margin-bottom:8px">'
+                f'<div style="display:flex;align-items:center;gap:12px">'
+                # Rank
+                f'<div style="font-size:20px;flex-shrink:0;width:28px;text-align:center">{medal[rank]}</div>'
+                # Player info
+                f'<div style="flex:1;min-width:0">'
+                f'<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:3px">'
+                f'<span style="font-size:15px;font-weight:700;color:#fff">{c["name"]}</span>'
+                f'<span style="font-size:11px;color:var(--muted)">{c["team"]} · {c["pos"]}</span>'
+                f'</div>'
+                f'<div style="font-size:11px;color:var(--muted);margin-bottom:5px">'
+                f'vs {c["vs_pitcher"]} · {c["game"].split(" @ ")[0]} @ {c["game"].split(" @ ")[1] if " @ " in c["game"] else c["game"]}</div>'
+                # Stats row
+                f'<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:6px">'
+                f'<span style="font-size:11px;font-family:monospace">'
+                f'<span style="color:var(--muted)">HR: </span><span style="color:#fff;font-weight:700">{c["season_hr"]}</span>'
+                f'<span style="color:var(--muted)"> in {c["season_pa"]} PA</span></span>'
+                f'<span style="font-size:11px;font-family:monospace">'
+                f'<span style="color:var(--muted)">HR%: </span><span style="color:#fff">{c["hr_rate_pct"]}%</span></span>'
+                f'<span style="font-size:11px;font-family:monospace">'
+                f'<span style="color:var(--muted)">Park: </span>'
+                f'<span style="color:{"var(--red)" if c["park_factor"]>=1.1 else ("var(--green)" if c["park_factor"]<=0.9 else "#fff")}">{c["park_factor"]}x</span></span>'
+                f'</div>'
+                # Badges
+                + (f'<div style="margin-bottom:6px">{badges}</div>' if badges else "")
+                + f'</div>'
+                # Probability
+                f'<div style="flex-shrink:0;text-align:right;min-width:70px">'
+                f'<div style="font-family:monospace;font-size:22px;font-weight:700;color:{prob_col}">{prob}%</div>'
+                f'<div style="font-size:10px;color:var(--muted)">HR prob</div>'
+                f'</div>'
+                f'</div>'
+                # Probability bar
+                f'<div style="margin-top:8px;height:3px;background:var(--border);border-radius:2px">'
+                f'<div style="height:3px;width:{bar_w}%;background:{prob_col};border-radius:2px;'
+                f'transition:width 0.3s ease"></div>'
+                f'</div>'
+                f'</div>'
+            )
+
+        # Methodology note
+        method = (f'<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;'
+                  f'padding:14px 16px;margin-top:1rem;font-size:12px;color:var(--muted);line-height:1.8">'
+                  f'<div style="font-weight:700;color:var(--text);margin-bottom:4px">How HR probability is calculated</div>'
+                  f'Batter\'s 2026 HR rate (HR/PA) × Pitcher\'s HR-allowed rate vs league average × Ballpark HR factor × Wind factor × 3.5 estimated PA per game. '
+                  f'Career matchup HR history applies a small 20% blend adjustment. '
+                  f'Probabilities are model estimates — typical MLB HR rates per game are 8-18% for power hitters.'
+                  f'</div>')
+
+        return header + rows + method
+
+  # ── PAGE HTML ─────────────────────────────────────────────────
     def simulation_page():
         """
         Predict winner and score for every game using the model's
@@ -4493,6 +4741,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
   <div class="nav-item" onclick="showPage('weather',this)"><span class="nav-icon">&#127780;</span><span class="nav-label">Weather</span><span class="nav-count">{lw}</span></div>
   <div class="nav-item" onclick="showPage('parlay',this)"><span class="nav-icon">&#127922;</span><span class="nav-label">Parlay Analyzer</span></div>
   <div class="nav-item" onclick="showPage('f5',this)"><span class="nav-icon">&#9201;</span><span class="nav-label">F5 & 1st Inning</span><span class="nav-count">{len(f5_plays)}</span></div>
+  <div class="nav-item" onclick="showPage('homeruns',this)"><span class="nav-icon">&#127386;</span><span class="nav-label">HR Watch</span><span class="nav-count">{len(hr_candidates[:10])}</span></div>
   <div class="nav-item" onclick="showPage('simulation',this)"><span class="nav-icon">&#127939;</span><span class="nav-label">Simulation</span><span class="nav-count">{len(analyzed_games)}</span></div>
   <div class="nav-item" onclick="showPage('trends',this)"><span class="nav-icon">&#128200;</span><span class="nav-label">Betting Trends</span></div>
   <div class="nav-item" onclick="showPage('accuracy',this)"><span class="nav-icon">&#127919;</span><span class="nav-label">Model Accuracy</span></div>
@@ -4600,6 +4849,10 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
     {f5_page()}
   </div></div>
 
+  <div class="page" id="page-homeruns"><div class="page-inner">
+    {hr_page()}
+  </div></div>
+
   <div class="page" id="page-simulation"><div class="page-inner">
     {simulation_page()}
   </div></div>
@@ -4668,7 +4921,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
     document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
     document.getElementById('page-'+name).classList.add('active');
     if(el)el.classList.add('active');
-    const t={{home:'Home',plays:'Top Value Plays',games:'All Games',matchups:'Pitcher / Batter',weather:'Weather & Wind',parlay:'Parlay Analyzer',f5:'F5 & 1st Inning',simulation:'Simulation',trends:'Betting Trends',accuracy:'Model Accuracy'}};
+    const t={{home:'Home',plays:'Top Value Plays',games:'All Games',matchups:'Pitcher / Batter',weather:'Weather & Wind',parlay:'Parlay Analyzer',f5:'F5 & 1st Inning',homeruns:'HR Watch',simulation:'Simulation',trends:'Betting Trends',accuracy:'Model Accuracy'}};
     document.getElementById('topbar-title').textContent=t[name]||name;
     window.scrollTo(0,0);closeSidebar();
   }}
@@ -4954,7 +5207,16 @@ def main():
         print(f"  F5/NRFI error: {e}")
         f5_plays = []
 
-    html = build_html(analyzed, matchups, weather, results_data, tracking_games, all_noon_data, public_betting, pending_picks_for_display, f5_plays, date_str, time_str)
+    # Build HR candidates from matchup data
+    print("Building HR candidates...")
+    try:
+        hr_candidates = build_hr_candidates(matchups, weather)
+        print(f"  HR candidates: {len(hr_candidates)} batters ranked")
+    except Exception as e:
+        print(f"  HR candidates error: {e}")
+        hr_candidates = []
+
+    html = build_html(analyzed, matchups, weather, results_data, tracking_games, all_noon_data, public_betting, pending_picks_for_display, f5_plays, hr_candidates, date_str, time_str)
     with open("index.html","w",encoding="utf-8") as f:
         f.write(html)
 
