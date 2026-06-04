@@ -3,14 +3,14 @@
   "games": {
     "Los Angeles Dodgers @ Arizona Diamondbacks": {
       "play": "Arizona Diamondbacks Moneyline",
-      "price": "+121",
+      "price": "+122",
       "book": "BetOnline.ag",
       "is_pass": false,
       "edge": "+0.4%",
-      "away_true": 54,
-      "home_true": 46,
-      "away_fair": "-119",
-      "home_fair": "+119",
+      "away_true": 55,
+      "home_true": 45,
+      "away_fair": "-120",
+      "home_fair": "+120",
       "signal": "watch",
       "signal_label": ""
     },
@@ -61,8 +61,8 @@
       "edge": "+0.9%",
       "away_true": 34,
       "home_true": 66,
-      "away_fair": "+191",
-      "home_fair": "-191",
+      "away_fair": "+190",
+      "home_fair": "-190",
       "signal": "watch",
       "signal_label": ""
     },
