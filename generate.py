@@ -1136,6 +1136,7 @@ def build_matchup_data(odds_games, date_str):
                          "away":away_name,"home":home_name,
                          "away_pitcher":away_pitcher,"home_pitcher":home_pitcher,
                          "away_batters":away_vs_hp,"home_batters":home_vs_ap,
+                         "away_roster":away_batters,"home_roster":home_batters,
                          "away_source":away_source,"home_source":home_source,
                          "away_last5":away_last5,"home_last5":home_last5,
                          "away_batter_sides":away_sides,"home_batter_sides":home_sides})
@@ -1795,10 +1796,11 @@ def build_hr_candidates(matchups, weather_data):
         ap_hr_mult = fetch_pitcher_hr_rate(ap_id) if ap_id else 1.0
         hp_hr_mult = fetch_pitcher_hr_rate(hp_id) if hp_id else 1.0
 
-        # Score home batters facing away pitcher
+        # Score home batters facing away pitcher, and away batters facing home pitcher
+        # Use full roster (away_roster/home_roster) not filtered matchup list
         for batter_list, pitcher_id, pitcher_mult, pitcher_name, team in [
-            (m.get("home_batters",[]), ap_id, ap_hr_mult, ap.get("name","TBD"), home),
-            (m.get("away_batters",[]), hp_id, hp_hr_mult, hp.get("name","TBD"), away),
+            (m.get("home_roster", m.get("home_batters",[])), ap_id, ap_hr_mult, ap.get("name","TBD"), home),
+            (m.get("away_roster", m.get("away_batters",[])), hp_id, hp_hr_mult, hp.get("name","TBD"), away),
         ]:
             for b in batter_list:
                 batter_id = b.get("id")
@@ -1811,9 +1813,11 @@ def build_hr_candidates(matchups, weather_data):
                 base_hr_rate = season["hr_rate"]
                 if base_hr_rate <= 0: continue
 
-                # Career matchup HR bonus
-                matchup_hr = b.get("hr", 0)
-                matchup_ab = b.get("ab", 0)
+                # Look up career matchup stats from the filtered list
+                filtered_key = "home_batters" if team == home else "away_batters"
+                matchup_stats = next((x for x in m.get(filtered_key,[]) if x.get("id") == batter_id), {})
+                matchup_hr = matchup_stats.get("hr", 0)
+                matchup_ab = matchup_stats.get("ab", 0)
                 matchup_bonus = 0.0
                 if matchup_ab >= 5 and matchup_hr > 0:
                     matchup_hr_rate = matchup_hr / matchup_ab
@@ -4740,10 +4744,8 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
   <div class="nav-item" onclick="showPage('matchups',this)"><span class="nav-icon">&#9889;</span><span class="nav-label">Pitcher / Batter</span><span class="nav-count">{lm}</span></div>
   <div class="nav-item" onclick="showPage('weather',this)"><span class="nav-icon">&#127780;</span><span class="nav-label">Weather</span><span class="nav-count">{lw}</span></div>
   <div class="nav-item" onclick="showPage('parlay',this)"><span class="nav-icon">&#127922;</span><span class="nav-label">Parlay Analyzer</span></div>
-  <div class="nav-item" onclick="showPage('f5',this)"><span class="nav-icon">&#9201;</span><span class="nav-label">F5 & 1st Inning</span><span class="nav-count">{len(f5_plays)}</span></div>
   <div class="nav-item" onclick="showPage('homeruns',this)"><span class="nav-icon">&#127386;</span><span class="nav-label">HR Watch</span><span class="nav-count">{len(hr_candidates[:10])}</span></div>
   <div class="nav-item" onclick="showPage('simulation',this)"><span class="nav-icon">&#127939;</span><span class="nav-label">Simulation</span><span class="nav-count">{len(analyzed_games)}</span></div>
-  <div class="nav-item" onclick="showPage('trends',this)"><span class="nav-icon">&#128200;</span><span class="nav-label">Betting Trends</span></div>
   <div class="nav-item" onclick="showPage('accuracy',this)"><span class="nav-icon">&#127919;</span><span class="nav-label">Model Accuracy</span></div>
   <div class="sidebar-section" style="margin-top:8px">Today</div>
   <div class="sidebar-stats">
@@ -4845,20 +4847,12 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
     {weather_page()}
   </div></div>
 
-  <div class="page" id="page-f5"><div class="page-inner">
-    {f5_page()}
-  </div></div>
-
   <div class="page" id="page-homeruns"><div class="page-inner">
     {hr_page()}
   </div></div>
 
   <div class="page" id="page-simulation"><div class="page-inner">
     {simulation_page()}
-  </div></div>
-
-  <div class="page" id="page-trends"><div class="page-inner">
-    {betting_trends_page(results_data)}
   </div></div>
 
   <div class="page" id="page-accuracy"><div class="page-inner">
@@ -4921,7 +4915,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
     document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
     document.getElementById('page-'+name).classList.add('active');
     if(el)el.classList.add('active');
-    const t={{home:'Home',plays:'Top Value Plays',games:'All Games',matchups:'Pitcher / Batter',weather:'Weather & Wind',parlay:'Parlay Analyzer',f5:'F5 & 1st Inning',homeruns:'HR Watch',simulation:'Simulation',trends:'Betting Trends',accuracy:'Model Accuracy'}};
+    const t={{home:'Home',plays:'Top Value Plays',games:'All Games',matchups:'Pitcher / Batter',weather:'Weather & Wind',parlay:'Parlay Analyzer',homeruns:'HR Watch',simulation:'Simulation',accuracy:'Model Accuracy'}};
     document.getElementById('topbar-title').textContent=t[name]||name;
     window.scrollTo(0,0);closeSidebar();
   }}
