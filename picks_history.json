@@ -527,6 +527,72 @@
       "type": "ml",
       "edge": "+1.3%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-06-04",
+      "date_display": "June 04, 2026",
+      "game": "Baltimore Orioles @ Boston Red Sox",
+      "play": "Baltimore Orioles Moneyline",
+      "price": "+105",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.1%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-04",
+      "date_display": "June 04, 2026",
+      "game": "Pittsburgh Pirates @ Houston Astros",
+      "play": "Pittsburgh Pirates Moneyline",
+      "price": "-101",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+1.6%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-04",
+      "date_display": "June 04, 2026",
+      "game": "San Diego Padres @ Philadelphia Phillies",
+      "play": "Philadelphia Phillies Moneyline",
+      "price": "-196",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+1.0%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-04",
+      "date_display": "June 04, 2026",
+      "game": "Cleveland Guardians @ New York Yankees",
+      "play": "Cleveland Guardians Moneyline",
+      "price": "+146",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+0.1%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-04",
+      "date_display": "June 04, 2026",
+      "game": "Toronto Blue Jays @ Atlanta Braves",
+      "play": "Toronto Blue Jays Moneyline",
+      "price": "+180",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+0.9%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-04",
+      "date_display": "June 04, 2026",
+      "game": "Los Angeles Dodgers @ Arizona Diamondbacks",
+      "play": "Arizona Diamondbacks Moneyline",
+      "price": "+122",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+0.9%",
+      "signal": "watch"
     }
   ]
 }
