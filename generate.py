@@ -587,29 +587,47 @@ HR_PARK_FACTORS = {
     "Tropicana Field":         0.86,
 }
 
-def fetch_batter_season_stats(batter_id):
-    """Fetch 2026 season hitting stats for a batter. Returns HR, PA, HR rate."""
-    data = mlb_get(f"/people/{batter_id}/stats",
-                   {"stats":"season","group":"hitting","season":"2026","sportId":1})
-    if not data: return None
-    for sg in data.get("stats",[]):
-        splits = sg.get("splits",[])
-        if not splits: continue
-        s = splits[0].get("stat",{})
-        pa = s.get("plateAppearances",0) or s.get("atBats",0)
-        hr = s.get("homeRuns",0)
-        ab = s.get("atBats",0)
-        slg= float(s.get("slugging","0") or 0)
-        iso= float(s.get("ops","0") or 0) - float(s.get("onBasePercentage","0") or 0)
-        if pa > 0:
-            return {
-                "hr":       hr,
-                "pa":       pa,
-                "ab":       ab,
-                "hr_rate":  hr / pa,
-                "slg":      slg,
-            }
-    return None
+def fetch_batter_season_stats_batch(batter_ids):
+    """
+    Batch fetch 2026 season hitting stats for multiple batters at once.
+    Returns dict {batter_id: {hr, pa, ab, hr_rate, slg}}
+    """
+    if not batter_ids: return {}
+    results = {}
+    # MLB API supports comma-separated person IDs
+    chunk_size = 50  # fetch 50 at a time
+    id_list = list(batter_ids)
+    for i in range(0, len(id_list), chunk_size):
+        chunk = id_list[i:i+chunk_size]
+        ids_str = ",".join(str(b) for b in chunk)
+        data = mlb_get("/people", {
+            "personIds": ids_str,
+            "hydrate": "stats(group=hitting,type=season,season=2026)",
+            "sportId": 1
+        })
+        if not data: continue
+        for person in data.get("people",[]):
+            pid = person.get("id")
+            if not pid: continue
+            for sg in person.get("stats",[]):
+                splits = sg.get("splits",[])
+                if not splits: continue
+                s  = splits[0].get("stat",{})
+                pa = s.get("plateAppearances",0) or s.get("atBats",0)
+                hr = s.get("homeRuns",0)
+                ab = s.get("atBats",0)
+                slg= float(s.get("slugging","0") or 0)
+                if pa > 0:
+                    results[pid] = {
+                        "hr":      hr,
+                        "pa":      pa,
+                        "ab":      ab,
+                        "hr_rate": hr / pa,
+                        "slg":     slg,
+                    }
+                    break
+        time.sleep(0.1)
+    return results
 
 def fetch_pitcher_hr_rate(pitcher_id):
     """Fetch pitcher's 2026 HR allowed per 9 innings."""
@@ -1792,40 +1810,46 @@ def fetch_game_context(game, matchup_data, weather_data, mlb_schedule_games, ope
 def build_hr_candidates(matchups, weather_data):
     """
     Score every batter in today's lineup for HR probability.
-    Formula: base_hr_rate * pitcher_hr_multiplier * park_hr_factor * wind_factor
-    Returns sorted list of top candidates.
+    Uses a single batch API call for all batter season stats.
     """
-    candidates = []
+    import math as _math
+
+    # Collect all unique batter IDs first
+    all_batter_ids = set()
+    for m in matchups:
+        for b in m.get("home_roster", m.get("home_batters",[])):
+            if b.get("id"): all_batter_ids.add(b["id"])
+        for b in m.get("away_roster", m.get("away_batters",[])):
+            if b.get("id"): all_batter_ids.add(b["id"])
+
+    if not all_batter_ids:
+        print("  HR: no batter IDs found in roster data")
+        return []
+
+    print(f"  HR: fetching season stats for {len(all_batter_ids)} batters...")
+    season_stats = fetch_batter_season_stats_batch(all_batter_ids)
+    print(f"  HR: got stats for {len(season_stats)} batters")
+
+    candidates  = []
     seen_batters = set()
-    api_calls = 0
 
     for m in matchups:
-        if m.get("date_et","") not in ("Today","") and "Tomorrow" in m.get("date_et",""):
-            continue  # only today's games
-        game_key = m.get("game","")
         away = m.get("away",""); home = m.get("home","")
         ap   = m.get("away_pitcher",{}); hp = m.get("home_pitcher",{})
         ap_id= ap.get("id"); hp_id = hp.get("id")
         wx   = weather_data.get(home,{})
 
-        # Ballpark HR factor
-        stadium   = wx.get("stadium","")
-        park_hr   = HR_PARK_FACTORS.get(stadium, 1.0)
-
-        # Wind factor for HR
-        wind_spd  = int(wx.get("wind_speed",0) or 0)
-        wind_eff  = wx.get("wind_effect","")
-        wind_hr   = 1.0
+        park_hr  = HR_PARK_FACTORS.get(wx.get("stadium",""), 1.0)
+        wind_spd = int(wx.get("wind_speed",0) or 0)
+        wind_eff = wx.get("wind_effect","")
+        wind_hr  = 1.0
         if wind_spd >= 10:
             if wind_eff == "blowing_out":  wind_hr = 1.0 + min(0.15, wind_spd * 0.008)
             elif wind_eff == "blowing_in": wind_hr = 1.0 - min(0.12, wind_spd * 0.006)
 
-        # Pitcher HR allowed rates
         ap_hr_mult = fetch_pitcher_hr_rate(ap_id) if ap_id else 1.0
         hp_hr_mult = fetch_pitcher_hr_rate(hp_id) if hp_id else 1.0
 
-        # Score home batters facing away pitcher, and away batters facing home pitcher
-        # Use full roster (away_roster/home_roster) not filtered matchup list
         for batter_list, pitcher_id, pitcher_mult, pitcher_name, team in [
             (m.get("home_roster", m.get("home_batters",[])), ap_id, ap_hr_mult, ap.get("name","TBD"), home),
             (m.get("away_roster", m.get("away_batters",[])), hp_id, hp_hr_mult, hp.get("name","TBD"), away),
@@ -1835,61 +1859,49 @@ def build_hr_candidates(matchups, weather_data):
                 if not batter_id or batter_id in seen_batters: continue
                 seen_batters.add(batter_id)
 
-                # Fetch season stats
-                season = fetch_batter_season_stats(batter_id)
-                api_calls += 1
-                if api_calls % 20 == 0:
-                    print(f"  HR: {api_calls} API calls, {len(candidates)} candidates so far")
-                time.sleep(0.05)  # rate limit
-                if not season:
-                    continue
-                if season["pa"] < 15:  # lowered from 30 — early season or bench players
-                    continue
+                season = season_stats.get(batter_id)
+                if not season or season["pa"] < 15: continue
                 base_hr_rate = season["hr_rate"]
                 if base_hr_rate <= 0:
-                    # Still include players with 0 HR but give them a small base rate
                     if season["pa"] >= 50:
-                        base_hr_rate = 0.01  # 1% base for power-capable positions
+                        base_hr_rate = 0.01
                     else:
                         continue
 
-                # Look up career matchup stats from the filtered list
+                # Career matchup HR bonus
                 filtered_key = "home_batters" if team == home else "away_batters"
                 matchup_stats = next((x for x in m.get(filtered_key,[]) if x.get("id") == batter_id), {})
                 matchup_hr = matchup_stats.get("hr", 0)
                 matchup_ab = matchup_stats.get("ab", 0)
                 matchup_bonus = 0.0
                 if matchup_ab >= 5 and matchup_hr > 0:
-                    matchup_hr_rate = matchup_hr / matchup_ab
-                    # Blend: mostly season rate, small matchup bump
-                    matchup_bonus = (matchup_hr_rate - base_hr_rate) * 0.2
+                    matchup_bonus = (matchup_hr/matchup_ab - base_hr_rate) * 0.2
 
-                # Final HR probability per game (rough — ~3.5 PA per game avg)
                 pa_per_game  = 3.5
                 raw_hr_rate  = (base_hr_rate + matchup_bonus) * pitcher_mult * park_hr * wind_hr
                 hr_prob_game = round(raw_hr_rate * pa_per_game * 100, 1)
 
                 candidates.append({
-                    "name":         b.get("name","?"),
-                    "team":         team,
-                    "pos":          b.get("pos",""),
-                    "game":         game_key,
-                    "vs_pitcher":   pitcher_name,
-                    "season_hr":    season["hr"],
-                    "season_pa":    season["pa"],
-                    "hr_rate_pct":  round(base_hr_rate * 100, 2),
-                    "matchup_hr":   matchup_hr,
-                    "matchup_ab":   matchup_ab,
-                    "park":         stadium,
-                    "park_factor":  park_hr,
-                    "wind_effect":  wind_eff if wind_spd >= 8 else "",
-                    "wind_spd":     wind_spd,
-                    "pitcher_mult": pitcher_mult,
-                    "hr_prob":      hr_prob_game,
+                    "name":        b.get("name","?"),
+                    "team":        team,
+                    "pos":         b.get("pos",""),
+                    "game":        f"{away} @ {home}",
+                    "vs_pitcher":  pitcher_name,
+                    "season_hr":   season["hr"],
+                    "season_pa":   season["pa"],
+                    "hr_rate_pct": round(base_hr_rate * 100, 2),
+                    "matchup_hr":  matchup_hr,
+                    "matchup_ab":  matchup_ab,
+                    "park":        wx.get("stadium",""),
+                    "park_factor": park_hr,
+                    "wind_effect": wind_eff if wind_spd >= 8 else "",
+                    "wind_spd":    wind_spd,
+                    "pitcher_mult":pitcher_mult,
+                    "hr_prob":     hr_prob_game,
                 })
 
     candidates.sort(key=lambda x: -x["hr_prob"])
-    print(f"  HR: {api_calls} total API calls, {len(candidates)} qualifying batters ranked")
+    print(f"  HR: {len(candidates)} qualifying batters ranked")
     return candidates[:20]
 
 
