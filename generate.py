@@ -3343,6 +3343,192 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                         "Weak starters or Coors/hitter parks = Over lean.")
         return html
 
+    def simulation_page():
+        """
+        Predict winner and score for every game using the model's
+        true probabilities and the Pythagorean run expectancy formula.
+        Model is read-only — no changes to analysis.
+        """
+        import math as _math
+
+        def predict_score(away_true_pct, home_true_pct, total_line):
+            """
+            Use Pythagorean formula to split expected total into
+            per-team run expectations based on win probability.
+            W% = R^2 / (R^2 + RA^2)  →  R/RA = sqrt(W% / (1-W%))
+            """
+            if not total_line or total_line <= 0:
+                total_line = 8.5  # MLB average
+            home_w = max(0.02, min(0.98, home_true_pct / 100))
+            away_w = 1 - home_w
+            # Pythagorean ratio
+            home_ratio = _math.sqrt(home_w / (1 - home_w)) if home_w < 1 else 10
+            away_ratio = _math.sqrt(away_w / (1 - away_w)) if away_w < 1 else 10
+            # Split total
+            home_runs = total_line * home_ratio / (home_ratio + 1)
+            away_runs = total_line * away_ratio / (away_ratio + 1)
+            # Round to nearest 0.5 for display
+            home_r = round(home_runs * 2) / 2
+            away_r = round(away_runs * 2) / 2
+            # Ensure integer display for final scores
+            return round(away_runs), round(home_runs)
+
+        def confidence_label(pct):
+            if pct >= 70: return ("Strong", "var(--green)")
+            if pct >= 60: return ("Likely", "var(--accent)")
+            if pct >= 55: return ("Slight lean", "var(--amber)")
+            return ("Toss-up", "var(--muted)")
+
+        def top_factor(adjustments):
+            """Return the single biggest factor driving the prediction."""
+            if not adjustments: return ""
+            biggest = max(adjustments, key=lambda a: abs(a[1]))
+            name  = biggest[0]
+            val   = biggest[1]
+            arrow = "▲" if val > 0 else "▼"
+            col   = "var(--green)" if val > 0 else "var(--red)"
+            return f'<span style="color:{col}">{arrow}</span> {name}'
+
+        _today = datetime.now(EASTERN).strftime("%A, %B %d")
+        today_games    = [g for g in analyzed_games if g.get("date_et","") in (_today,"Today")]
+        tomorrow_games = [g for g in analyzed_games if g.get("date_et","") not in (_today,"Today","")]
+
+        def render_section(games, label):
+            if not games: return ""
+            html = (f'<div class="sec-header"><h2>{label}</h2><div class="sec-line"></div></div>'
+                    f'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:2rem">')
+
+            for g in sorted(games, key=lambda x: x.get("date_sort","9999")):
+                away = g["away"]; home = g["home"]
+                away_true = g.get("away_true", 50)
+                home_true = g.get("home_true", 50)
+
+                # Get consensus total from book data
+                book_data = g.get("book_data",[])
+                bwt = [b for b in book_data if b.get("total_line") and b.get("over_price") and b.get("under_price")]
+                if bwt:
+                    cons_total = sorted([b["total_line"] for b in bwt])[len(bwt)//2]
+                else:
+                    cons_total = 8.5
+
+                away_pred, home_pred = predict_score(away_true, home_true, cons_total)
+                winner     = home if home_true >= away_true else away
+                winner_pct = max(home_true, away_true)
+                loser_pct  = min(home_true, away_true)
+                conf_lbl, conf_col = confidence_label(winner_pct)
+                adjustments = g.get("adjustments",[])
+                key_factor  = top_factor(adjustments)
+                game_time   = g.get("time","")
+
+                # Win probability bar widths
+                away_bar = int(away_true)
+                home_bar = int(home_true)
+                away_is_winner = away_true >= home_true
+                away_score_col = "var(--accent)" if away_is_winner else "var(--muted)"
+                home_score_col = "var(--accent)" if not away_is_winner else "var(--muted)"
+
+                # Pitcher matchup line
+                ap = g.get("away_pitcher",{}); hp = g.get("home_pitcher",{})
+                ap_name = ap.get("name","TBD"); hp_name = hp.get("name","TBD")
+                ap_era  = ap.get("era","N/A");  hp_era  = hp.get("era","N/A")
+
+                # Best bet badge
+                bet_badge = ""
+                if not g.get("bet_is_pass") and g.get("bet_play"):
+                    bp     = g["bet_play"]
+                    be     = g.get("bet_edge","")
+                    sig    = g.get("signal","watch")
+                    sig_col_map = {"fire":"var(--red)","sharp":"var(--blue)",
+                                   "value":"var(--green)","watch":"var(--amber)"}
+                    bc = sig_col_map.get(sig,"var(--amber)")
+                    bet_badge = (f'<div style="margin-top:10px;padding:8px 10px;'
+                                 f'background:rgba(0,0,0,0.2);border-radius:6px;'
+                                 f'border-left:2px solid {bc}">'
+                                 f'<div style="font-size:9px;color:var(--muted);text-transform:uppercase;'
+                                 f'letter-spacing:1px;margin-bottom:2px">Model Bet</div>'
+                                 f'<div style="font-size:12px;font-weight:700;color:#fff">{bp}</div>'
+                                 f'<div style="font-size:11px;font-family:monospace;color:{bc}">'
+                                 f'{g.get("bet_sub","")} · {be}</div>'
+                                 f'</div>')
+
+                card = (
+                    f'<div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;overflow:hidden">'
+                    f'<div style="font-size:10px;color:var(--muted);font-family:monospace;margin-bottom:8px">{game_time}</div>'
+                    f'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">'
+                    f'<div style="text-align:center;flex:1">'
+                    f'<div style="font-size:11px;color:var(--muted);margin-bottom:2px">{away}</div>'
+                    f'<div style="font-size:36px;font-weight:700;color:{away_score_col};font-family:monospace;line-height:1">{away_pred}</div>'
+                    f'<div style="font-size:10px;color:var(--muted);margin-top:2px">{away_true}% win prob</div>'
+                    f'</div>'
+                    f'<div style="font-size:12px;color:var(--dim);font-family:monospace;flex-shrink:0;padding:0 8px">@</div>'
+                    f'<div style="text-align:center;flex:1">'
+                    f'<div style="font-size:11px;color:var(--muted);margin-bottom:2px">{home}</div>'
+                    f'<div style="font-size:36px;font-weight:700;color:{home_score_col};font-family:monospace;line-height:1">{home_pred}</div>'
+                    f'<div style="font-size:10px;color:var(--muted);margin-top:2px">{home_true}% win prob</div>'
+                    f'</div>'
+                    f'</div>'
+                    f'<div style="display:flex;height:4px;border-radius:2px;overflow:hidden;margin-bottom:8px;background:var(--border)">'
+                    f'<div style="width:{away_bar}%;background:{"var(--accent)" if away_is_winner else "var(--border2)"}"></div>'
+                    f'<div style="width:{home_bar}%;background:{"var(--accent)" if not away_is_winner else "var(--border2)"}"></div>'
+                    f'</div>'
+                    f'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">'
+                    f'<div style="font-size:12px;color:#fff">Predicted: <strong>{winner}</strong></div>'
+                    f'<div style="font-size:11px;font-family:monospace;color:{conf_col};font-weight:700">{conf_lbl} ({winner_pct}%)</div>'
+                    f'</div>'
+                )
+                if key_factor:
+                    card += f'<div style="font-size:11px;color:var(--muted);margin-bottom:6px">Key factor: {key_factor}</div>'
+                card += (
+                    f'<div style="font-size:10px;color:var(--dim);font-family:monospace;border-top:1px solid var(--border);padding-top:8px">'
+                    f'{ap_name} ({ap_era}) vs {hp_name} ({hp_era})</div>'
+                )
+                card += bet_badge + '</div>'
+                html += card
+
+            html += '</div>'
+            return html
+
+        # Summary stats
+        today_ct    = len(today_games)
+        tmrw_ct     = len(tomorrow_games)
+        favs_today  = sum(1 for g in today_games if max(g.get("away_true",50),g.get("home_true",50)) >= 60)
+        tossups     = sum(1 for g in today_games if abs(g.get("away_true",50)-g.get("home_true",50)) <= 8)
+
+        header = (
+            f'<div style="margin-bottom:1.5rem">'
+            f'<div style="font-family:\'IBM Plex Mono\',monospace;font-size:22px;font-weight:700;'
+            f'color:#fff;margin-bottom:4px">🏃 Game Simulation</div>'
+            f'<div style="font-size:13px;color:var(--muted);line-height:1.6">'
+            f'Model predictions for every game — winner, score, and confidence. '
+            f'Uses the Pythagorean run expectancy formula to split the expected total '
+            f'into per-team run predictions based on adjusted win probability. '
+            f'The underlying model and bet selections are completely unchanged.</div>'
+            f'</div>'
+            f'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:2rem">'
+            f'<div class="metric-card" style="text-align:center">'
+            f'<div class="metric-label">Games Today</div>'
+            f'<div class="metric-val">{today_ct}</div></div>'
+            f'<div class="metric-card" style="text-align:center">'
+            f'<div class="metric-label">Clear Favorites</div>'
+            f'<div class="metric-val amber">{favs_today}</div></div>'
+            f'<div class="metric-card" style="text-align:center">'
+            f'<div class="metric-label">Toss-Ups</div>'
+            f'<div class="metric-val" style="color:var(--blue)">{tossups}</div></div>'
+            f'<div class="metric-card" style="text-align:center">'
+            f'<div class="metric-label">Tomorrow</div>'
+            f'<div class="metric-val" style="color:var(--muted)">{tmrw_ct}</div></div>'
+            f'</div>'
+        )
+
+        if not today_games and not tomorrow_games:
+            return (header +
+                    f'<div style="text-align:center;padding:3rem;color:var(--muted)">'
+                    f'No games to simulate today.</div>')
+
+        return (header
+                + render_section(today_games, f"Today — {_today}")
+                + render_section(tomorrow_games, "Tomorrow's Games"))
+
     def betting_trends_page(results_data):
         days     = results_data.get("days",[])
         all_bets = [b for day in days for b in day.get("bets",[])
@@ -4310,6 +4496,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
   <div class="nav-item" onclick="showPage('weather',this)"><span class="nav-icon">&#127780;</span><span class="nav-label">Weather</span><span class="nav-count">{lw}</span></div>
   <div class="nav-item" onclick="showPage('parlay',this)"><span class="nav-icon">&#127922;</span><span class="nav-label">Parlay Analyzer</span></div>
   <div class="nav-item" onclick="showPage('f5',this)"><span class="nav-icon">&#9201;</span><span class="nav-label">F5 & 1st Inning</span><span class="nav-count">{len(f5_plays)}</span></div>
+  <div class="nav-item" onclick="showPage('simulation',this)"><span class="nav-icon">&#127939;</span><span class="nav-label">Simulation</span><span class="nav-count">{len(analyzed_games)}</span></div>
   <div class="nav-item" onclick="showPage('trends',this)"><span class="nav-icon">&#128200;</span><span class="nav-label">Betting Trends</span></div>
   <div class="nav-item" onclick="showPage('accuracy',this)"><span class="nav-icon">&#127919;</span><span class="nav-label">Model Accuracy</span></div>
   <div class="sidebar-section" style="margin-top:8px">Today</div>
@@ -4416,6 +4603,10 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
     {f5_page()}
   </div></div>
 
+  <div class="page" id="page-simulation"><div class="page-inner">
+    {simulation_page()}
+  </div></div>
+
   <div class="page" id="page-trends"><div class="page-inner">
     {betting_trends_page(results_data)}
   </div></div>
@@ -4480,7 +4671,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 
     document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
     document.getElementById('page-'+name).classList.add('active');
     if(el)el.classList.add('active');
-    const t={{home:'Home',plays:'Top Value Plays',games:'All Games',matchups:'Pitcher / Batter',weather:'Weather & Wind',parlay:'Parlay Analyzer',f5:'F5 & 1st Inning',trends:'Betting Trends',accuracy:'Model Accuracy'}};
+    const t={{home:'Home',plays:'Top Value Plays',games:'All Games',matchups:'Pitcher / Batter',weather:'Weather & Wind',parlay:'Parlay Analyzer',f5:'F5 & 1st Inning',simulation:'Simulation',trends:'Betting Trends',accuracy:'Model Accuracy'}};
     document.getElementById('topbar-title').textContent=t[name]||name;
     window.scrollTo(0,0);closeSidebar();
   }}
