@@ -3352,26 +3352,23 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
         import math as _math
 
         def predict_score(away_true_pct, home_true_pct, total_line):
-            """
-            Use Pythagorean formula to split expected total into
-            per-team run expectations based on win probability.
-            W% = R^2 / (R^2 + RA^2)  →  R/RA = sqrt(W% / (1-W%))
-            """
             if not total_line or total_line <= 0:
-                total_line = 8.5  # MLB average
+                total_line = 8.5
             home_w = max(0.02, min(0.98, home_true_pct / 100))
             away_w = 1 - home_w
-            # Pythagorean ratio
             home_ratio = _math.sqrt(home_w / (1 - home_w)) if home_w < 1 else 10
             away_ratio = _math.sqrt(away_w / (1 - away_w)) if away_w < 1 else 10
-            # Split total
             home_runs = total_line * home_ratio / (home_ratio + 1)
             away_runs = total_line * away_ratio / (away_ratio + 1)
-            # Round to nearest 0.5 for display
-            home_r = round(home_runs * 2) / 2
-            away_r = round(away_runs * 2) / 2
-            # Ensure integer display for final scores
-            return round(away_runs), round(home_runs)
+            away_pred = round(away_runs)
+            home_pred = round(home_runs)
+            # Never allow a tie — winner is whoever has higher true probability
+            if away_pred == home_pred:
+                if home_true_pct >= away_true_pct:
+                    home_pred += 1
+                else:
+                    away_pred += 1
+            return away_pred, home_pred
 
         def confidence_label(pct):
             if pct >= 70: return ("Strong", "var(--green)")
