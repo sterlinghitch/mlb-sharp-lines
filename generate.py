@@ -1770,6 +1770,7 @@ def build_hr_candidates(matchups, weather_data):
     """
     candidates = []
     seen_batters = set()
+    api_calls = 0
 
     for m in matchups:
         if m.get("date_et","") not in ("Today","") and "Tomorrow" in m.get("date_et",""):
@@ -1809,9 +1810,21 @@ def build_hr_candidates(matchups, weather_data):
 
                 # Fetch season stats
                 season = fetch_batter_season_stats(batter_id)
-                if not season or season["pa"] < 30: continue
+                api_calls += 1
+                if api_calls % 20 == 0:
+                    print(f"  HR: {api_calls} API calls, {len(candidates)} candidates so far")
+                time.sleep(0.05)  # rate limit
+                if not season:
+                    continue
+                if season["pa"] < 15:  # lowered from 30 — early season or bench players
+                    continue
                 base_hr_rate = season["hr_rate"]
-                if base_hr_rate <= 0: continue
+                if base_hr_rate <= 0:
+                    # Still include players with 0 HR but give them a small base rate
+                    if season["pa"] >= 50:
+                        base_hr_rate = 0.01  # 1% base for power-capable positions
+                    else:
+                        continue
 
                 # Look up career matchup stats from the filtered list
                 filtered_key = "home_batters" if team == home else "away_batters"
@@ -1849,7 +1862,8 @@ def build_hr_candidates(matchups, weather_data):
                 })
 
     candidates.sort(key=lambda x: -x["hr_prob"])
-    return candidates[:20]  # top 20, display shows top 10
+    print(f"  HR: {api_calls} total API calls, {len(candidates)} qualifying batters ranked")
+    return candidates[:20]
 
 
 def build_why_this_bet(game):
@@ -2226,20 +2240,7 @@ def analyze_f5_nrfi(f5_games, matchups_by_game):
 def build_html(analyzed_games, matchups, weather, results_data, tracking_games, all_noon_data, public_betting, pending_picks, f5_plays, hr_candidates, date_str, time_str):
     all_disc=[]; sharp_ct=0; value_ct=0
 
-    # Dedup analyzed_games by game key — keep today's game if duplicate exists
     _today_et_str = datetime.now(EASTERN).strftime("%A, %B %d")
-    seen_games = {}
-    for g in analyzed_games:
-        key = g["game"]
-        if key not in seen_games:
-            seen_games[key] = g
-        else:
-            # Prefer today's version over tomorrow's
-            existing_date = seen_games[key].get("date_et","")
-            new_date = g.get("date_et","")
-            if new_date in (_today_et_str, "Today") and existing_date not in (_today_et_str, "Today"):
-                seen_games[key] = g
-    analyzed_games = list(seen_games.values())
 
     all_plays = []
     for g in analyzed_games:
@@ -2247,12 +2248,22 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
         if g["value_play"]: all_plays.append(g["value_play"])
         if g["signal"]=="fire": sharp_ct+=1
 
-    # Dedup all_plays by game key too — keep highest edge
+    # Dedup all_plays — same game might appear for today AND tomorrow
+    # Keep today's version; if only tomorrow, keep that
     plays_by_game = {}
     for p in all_plays:
         key = p.get("game","")
-        if key not in plays_by_game or (p.get("edge") or 0) > (plays_by_game[key].get("edge") or 0):
+        existing = plays_by_game.get(key)
+        if not existing:
             plays_by_game[key] = p
+        else:
+            # Prefer today's play
+            ex_today = existing.get("date_et","") in (_today_et_str,"Today")
+            new_today = p.get("date_et","") in (_today_et_str,"Today")
+            if new_today and not ex_today:
+                plays_by_game[key] = p
+            elif ex_today == new_today and (p.get("edge") or 0) > (existing.get("edge") or 0):
+                plays_by_game[key] = p
     all_plays = list(plays_by_game.values())
 
     date_lookup_sort = {g["game"]: g.get("date_et","Today") for g in analyzed_games}
