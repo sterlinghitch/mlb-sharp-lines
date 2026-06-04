@@ -1458,26 +1458,48 @@ def analyze_game(game, context):
                           "gap":gap,"best_book":best["name"],"worst_book":worst["name"]})
 
     value_play = None
-    # Qualify for value tab if:
-    #   1. Book discrepancy signal (fire/value/sharp), OR
-    #   2. Best bet has a genuine +2.5% or better edge from model adjustments
-    # Either way, must not be a pass and edge must be at least -1%
-    # (discrepancy plays are still shown even with slight negative edge
-    #  since the discrepancy itself is the signal, but hard cap at -1%)
     best_bet_edge_val = max((c["edge_val"] for c in candidates), default=0.0)
 
     # Qualify for value tab:
-    # - FIRE/SHARP/VALUE signal (book discrepancy): needs only +0.5% edge
-    # - WATCH signal (model only): needs +1.5% edge
-    # The discrepancy itself is a signal worth showing even at lower edge
+    # - FIRE/SHARP/VALUE = book discrepancy detected — show regardless of model pass/fail
+    #   as long as there's a best price available (the discrepancy IS the signal)
+    # - WATCH = model-only edge, needs +1.5% and must not be a pass
     if signal in ("fire","sharp","value"):
-        qualifies = (not bet_is_pass) and (best_bet_edge_val >= 0.5)
+        # For discrepancy plays, show even if model passes — use best available price
+        qualifies = len(candidates) > 0 or (away_gap >= 10 or home_gap >= 10)
     else:
         qualifies = (not bet_is_pass) and (best_bet_edge_val >= 1.5)
 
-    if qualifies and candidates:
-        # Always use the actual best candidate — avoids ML/total mismatch
-        best_c  = max(candidates, key=lambda c: c["edge_val"])
+    if qualifies:
+        # For discrepancy plays with no model candidates, build from raw book data
+        if not candidates and signal in ("fire","sharp","value"):
+            # Coin-flip game but books disagree — show the best price available
+            best_side = best_away if away_gap >= home_gap else best_home
+            price_key = "away_price" if away_gap >= home_gap else "home_price"
+            team_side = away if away_gap >= home_gap else home
+            raw_price = best_side.get(price_key) if best_side else None
+            if raw_price:
+                raw_imp = american_to_implied(raw_price) or 0.5
+                ve  = round((0.50 - raw_imp) * 100, 1)  # edge vs 50% true
+                vp  = fmt(raw_price)
+                vb  = best_side.get("name","?")
+                vtp = 50.0
+                vi  = round(raw_imp * 100, 1)
+                vt  = team_side
+                play_label = f"{team_side} Moneyline"
+                narrative  = (f"Books are split on this game — {away_gap if away_gap>=home_gap else home_gap}c gap "
+                              f"between the best and worst price on {team_side}. "
+                              f"The model sees this as a near coin-flip but the discrepancy is worth noting.")
+                value_play = {
+                    "game": f"{away} @ {home}", "signal": signal,
+                    "team": vt, "play_label": play_label,
+                    "best_price": vp, "best_book": vb,
+                    "true_pct": vtp, "implied_pct": vi, "edge": ve,
+                    "reasoning": narrative,
+                }
+        elif candidates:
+            # Normal path — use best candidate
+            best_c  = max(candidates, key=lambda c: c["edge_val"])
         vp      = best_c["best_price"]
         vb      = best_c["sub"].split(" at ")[-1] if " at " in best_c["sub"] else ""
         ve      = best_c["edge_val"]
