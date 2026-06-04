@@ -1467,9 +1467,13 @@ def analyze_game(game, context):
     best_bet_edge_val = max((c["edge_val"] for c in candidates), default=0.0)
 
     # Qualify for value tab:
-    # Any best bet with +1.5% or better edge shows on the value tab
-    # regardless of signal type — edge is the primary filter
-    qualifies = (not bet_is_pass) and (best_bet_edge_val >= 1.5)
+    # - FIRE/SHARP/VALUE signal (book discrepancy): needs only +0.5% edge
+    # - WATCH signal (model only): needs +1.5% edge
+    # The discrepancy itself is a signal worth showing even at lower edge
+    if signal in ("fire","sharp","value"):
+        qualifies = (not bet_is_pass) and (best_bet_edge_val >= 0.5)
+    else:
+        qualifies = (not bet_is_pass) and (best_bet_edge_val >= 1.5)
 
     if qualifies and candidates:
         # Always use the actual best candidate — avoids ML/total mismatch
