@@ -3,6 +3,22 @@
   "date_display": "June 04, 2026",
   "bets": [
     {
+      "game": "New York Mets @ San Diego Padres",
+      "away": "New York Mets",
+      "home": "San Diego Padres",
+      "away_id": 121,
+      "home_id": 135,
+      "play": "Over 7.5 Runs",
+      "price": "+108",
+      "book": "BetOnline.ag",
+      "type": "total",
+      "pick_team": null,
+      "side": "Over",
+      "total_line": 7.5,
+      "edge": "+0.2%",
+      "signal": "watch"
+    },
+    {
       "game": "Seattle Mariners @ Detroit Tigers",
       "away": "Seattle Mariners",
       "home": "Detroit Tigers",
