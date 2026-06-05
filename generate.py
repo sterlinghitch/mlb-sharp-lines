@@ -3656,42 +3656,30 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
         def predict_score(away_true_pct, home_true_pct, total_line):
             if not total_line or total_line <= 0:
                 total_line = 8.5
-            home_w = max(0.02, min(0.98, home_true_pct / 100))
-            away_w = 1 - home_w
 
-            # Pythagorean ratio
-            home_ratio = _math.sqrt(home_w / (1 - home_w)) if home_w < 1 else 10
-            away_ratio = _math.sqrt(away_w / (1 - away_w)) if away_w < 1 else 10
+            # Win probability differential drives run margin
+            # In MLB, a 60% favorite typically wins by ~1.5 runs
+            # A 70% favorite wins by ~3 runs on average
+            win_diff = (max(home_true_pct, away_true_pct) - 50) / 100
+            # Expected run margin: scale so 50%=0, 60%=1, 70%=2.5, 75%=3.5
+            expected_margin = win_diff * 35
 
-            home_runs = total_line * home_ratio / (home_ratio + 1)
-            away_runs = total_line * away_ratio / (away_ratio + 1)
+            # Split total: winner gets (total + margin) / 2, loser gets (total - margin) / 2
+            winner_runs = (total_line + expected_margin) / 2
+            loser_runs  = (total_line - expected_margin) / 2
 
-            # Round naturally — but use a minimum margin based on confidence
-            away_pred = round(away_runs)
-            home_pred = round(home_runs)
+            winner_pred = max(1, round(winner_runs))
+            loser_pred  = max(0, round(loser_runs))
 
-            # Ensure the winner wins by at least 1
-            if away_pred == home_pred:
-                if home_true_pct >= away_true_pct:
-                    home_pred += 1
-                else:
-                    away_pred += 1
+            # Ensure winner actually wins
+            if winner_pred <= loser_pred:
+                winner_pred = loser_pred + 1
 
-            # For clear favorites (60%+), enforce a more decisive margin
-            margin = abs(home_pred - away_pred)
-            winner_pct = max(home_true_pct, away_true_pct)
-            if winner_pct >= 65 and margin < 2:
-                if home_true_pct >= away_true_pct:
-                    home_pred = away_pred + 2
-                else:
-                    away_pred = home_pred + 2
-            elif winner_pct >= 60 and margin < 1:
-                if home_true_pct >= away_true_pct:
-                    home_pred = away_pred + 1
-                else:
-                    away_pred = home_pred + 1
-
-            return away_pred, home_pred
+            # Assign to away/home
+            if home_true_pct >= away_true_pct:
+                return loser_pred, winner_pred
+            else:
+                return winner_pred, loser_pred
 
         def confidence_label(pct):
             if pct >= 70: return ("Strong", "var(--green)")
