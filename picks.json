@@ -3,6 +3,22 @@
   "date_display": "June 05, 2026",
   "bets": [
     {
+      "game": "Seattle Mariners @ Detroit Tigers",
+      "away": "Seattle Mariners",
+      "home": "Detroit Tigers",
+      "away_id": 136,
+      "home_id": 116,
+      "play": "Over 7.5 Runs",
+      "price": "-114",
+      "book": "DraftKings",
+      "type": "total",
+      "pick_team": null,
+      "side": "Over",
+      "total_line": 7.5,
+      "edge": "+2.5%",
+      "signal": "watch"
+    },
+    {
       "game": "Los Angeles Dodgers @ Arizona Diamondbacks",
       "away": "Los Angeles Dodgers",
       "home": "Arizona Diamondbacks",
