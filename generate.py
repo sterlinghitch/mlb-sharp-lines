@@ -3658,18 +3658,39 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                 total_line = 8.5
             home_w = max(0.02, min(0.98, home_true_pct / 100))
             away_w = 1 - home_w
+
+            # Pythagorean ratio
             home_ratio = _math.sqrt(home_w / (1 - home_w)) if home_w < 1 else 10
             away_ratio = _math.sqrt(away_w / (1 - away_w)) if away_w < 1 else 10
+
             home_runs = total_line * home_ratio / (home_ratio + 1)
             away_runs = total_line * away_ratio / (away_ratio + 1)
+
+            # Round naturally — but use a minimum margin based on confidence
             away_pred = round(away_runs)
             home_pred = round(home_runs)
-            # Never allow a tie — winner is whoever has higher true probability
+
+            # Ensure the winner wins by at least 1
             if away_pred == home_pred:
                 if home_true_pct >= away_true_pct:
                     home_pred += 1
                 else:
                     away_pred += 1
+
+            # For clear favorites (60%+), enforce a more decisive margin
+            margin = abs(home_pred - away_pred)
+            winner_pct = max(home_true_pct, away_true_pct)
+            if winner_pct >= 65 and margin < 2:
+                if home_true_pct >= away_true_pct:
+                    home_pred = away_pred + 2
+                else:
+                    away_pred = home_pred + 2
+            elif winner_pct >= 60 and margin < 1:
+                if home_true_pct >= away_true_pct:
+                    home_pred = away_pred + 1
+                else:
+                    away_pred = home_pred + 1
+
             return away_pred, home_pred
 
         def confidence_label(pct):
