@@ -42,7 +42,7 @@
     },
     "San Francisco Giants @ Chicago Cubs": {
       "play": "No Play",
-      "price": "Best option (San Francisco Giants Moneyline) is overpriced",
+      "price": "Best option (Over 11.0 Runs) is overpriced",
       "book": "current lines",
       "is_pass": true,
       "edge": "-0.4%",
@@ -58,7 +58,7 @@
       "price": "Best option (Chicago White Sox Moneyline) is overpriced",
       "book": "current lines",
       "is_pass": true,
-      "edge": "-0.8%",
+      "edge": "-0.7%",
       "away_true": 38,
       "home_true": 62,
       "away_fair": "+166",
