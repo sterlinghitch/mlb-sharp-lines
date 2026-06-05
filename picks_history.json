@@ -593,6 +593,61 @@
       "type": "ml",
       "edge": "+0.9%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-06-05",
+      "date_display": "June 05, 2026",
+      "game": "Los Angeles Dodgers @ Arizona Diamondbacks",
+      "play": "Arizona Diamondbacks Moneyline",
+      "price": "-111",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+3.8%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-05",
+      "date_display": "June 05, 2026",
+      "game": "Boston Red Sox @ New York Yankees",
+      "play": "Boston Red Sox Moneyline",
+      "price": "+127",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+0.8%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-05",
+      "date_display": "June 05, 2026",
+      "game": "Baltimore Orioles @ Toronto Blue Jays",
+      "play": "Baltimore Orioles Moneyline",
+      "price": "+132",
+      "book": "FanDuel",
+      "type": "ml",
+      "edge": "+0.2%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-05",
+      "date_display": "June 05, 2026",
+      "game": "Cincinnati Reds @ St. Louis Cardinals",
+      "play": "Cincinnati Reds Moneyline",
+      "price": "+120",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+0.6%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-05",
+      "date_display": "June 05, 2026",
+      "game": "Milwaukee Brewers @ Colorado Rockies",
+      "play": "Over 11.5 Runs",
+      "price": "-107",
+      "book": "MyBookie.ag",
+      "type": "total",
+      "edge": "+3.3%",
+      "signal": "watch"
     }
   ]
 }
