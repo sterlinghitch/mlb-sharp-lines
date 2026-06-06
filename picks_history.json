@@ -648,6 +648,72 @@
       "type": "total",
       "edge": "+3.3%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-06-06",
+      "date_display": "June 06, 2026",
+      "game": "Kansas City Royals @ Minnesota Twins",
+      "play": "Kansas City Royals Moneyline",
+      "price": "+136",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+0.6%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-06",
+      "date_display": "June 06, 2026",
+      "game": "Cincinnati Reds @ St. Louis Cardinals",
+      "play": "Cincinnati Reds Moneyline",
+      "price": "+111",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+0.4%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-06",
+      "date_display": "June 06, 2026",
+      "game": "San Francisco Giants @ Chicago Cubs",
+      "play": "Under 7.5 Runs",
+      "price": "-105",
+      "book": "FanDuel",
+      "type": "total",
+      "edge": "+0.6%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-06",
+      "date_display": "June 06, 2026",
+      "game": "Boston Red Sox @ New York Yankees",
+      "play": "Boston Red Sox Moneyline",
+      "price": "+118",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+0.7%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-06",
+      "date_display": "June 06, 2026",
+      "game": "Milwaukee Brewers @ Colorado Rockies",
+      "play": "Over 10.5 Runs",
+      "price": "-106",
+      "book": "MyBookie.ag",
+      "type": "total",
+      "edge": "+3.1%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-06",
+      "date_display": "June 06, 2026",
+      "game": "New York Mets @ San Diego Padres",
+      "play": "Under 7.5 Runs",
+      "price": "-102",
+      "book": "DraftKings",
+      "type": "total",
+      "edge": "+0.1%",
+      "signal": "watch"
     }
   ]
 }
