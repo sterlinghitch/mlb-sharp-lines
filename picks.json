@@ -3,6 +3,38 @@
   "date_display": "June 06, 2026",
   "bets": [
     {
+      "game": "Chicago White Sox @ Philadelphia Phillies",
+      "away": "Chicago White Sox",
+      "home": "Philadelphia Phillies",
+      "away_id": 145,
+      "home_id": 143,
+      "play": "Over 9.5 Runs",
+      "price": "+100",
+      "book": "FanDuel",
+      "type": "total",
+      "pick_team": null,
+      "side": "Over",
+      "total_line": 9.5,
+      "edge": "+1.4%",
+      "signal": "watch"
+    },
+    {
+      "game": "Baltimore Orioles @ Toronto Blue Jays",
+      "away": "Baltimore Orioles",
+      "home": "Toronto Blue Jays",
+      "away_id": 110,
+      "home_id": 141,
+      "play": "Baltimore Orioles Moneyline",
+      "price": "+121",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "pick_team": "Baltimore Orioles",
+      "side": null,
+      "total_line": null,
+      "edge": "+1.0%",
+      "signal": "watch"
+    },
+    {
       "game": "Athletics @ Houston Astros",
       "away": "Athletics",
       "home": "Houston Astros",
