@@ -3,6 +3,22 @@
   "date_display": "June 06, 2026",
   "bets": [
     {
+      "game": "Athletics @ Houston Astros",
+      "away": "Athletics",
+      "home": "Houston Astros",
+      "away_id": 133,
+      "home_id": 117,
+      "play": "Athletics Moneyline",
+      "price": "+111",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "pick_team": "Athletics",
+      "side": null,
+      "total_line": null,
+      "edge": "+1.0%",
+      "signal": "watch"
+    },
+    {
       "game": "Kansas City Royals @ Minnesota Twins",
       "away": "Kansas City Royals",
       "home": "Minnesota Twins",
