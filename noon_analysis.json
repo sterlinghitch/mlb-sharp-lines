@@ -208,6 +208,97 @@
       "home_fair": "-104",
       "signal": "fire",
       "signal_label": "SPLIT MARKET"
+    },
+    "Boston Red Sox @ Tampa Bay Rays": {
+      "play": "No Play",
+      "price": "Best option (Tampa Bay Rays Moneyline) is overpriced",
+      "book": "current lines",
+      "is_pass": true,
+      "edge": "-2.0%",
+      "away_true": 52,
+      "home_true": 48,
+      "away_fair": "-106",
+      "home_fair": "+106",
+      "signal": "fire",
+      "signal_label": "SPLIT MARKET"
+    },
+    "Seattle Mariners @ Baltimore Orioles": {
+      "play": "No Play",
+      "price": "Best option (Baltimore Orioles Moneyline) is overpriced",
+      "book": "current lines",
+      "is_pass": true,
+      "edge": "-1.8%",
+      "away_true": 54,
+      "home_true": 46,
+      "away_fair": "-116",
+      "home_fair": "+116",
+      "signal": "watch",
+      "signal_label": ""
+    },
+    "Philadelphia Phillies @ Toronto Blue Jays": {
+      "play": "No Play",
+      "price": "Best option (Toronto Blue Jays Moneyline) is overpriced",
+      "book": "current lines",
+      "is_pass": true,
+      "edge": "-0.8%",
+      "away_true": 61,
+      "home_true": 39,
+      "away_fair": "-159",
+      "home_fair": "+159",
+      "signal": "watch",
+      "signal_label": ""
+    },
+    "Houston Astros @ Los Angeles Angels": {
+      "play": "No Play -- near coin flip",
+      "price": "Teams too evenly matched",
+      "book": "current prices",
+      "is_pass": true,
+      "edge": "None",
+      "away_true": 50,
+      "home_true": 50,
+      "away_fair": "-102",
+      "home_fair": "+102",
+      "signal": "watch",
+      "signal_label": ""
+    },
+    "Cincinnati Reds @ San Diego Padres": {
+      "play": "No Play",
+      "price": "Best option (Over 8.0 Runs) is overpriced",
+      "book": "current lines",
+      "is_pass": true,
+      "edge": "-0.5%",
+      "away_true": 44,
+      "home_true": 56,
+      "away_fair": "+127",
+      "home_fair": "-127",
+      "signal": "watch",
+      "signal_label": ""
+    },
+    "Washington Nationals @ San Francisco Giants": {
+      "play": "No Play",
+      "price": "Best option (Under 8.0 Runs) is overpriced",
+      "book": "current lines",
+      "is_pass": true,
+      "edge": "-0.9%",
+      "away_true": 38,
+      "home_true": 62,
+      "away_fair": "+165",
+      "home_fair": "-165",
+      "signal": "watch",
+      "signal_label": ""
+    },
+    "Milwaukee Brewers @ Athletics": {
+      "play": "No Play",
+      "price": "Best option (Athletics Moneyline) is overpriced",
+      "book": "current lines",
+      "is_pass": true,
+      "edge": "-0.7%",
+      "away_true": 59,
+      "home_true": 41,
+      "away_fair": "-143",
+      "home_fair": "+143",
+      "signal": "watch",
+      "signal_label": ""
     }
   }
 }
