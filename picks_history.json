@@ -769,6 +769,28 @@
       "type": "total",
       "edge": "+2.1%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-06-08",
+      "date_display": "June 08, 2026",
+      "game": "Houston Astros @ Los Angeles Angels",
+      "play": "Los Angeles Angels Moneyline",
+      "price": "+114",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+0.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-08",
+      "date_display": "June 08, 2026",
+      "game": "Arizona Diamondbacks @ Miami Marlins",
+      "play": "Under 7.5 Runs",
+      "price": "+100",
+      "book": "FanDuel",
+      "type": "total",
+      "edge": "+1.8%",
+      "signal": "watch"
     }
   ]
 }
