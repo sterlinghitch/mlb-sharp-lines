@@ -791,6 +791,83 @@
       "type": "total",
       "edge": "+1.8%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-06-09",
+      "date_display": "June 09, 2026",
+      "game": "New York Yankees @ Cleveland Guardians",
+      "play": "Over 8.5 Runs",
+      "price": "-115",
+      "book": "BetOnline.ag",
+      "type": "total",
+      "edge": "+1.0%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-09",
+      "date_display": "June 09, 2026",
+      "game": "Los Angeles Dodgers @ Pittsburgh Pirates",
+      "play": "Over 8.5 Runs",
+      "price": "-103",
+      "book": "MyBookie.ag",
+      "type": "total",
+      "edge": "+0.4%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-09",
+      "date_display": "June 09, 2026",
+      "game": "Minnesota Twins @ Detroit Tigers",
+      "play": "Over 8.5 Runs",
+      "price": "+100",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+3.1%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-09",
+      "date_display": "June 09, 2026",
+      "game": "St. Louis Cardinals @ New York Mets",
+      "play": "Over 7.5 Runs",
+      "price": "-119",
+      "book": "DraftKings",
+      "type": "total",
+      "edge": "+0.8%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-09",
+      "date_display": "June 09, 2026",
+      "game": "Texas Rangers @ Kansas City Royals",
+      "play": "Over 9.5 Runs",
+      "price": "-101",
+      "book": "DraftKings",
+      "type": "total",
+      "edge": "+2.3%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-09",
+      "date_display": "June 09, 2026",
+      "game": "Chicago Cubs @ Colorado Rockies",
+      "play": "Over 12.5 Runs",
+      "price": "-102",
+      "book": "BetMGM",
+      "type": "total",
+      "edge": "+5.6%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-09",
+      "date_display": "June 09, 2026",
+      "game": "Houston Astros @ Los Angeles Angels",
+      "play": "Los Angeles Angels Moneyline",
+      "price": "+111",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+0.9%",
+      "signal": "watch"
     }
   ]
 }
