@@ -22,8 +22,8 @@
       "edge": "None",
       "away_true": 51,
       "home_true": 49,
-      "away_fair": "-103",
-      "home_fair": "+103",
+      "away_fair": "-104",
+      "home_fair": "+104",
       "signal": "fire",
       "signal_label": "SPLIT MARKET"
     },
