@@ -3,6 +3,38 @@
   "date_display": "June 09, 2026",
   "bets": [
     {
+      "game": "Washington Nationals @ San Francisco Giants",
+      "away": "Washington Nationals",
+      "home": "San Francisco Giants",
+      "away_id": 120,
+      "home_id": 137,
+      "play": "Under 8.5 Runs",
+      "price": "+100",
+      "book": "BetOnline.ag",
+      "type": "total",
+      "pick_team": null,
+      "side": "Under",
+      "total_line": 8.5,
+      "edge": "+0.1%",
+      "signal": "watch"
+    },
+    {
+      "game": "Cincinnati Reds @ San Diego Padres",
+      "away": "Cincinnati Reds",
+      "home": "San Diego Padres",
+      "away_id": 113,
+      "home_id": 135,
+      "play": "San Diego Padres Moneyline",
+      "price": "-150",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "pick_team": "San Diego Padres",
+      "side": null,
+      "total_line": null,
+      "edge": "+2.2%",
+      "signal": "watch"
+    },
+    {
       "game": "New York Yankees @ Cleveland Guardians",
       "away": "New York Yankees",
       "home": "Cleveland Guardians",
