@@ -3,6 +3,22 @@
   "date_display": "June 10, 2026",
   "bets": [
     {
+      "game": "Seattle Mariners @ Baltimore Orioles",
+      "away": "Seattle Mariners",
+      "home": "Baltimore Orioles",
+      "away_id": 136,
+      "home_id": 110,
+      "play": "Over 8.5 Runs",
+      "price": "-105",
+      "book": "BetMGM",
+      "type": "total",
+      "pick_team": null,
+      "side": "Over",
+      "total_line": 8.5,
+      "edge": "+0.5%",
+      "signal": "fire"
+    },
+    {
       "game": "Los Angeles Dodgers @ Pittsburgh Pirates",
       "away": "Los Angeles Dodgers",
       "home": "Pittsburgh Pirates",
