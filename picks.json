@@ -3,6 +3,22 @@
   "date_display": "June 10, 2026",
   "bets": [
     {
+      "game": "Atlanta Braves @ Chicago White Sox",
+      "away": "Atlanta Braves",
+      "home": "Chicago White Sox",
+      "away_id": 144,
+      "home_id": 145,
+      "play": "Over 7.5 Runs",
+      "price": "-102",
+      "book": "BetMGM",
+      "type": "total",
+      "pick_team": null,
+      "side": "Over",
+      "total_line": 7.5,
+      "edge": "+0.3%",
+      "signal": "watch"
+    },
+    {
       "game": "Houston Astros @ Los Angeles Angels",
       "away": "Houston Astros",
       "home": "Los Angeles Angels",
