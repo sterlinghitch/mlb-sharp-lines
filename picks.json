@@ -3,6 +3,22 @@
   "date_display": "June 10, 2026",
   "bets": [
     {
+      "game": "Los Angeles Dodgers @ Pittsburgh Pirates",
+      "away": "Los Angeles Dodgers",
+      "home": "Pittsburgh Pirates",
+      "away_id": 119,
+      "home_id": 134,
+      "play": "Los Angeles Dodgers Moneyline",
+      "price": "-190",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "pick_team": "Los Angeles Dodgers",
+      "side": null,
+      "total_line": null,
+      "edge": "+1.4%",
+      "signal": "watch"
+    },
+    {
       "game": "Atlanta Braves @ Chicago White Sox",
       "away": "Atlanta Braves",
       "home": "Chicago White Sox",
