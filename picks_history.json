@@ -868,6 +868,72 @@
       "type": "ml",
       "edge": "+0.9%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-06-10",
+      "date_display": "June 10, 2026",
+      "game": "Boston Red Sox @ Tampa Bay Rays",
+      "play": "Boston Red Sox Moneyline",
+      "price": "+131",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+0.9%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-10",
+      "date_display": "June 10, 2026",
+      "game": "Cincinnati Reds @ San Diego Padres",
+      "play": "San Diego Padres Moneyline",
+      "price": "-160",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+1.3%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-10",
+      "date_display": "June 10, 2026",
+      "game": "Minnesota Twins @ Detroit Tigers",
+      "play": "Minnesota Twins Moneyline",
+      "price": "+147",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+0.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-10",
+      "date_display": "June 10, 2026",
+      "game": "St. Louis Cardinals @ New York Mets",
+      "play": "Over 8.5 Runs",
+      "price": "-101",
+      "book": "DraftKings",
+      "type": "total",
+      "edge": "+0.4%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-10",
+      "date_display": "June 10, 2026",
+      "game": "Texas Rangers @ Kansas City Royals",
+      "play": "Over 10.0 Runs",
+      "price": "-105",
+      "book": "MyBookie.ag",
+      "type": "total",
+      "edge": "+2.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-10",
+      "date_display": "June 10, 2026",
+      "game": "Chicago Cubs @ Colorado Rockies",
+      "play": "Over 12.0 Runs",
+      "price": "-114",
+      "book": "FanDuel",
+      "type": "total",
+      "edge": "+2.6%",
+      "signal": "watch"
     }
   ]
 }
