@@ -3,6 +3,22 @@
   "date_display": "June 10, 2026",
   "bets": [
     {
+      "game": "Houston Astros @ Los Angeles Angels",
+      "away": "Houston Astros",
+      "home": "Los Angeles Angels",
+      "away_id": 117,
+      "home_id": 108,
+      "play": "Houston Astros Moneyline",
+      "price": "+107",
+      "book": "BetUS",
+      "type": "ml",
+      "pick_team": "Houston Astros",
+      "side": null,
+      "total_line": null,
+      "edge": "+0.4%",
+      "signal": "watch"
+    },
+    {
       "game": "Boston Red Sox @ Tampa Bay Rays",
       "away": "Boston Red Sox",
       "home": "Tampa Bay Rays",
