@@ -1221,17 +1221,17 @@ def analyze_game(game, context):
     ap_ctx = context.get("away_pitcher",{}); hp_ctx = context.get("home_pitcher",{})
     ap_q = ap_ctx.get("quality",0.0); hp_q = hp_ctx.get("quality",0.0)
     if abs(ap_q)>0.01:
-        adj_at += ap_q*0.5; adj_ht -= ap_q*0.5
+        adj_at += ap_q*0.7; adj_ht -= ap_q*0.7
         adjustments.append((f"Away SP {ap_ctx.get('name','?')} ERA {ap_ctx.get('era','?')}",ap_q*0.5,-ap_q*0.5))
     if abs(hp_q)>0.01:
-        adj_ht += hp_q*0.5; adj_at -= hp_q*0.5
+        adj_ht += hp_q*0.7; adj_at -= hp_q*0.7
         adjustments.append((f"Home SP {hp_ctx.get('name','?')} ERA {hp_ctx.get('era','?')}",-hp_q*0.5,hp_q*0.5))
 
     # 2. Bullpen fatigue
     away_bp = context.get("away_bullpen",{}); home_bp = context.get("home_bullpen",{})
     fat_diff = home_bp.get("fatigue",0) - away_bp.get("fatigue",0)
     if abs(fat_diff)>0.2:
-        delta = fat_diff*0.04; adj_at += delta; adj_ht -= delta
+        delta = fat_diff*0.06; adj_at += delta; adj_ht -= delta
         adjustments.append((f"Bullpen ({away_bp.get('label','?')} vs {home_bp.get('label','?')})",delta,-delta))
 
     # 3. Injuries -- key position players OUT
@@ -1346,7 +1346,7 @@ def analyze_game(game, context):
     elif away_gap>=10 or home_gap>=10: signal,signal_label="value","SHOP"
     else:                              signal,signal_label="watch",""
 
-    is_coin = abs(adj_at-adj_ht)<0.03
+    is_coin = abs(adj_at-adj_ht)<0.02
 
     def ml_cand(team,true_p,best_b,pk):
         bp=best_b[pk]; imp=american_to_implied(bp)
@@ -1388,7 +1388,7 @@ def analyze_game(game, context):
 
         # Park factor
         pf = PARK_FACTORS.get(home,1.0)
-        adj_ov = min(0.85,max(0.15, true_ov + (pf-1.0)*0.15))
+        adj_ov = min(0.85,max(0.15, true_ov + (pf-1.0)*0.08))
         adj_un = 1.0-adj_ov
 
         # Umpire run impact
@@ -1402,7 +1402,7 @@ def analyze_game(game, context):
             wind_spd = int(wx.get("wind_speed","0") or 0)
             wind_effect = wx.get("wind_effect","")
             if wind_spd>=8:
-                wind_adj = (wind_spd/20.0)*0.06
+                wind_adj = (wind_spd/20.0)*0.04
                 if wind_effect=="blowing_out":   adj_ov=min(0.85,adj_ov+wind_adj)
                 elif wind_effect=="blowing_in":  adj_ov=max(0.15,adj_ov-wind_adj)
                 adj_un = 1.0-adj_ov
@@ -1412,7 +1412,7 @@ def analyze_game(game, context):
             try:
                 temp_f = float(str(wx.get("temp","70") or "70"))
                 if temp_f < 70:
-                    temp_adj = ((70 - temp_f) / 10.0) * 0.004  # -0.4% per 10F below 70
+                    temp_adj = ((70 - temp_f) / 10.0) * 0.002  # -0.2% per 10F below 70
                     temp_adj = min(temp_adj, 0.04)   # cap at -4%
                     adj_ov = max(0.15, adj_ov - temp_adj)
                     adj_un = 1.0 - adj_ov
@@ -1486,8 +1486,8 @@ def analyze_game(game, context):
         # Discrepancy signal — show if model doesn't pass and edge is positive
         qualifies = (not bet_is_pass) and (best_bet_edge_val > 0)
     else:
-        # Watch signal — model edge only, needs stronger threshold
-        qualifies = (not bet_is_pass) and (best_bet_edge_val >= 1.5)
+        # Watch signal — model edge only, needs threshold
+        qualifies = (not bet_is_pass) and (best_bet_edge_val >= 1.0)
 
     if qualifies:
         # For discrepancy plays with no model candidates, build from raw book data
