@@ -3,6 +3,38 @@
   "date_display": "June 11, 2026",
   "bets": [
     {
+      "game": "Seattle Mariners @ Baltimore Orioles",
+      "away": "Seattle Mariners",
+      "home": "Baltimore Orioles",
+      "away_id": 136,
+      "home_id": 110,
+      "play": "Over 8.5 Runs",
+      "price": "-115",
+      "book": "BetMGM",
+      "type": "total",
+      "pick_team": null,
+      "side": "Over",
+      "total_line": 8.5,
+      "edge": "+0.2%",
+      "signal": "fire"
+    },
+    {
+      "game": "Philadelphia Phillies @ Milwaukee Brewers",
+      "away": "Philadelphia Phillies",
+      "home": "Milwaukee Brewers",
+      "away_id": 143,
+      "home_id": 158,
+      "play": "Philadelphia Phillies Moneyline",
+      "price": "+219",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "pick_team": "Philadelphia Phillies",
+      "side": null,
+      "total_line": null,
+      "edge": "+0.1%",
+      "signal": "watch"
+    },
+    {
       "game": "Texas Rangers @ Kansas City Royals",
       "away": "Texas Rangers",
       "home": "Kansas City Royals",
