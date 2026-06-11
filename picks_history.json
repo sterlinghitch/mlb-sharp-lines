@@ -934,6 +934,39 @@
       "type": "total",
       "edge": "+2.6%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-06-11",
+      "date_display": "June 11, 2026",
+      "game": "Texas Rangers @ Kansas City Royals",
+      "play": "Over 10.5 Runs",
+      "price": "-102",
+      "book": "BetMGM",
+      "type": "total",
+      "edge": "+2.1%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-11",
+      "date_display": "June 11, 2026",
+      "game": "Atlanta Braves @ Chicago White Sox",
+      "play": "Over 8.5 Runs",
+      "price": "-112",
+      "book": "FanDuel",
+      "type": "total",
+      "edge": "+0.2%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-11",
+      "date_display": "June 11, 2026",
+      "game": "Minnesota Twins @ Detroit Tigers",
+      "play": "Minnesota Twins Moneyline",
+      "price": "+113",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+0.7%",
+      "signal": "watch"
     }
   ]
 }
