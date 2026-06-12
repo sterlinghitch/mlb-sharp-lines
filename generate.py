@@ -2323,12 +2323,12 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
                 plays_by_game[key] = p
     all_plays = list(plays_by_game.values())
 
-    date_lookup_sort = {g["game"]: g.get("date_et","Today") for g in analyzed_games}
+    # Sort using date_et directly from value_play (now stored on each play)
     all_plays.sort(key=lambda x: (
-        0 if date_lookup_sort.get(x.get("game",""),"") in (_today_et_str,"Today") else 1,
+        0 if x.get("date_et","") in (_today_et_str,"Today") else 1,
         -(x.get("edge") or 0)
     ))
-    value_ct = len([p for p in all_plays if date_lookup_sort.get(p.get("game",""),"") in (_today_et_str,"Today")])
+    value_ct = len([p for p in all_plays if p.get("date_et","") in (_today_et_str,"Today")])
     all_disc.sort(key=lambda x:-(x.get("gap",0)))
     sig_cls={"fire":"b-fire","sharp":"b-sharp","value":"b-value","watch":"b-watch","pass":"b-pass"}
     alert_cls={"fire":"fire","sharp":"sharp","value":"value","watch":"watch"}
@@ -2337,11 +2337,9 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
 
     def alert_cards():
         if not all_plays: return '<p style="color:var(--muted);font-size:13px;padding:1rem 0">No sharp alerts today.</p>'
-        date_lookup = {g["game"]: g.get("date_et","Today") for g in analyzed_games}
-        time_lookup = {g["game"]: g.get("time","") for g in analyzed_games}
         today_d = datetime.now(EASTERN).strftime("%A, %B %d")
-        today_plays    = [p for p in all_plays if date_lookup.get(p.get("game",""),"") in (today_d,"Today")]
-        tomorrow_plays = [p for p in all_plays if date_lookup.get(p.get("game",""),"") not in (today_d,"Today")]
+        today_plays    = [p for p in all_plays if p.get("date_et","") in (today_d,"Today")]
+        tomorrow_plays = [p for p in all_plays if p.get("date_et","") not in (today_d,"Today","")]
         html = ""
 
         def render_card(p):
@@ -2395,7 +2393,7 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
         from collections import OrderedDict
         grouped = OrderedDict()
         for p in plays[:12]:
-            game_date = date_lookup.get(p.get("game",""), "Today")
+            game_date = p.get("date_et","Today")
             grouped.setdefault(game_date, []).append(p)
 
         rows = ""
@@ -2435,7 +2433,7 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
         _today = datetime.now(EASTERN).strftime("%A, %B %d")
         positive = [p for p in all_plays
                     if (p.get("edge") or 0) > 0
-                    and date_lookup.get(p.get("game",""),"") in (_today,"Today")]
+                    and p.get("date_et","") in (_today,"Today")]
         if not positive:
             positive = [p for p in all_plays if (p.get("edge") or 0) > 0]
         if not positive:
@@ -2640,7 +2638,7 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
         positive = [
             p for p in all_plays
             if (p.get("edge") or 0) > 0
-            and date_lookup.get(p.get("game",""), "") in (today_date,"Today")
+            and p.get("date_et","") in (today_date,"Today")
         ]
         # If no today plays, fall back to any positive-edge play but note it
         if not positive:
