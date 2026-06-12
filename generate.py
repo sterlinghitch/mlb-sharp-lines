@@ -1531,6 +1531,7 @@ def analyze_game(game, context):
                     "best_price": vp, "best_book": vb,
                     "true_pct": vtp, "implied_pct": vi, "edge": ve,
                     "reasoning": narrative,
+                    "date_et": date_et, "time": time_display,
                 }
         elif candidates:
             # Normal path — use best candidate
@@ -1689,6 +1690,8 @@ def analyze_game(game, context):
             "implied_pct": vi,
             "edge":        ve,
             "reasoning":   narrative,
+            "date_et":     date_et,
+            "time":        time_display,
         }
 
     # ── BET UP TO ────────────────────────────────────────
