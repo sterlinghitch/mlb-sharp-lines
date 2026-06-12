@@ -1724,6 +1724,7 @@ def analyze_game(game, context):
             "edge":        ve,
             "reasoning":   narrative,
             "date_et":     date_et,
+            "date_sort":   date_sort,
             "time":        time_display,
         }
 
@@ -2349,8 +2350,8 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
 
     # Sort using date_et directly from value_play (now stored on each play)
     all_plays.sort(key=lambda x: (
-        0 if x.get("date_et","") in (_today_et_str,"Today") else 1,
-        -(x.get("edge") or 0)
+        x.get("date_sort", x.get("date_et","z")),  # chronological date order
+        -(x.get("edge") or 0)                        # then highest edge first
     ))
     value_ct = len([p for p in all_plays if p.get("date_et","") in (_today_et_str,"Today")])
     all_disc.sort(key=lambda x:-(x.get("gap",0)))
