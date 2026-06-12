@@ -1221,10 +1221,10 @@ def analyze_game(game, context):
     ap_ctx = context.get("away_pitcher",{}); hp_ctx = context.get("home_pitcher",{})
     ap_q = ap_ctx.get("quality",0.0); hp_q = hp_ctx.get("quality",0.0)
     if abs(ap_q)>0.01:
-        adj_at += ap_q*0.7; adj_ht -= ap_q*0.7
+        adj_at += ap_q; adj_ht -= ap_q
         adjustments.append((f"Away SP {ap_ctx.get('name','?')} ERA {ap_ctx.get('era','?')}",ap_q*0.5,-ap_q*0.5))
     if abs(hp_q)>0.01:
-        adj_ht += hp_q*0.7; adj_at -= hp_q*0.7
+        adj_ht += hp_q; adj_at -= hp_q
         adjustments.append((f"Home SP {hp_ctx.get('name','?')} ERA {hp_ctx.get('era','?')}",-hp_q*0.5,hp_q*0.5))
 
     # 2. Bullpen fatigue
@@ -1346,7 +1346,7 @@ def analyze_game(game, context):
     elif away_gap>=10 or home_gap>=10: signal,signal_label="value","SHOP"
     else:                              signal,signal_label="watch",""
 
-    is_coin = abs(adj_at-adj_ht)<0.02
+    is_coin = False  # removed — edge threshold handles this already
 
     def ml_cand(team,true_p,best_b,pk):
         bp=best_b[pk]; imp=american_to_implied(bp)
@@ -5362,6 +5362,17 @@ def main():
         with open("picks.json","w",encoding="utf-8") as f:
             json.dump(picks, f, indent=2)
         print(f"Saved picks.json: {len(picks['bets'])} best bets")
+
+    # Diagnostic — shows in workflow log so you can verify algorithm is working
+    passes_ct   = sum(1 for g in analyzed if g.get("bet_is_pass"))
+    qualify_ct  = sum(1 for g in analyzed if g.get("value_play"))
+    top_edges   = sorted(
+        [(g.get("game","?").split(" @ ")[-1], g.get("bet_edge","?"))
+         for g in analyzed if not g.get("bet_is_pass")],
+        key=lambda x: float(str(x[1]).replace("+","").replace("%","") or 0), reverse=True
+    )[:5]
+    print(f"  Algorithm check: {len(analyzed)} games | {passes_ct} passes | {qualify_ct} value plays")
+    print(f"  Top edges: {top_edges}")
 
     # Save to permanent picks history (never overwritten, accumulates forever)
     history_path = "picks_history.json"
