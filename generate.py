@@ -1167,6 +1167,15 @@ def build_matchup_data(odds_games, date_str):
 # =============================================================
 def analyze_game(game, context):
     away = game["away_team"]; home = game["home_team"]
+    # Compute date/time early so value_play can use them
+    try:
+        _t = datetime.fromisoformat(game.get("commence_time","").replace("Z","+00:00")).astimezone(EASTERN)
+        time_display = _t.strftime("%-I:%M %p ET")
+        date_et      = _t.strftime("%A, %B %d")
+        date_sort    = _t.strftime("%Y-%m-%d")
+        commence_iso = game.get("commence_time","")
+    except Exception:
+        time_display = ""; date_et = "Today"; date_sort = "9999-99-99"; commence_iso = ""
     books = game.get("bookmakers",[])
 
     book_data = []
@@ -1715,12 +1724,7 @@ def analyze_game(game, context):
             except Exception:
                 pass
 
-    try:
-        t = datetime.fromisoformat(game.get("commence_time","").replace("Z","+00:00")).astimezone(EASTERN)
-        time_display=t.strftime("%-I:%M %p ET"); date_et=t.strftime("%A, %B %d"); date_sort=t.strftime("%Y-%m-%d")
-        commence_iso = game.get("commence_time","")
-    except Exception:
-        time_display=""; date_et="Today"; date_sort="9999-99-99"; commence_iso=""
+    # date_et, time_display, date_sort, commence_iso computed at top of function
     # Counts how many independent signals all point the same direction
     conf = 0; conf_reasons = []
     if best_bet_edge_val >= 2.5: conf += 1; conf_reasons.append(f"Edge +{round(best_bet_edge_val,1)}%")
