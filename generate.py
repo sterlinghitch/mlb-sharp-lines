@@ -2738,25 +2738,26 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
 
     def plays_table():
         if not all_plays: return "<p style='color:var(--muted);font-size:13px;padding:1rem 0'>No value plays today.</p>"
-        date_lookup = {g["game"]: g.get("date_et","Today") for g in analyzed_games}
-        time_lookup = {g["game"]: g.get("time","") for g in analyzed_games}
 
-        # Group by date
+        # Group by date using date_et directly from play (not date_lookup)
         from collections import OrderedDict
         grouped = OrderedDict()
         for p in all_plays:
-            d = date_lookup.get(p.get("game",""),"Today")
+            d = p.get("date_et","Today")
             grouped.setdefault(d,[]).append(p)
+
+        # Sort each date group by edge descending
+        for d in grouped:
+            grouped[d].sort(key=lambda x: -(x.get("edge") or 0))
 
         rows=""
         for date_lbl, plays in grouped.items():
-            # Date separator row
             rows+=(f'<tr><td colspan="9" style="background:var(--bg3);padding:6px 12px;'
                    f'font-family:monospace;font-size:10px;font-weight:700;text-transform:uppercase;'
                    f'letter-spacing:1.5px;color:var(--accent)">{date_lbl}</td></tr>')
             for p in plays:
                 ec="c-green" if (p.get("edge") or 0)>0 else "c-red"
-                gtime = time_lookup.get(p.get("game",""),"")
+                gtime = p.get("time","")
                 rows+=(f'<tr>'
                        f'<td style="font-size:10px;color:var(--muted);font-family:monospace;white-space:nowrap">{gtime}</td>'
                        f'<td>{p["game"]}</td>'
