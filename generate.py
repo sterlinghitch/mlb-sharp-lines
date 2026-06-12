@@ -1532,18 +1532,13 @@ def analyze_game(game, context):
         elif candidates:
             # Normal path — use best candidate
             best_c  = max(candidates, key=lambda c: c["edge_val"])
-        vp      = best_c["best_price"]
-        vb      = best_c["sub"].split(" at ")[-1] if " at " in best_c["sub"] else ""
-        ve      = best_c["edge_val"]
-        vtp_str = best_c["true_pct"].replace("%","")
-        vtp     = float(vtp_str) if vtp_str.replace(".","").isdigit() else 0.0
+        vp         = best_c["best_price"]
+        vb         = best_c["sub"].split(" at ")[-1] if " at " in best_c["sub"] else ""
+        ve         = best_c["edge_val"]
+        vtp_str    = best_c["true_pct"].replace("%","")
+        vtp        = float(vtp_str) if vtp_str.replace(".","").isdigit() else 0.0
         play_label = best_c["play"]
-
-        # Implied% from the best price
-        try:
-            vi = round((american_to_implied(float(vp.replace("+",""))) or 0)*100, 1)
-        except Exception:
-            vi = 0.0
+        vi         = round(vtp - ve, 1)  # vig-stripped implied = true - edge
 
         # Team label — for totals use home team as the "team" field (just for display grouping)
         if best_c["type"] == "Total":
