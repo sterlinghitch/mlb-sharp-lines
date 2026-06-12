@@ -54,15 +54,15 @@
       "signal_label": "SPLIT MARKET"
     },
     "Houston Astros @ Kansas City Royals": {
-      "play": "Kansas City Royals Moneyline",
-      "price": "+100",
-      "book": "MyBookie.ag",
+      "play": "Houston Astros Moneyline",
+      "price": "-108",
+      "book": "BetOnline.ag",
       "is_pass": false,
-      "edge": "+0.7%",
+      "edge": "+0.6%",
       "away_true": 51,
       "home_true": 49,
-      "away_fair": "-105",
-      "home_fair": "+105",
+      "away_fair": "-106",
+      "home_fair": "+106",
       "signal": "fire",
       "signal_label": "SPLIT MARKET"
     },
