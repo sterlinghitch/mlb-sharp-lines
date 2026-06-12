@@ -1365,7 +1365,7 @@ def analyze_game(game, context):
             "play":       f"{team} Moneyline",
             "sub":        f"{fmt(bp)} at {best_b['name']}",
             "best_price": fmt(bp),
-            "true_pct":   f"{round(true_p*100)}%",
+            "true_pct":   f"{round(true_p*100, 1)}%",
             "fair_line":  implied_to_american(true_p),
             "edge_val":   edge,
             "edge_label": f"+{edge}%" if edge>0 else f"{edge}%",
@@ -1441,14 +1441,17 @@ def analyze_game(game, context):
 
         best_ov_b  = max(filtered,key=lambda b:float(b["over_price"]))
         best_un_b  = max(filtered,key=lambda b:float(b["under_price"]))
-        for side,tp,best_b,pk in [("Over",adj_ov,best_ov_b,"over_price"),
-                                   ("Under",adj_un,best_un_b,"under_price")]:
-            bp=best_b[pk]; imp=american_to_implied(bp)
-            if imp is None: continue
-            edge=round((tp-imp)*100,1)
+        for side,tp,best_b,pk,opp_pk in [("Over",adj_ov,best_ov_b,"over_price","under_price"),
+                                          ("Under",adj_un,best_un_b,"under_price","over_price")]:
+            bp=best_b[pk]; opp_bp=best_b.get(opp_pk)
+            raw_imp = american_to_implied(bp)
+            raw_opp = american_to_implied(opp_bp) if opp_bp else (1-raw_imp)
+            stripped, _ = remove_vig(raw_imp, raw_opp)
+            if stripped is None: stripped = raw_imp
+            edge=round((tp-stripped)*100,1)
             results.append({"type":"Total","play":f"{side} {cons_line} Runs",
                             "sub":f"{fmt(bp)} at {best_b['name']}",
-                            "best_price":fmt(bp),"true_pct":f"{round(tp*100)}%",
+                            "best_price":fmt(bp),"true_pct":f"{round(tp*100,1)}%",
                             "fair_line":implied_to_american(tp),
                             "edge_val":edge,"edge_label":f"+{edge}%" if edge>0 else f"{edge}%"})
         return results
