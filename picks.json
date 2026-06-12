@@ -3,6 +3,22 @@
   "date_display": "June 12, 2026",
   "bets": [
     {
+      "game": "Atlanta Braves @ New York Mets",
+      "away": "Atlanta Braves",
+      "home": "New York Mets",
+      "away_id": 144,
+      "home_id": 121,
+      "play": "Under 8.0 Runs",
+      "price": "-105",
+      "book": "DraftKings",
+      "type": "total",
+      "pick_team": null,
+      "side": "Under",
+      "total_line": 8.0,
+      "edge": "+0.2%",
+      "signal": "fire"
+    },
+    {
       "game": "Detroit Tigers @ Cleveland Guardians",
       "away": "Detroit Tigers",
       "home": "Cleveland Guardians",
