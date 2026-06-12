@@ -1349,12 +1349,21 @@ def analyze_game(game, context):
     is_coin = False  # removed — edge threshold handles this already
 
     def ml_cand(team,true_p,best_b,pk):
-        bp=best_b[pk]; imp=american_to_implied(bp)
-        edge=round((true_p-imp)*100,1)
+        bp=best_b[pk]
+        # Edge = model true prob vs best available book price
+        # Use best book so we're showing the most favorable bet
+        book_imp = american_to_implied(bp)
+        edge = round((true_p - book_imp)*100, 1)
+        # Also compute vs market consensus for context
+        all_prices = [b[pk] for b in book_data if b.get(pk)]
+        mkt_imp = sum(american_to_implied(p) for p in all_prices) / len(all_prices) if all_prices else book_imp
+        mkt_edge = round((true_p - mkt_imp)*100, 1)
+        # Use the better of the two edges
+        use_edge = max(edge, mkt_edge)
         return {"type":"ML","play":f"{team} Moneyline","sub":f"{fmt(bp)} at {best_b['name']}",
                 "best_price":fmt(bp),"true_pct":f"{round(true_p*100)}%",
                 "fair_line":implied_to_american(true_p),
-                "edge_val":edge,"edge_label":f"+{edge}%" if edge>0 else f"{edge}%"}
+                "edge_val":use_edge,"edge_label":f"+{use_edge}%" if use_edge>0 else f"{use_edge}%"}
 
     def total_cands():
         results = []
