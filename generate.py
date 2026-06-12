@@ -587,6 +587,30 @@ HR_PARK_FACTORS = {
     "Tropicana Field":         0.86,
 }
 
+def fetch_batter_vs_pitcher(batter_id, pitcher_id):
+    if not batter_id or not pitcher_id: return None
+    try:
+        data = mlb_get(f"/people/{batter_id}/stats", {
+            "stats": "vsPlayer", "opposingPlayerId": pitcher_id,
+            "group": "hitting", "sportId": 1
+        })
+        if not data: return None
+        for sg in data.get("stats",[]):
+            splits = sg.get("splits",[])
+            if not splits: continue
+            s  = splits[0].get("stat",{})
+            ab = s.get("atBats",0)
+            h  = s.get("hits",0)
+            hr = s.get("homeRuns",0)
+            k  = s.get("strikeOuts",0)
+            if ab >= 3:
+                return {"ab":ab,"h":h,"hr":hr,"k":k,
+                        "avg":round(h/ab,3) if ab>0 else 0}
+    except Exception:
+        pass
+    return None
+
+
 def fetch_batter_season_stats_batch(batter_ids):
     """
     Batch fetch 2026 season hitting stats for multiple batters at once.
@@ -2340,6 +2364,7 @@ def build_html(analyzed_games, matchups, weather, results_data, tracking_games, 
         today_d = datetime.now(EASTERN).strftime("%A, %B %d")
         today_plays    = [p for p in all_plays if p.get("date_et","") in (today_d,"Today")]
         tomorrow_plays = [p for p in all_plays if p.get("date_et","") not in (today_d,"Today","")]
+        time_lookup = {g["game"]: g.get("time","") for g in analyzed_games}
         html = ""
 
         def render_card(p):
