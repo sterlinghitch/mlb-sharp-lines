@@ -1498,11 +1498,9 @@ def analyze_game(game, context):
     #   as long as there's a best price available (the discrepancy IS the signal)
     # - WATCH = model-only edge, needs +1.5% and must not be a pass
     if signal in ("fire","sharp","value"):
-        # Discrepancy signal — show if model doesn't pass and edge is positive
-        qualifies = (not bet_is_pass) and (best_bet_edge_val > 0)
+        qualifies = (not bet_is_pass) and (best_bet_edge_val >= 0.5)
     else:
-        # Watch signal — model edge only, needs threshold
-        qualifies = (not bet_is_pass) and (best_bet_edge_val >= 1.0)
+        qualifies = (not bet_is_pass) and (best_bet_edge_val >= 0.5)
 
     if qualifies:
         # For discrepancy plays with no model candidates, build from raw book data
