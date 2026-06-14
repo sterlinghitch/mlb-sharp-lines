@@ -1286,6 +1286,171 @@
       "type": "total",
       "edge": "+1.7%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-06-14",
+      "date_display": "June 14, 2026",
+      "game": "Arizona Diamondbacks @ Cincinnati Reds",
+      "play": "Over 10.0 Runs",
+      "price": "-105",
+      "book": "FanDuel",
+      "type": "total",
+      "edge": "+0.9%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-14",
+      "date_display": "June 14, 2026",
+      "game": "Detroit Tigers @ Cleveland Guardians",
+      "play": "Over 7.0 Runs",
+      "price": "-114",
+      "book": "FanDuel",
+      "type": "total",
+      "edge": "+2.9%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-14",
+      "date_display": "June 14, 2026",
+      "game": "Houston Astros @ Kansas City Royals",
+      "play": "Kansas City Royals Moneyline",
+      "price": "-116",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+2.3%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-14",
+      "date_display": "June 14, 2026",
+      "game": "St. Louis Cardinals @ Minnesota Twins",
+      "play": "Under 9.5 Runs",
+      "price": "-120",
+      "book": "BetOnline.ag",
+      "type": "total",
+      "edge": "+3.1%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-14",
+      "date_display": "June 14, 2026",
+      "game": "Tampa Bay Rays @ Los Angeles Angels",
+      "play": "Tampa Bay Rays Moneyline",
+      "price": "-115",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+4.9%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-14",
+      "date_display": "June 14, 2026",
+      "game": "Texas Rangers @ Boston Red Sox",
+      "play": "Over 9.0 Runs",
+      "price": "-108",
+      "book": "FanDuel",
+      "type": "total",
+      "edge": "+2.1%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-14",
+      "date_display": "June 14, 2026",
+      "game": "Miami Marlins @ Pittsburgh Pirates",
+      "play": "Pittsburgh Pirates Moneyline",
+      "price": "-149",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+0.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-14",
+      "date_display": "June 14, 2026",
+      "game": "San Diego Padres @ Baltimore Orioles",
+      "play": "Baltimore Orioles Moneyline",
+      "price": "-132",
+      "book": "FanDuel",
+      "type": "ml",
+      "edge": "+4.7%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-14",
+      "date_display": "June 14, 2026",
+      "game": "Seattle Mariners @ Washington Nationals",
+      "play": "Seattle Mariners Moneyline",
+      "price": "-128",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+2.9%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-14",
+      "date_display": "June 14, 2026",
+      "game": "New York Yankees @ Toronto Blue Jays",
+      "play": "Toronto Blue Jays Moneyline",
+      "price": "+112",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+2.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-14",
+      "date_display": "June 14, 2026",
+      "game": "Atlanta Braves @ New York Mets",
+      "play": "Atlanta Braves Moneyline",
+      "price": "+114",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+2.1%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-14",
+      "date_display": "June 14, 2026",
+      "game": "Los Angeles Dodgers @ Chicago White Sox",
+      "play": "Chicago White Sox Moneyline",
+      "price": "+169",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+2.6%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-14",
+      "date_display": "June 14, 2026",
+      "game": "Philadelphia Phillies @ Milwaukee Brewers",
+      "play": "Philadelphia Phillies Moneyline",
+      "price": "-123",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+6.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-14",
+      "date_display": "June 14, 2026",
+      "game": "Colorado Rockies @ Athletics",
+      "play": "Colorado Rockies Moneyline",
+      "price": "+169",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+1.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-14",
+      "date_display": "June 14, 2026",
+      "game": "Chicago Cubs @ San Francisco Giants",
+      "play": "San Francisco Giants Moneyline",
+      "price": "-132",
+      "book": "BetOnline.ag",
+      "type": "ml",
+      "edge": "+2.6%",
+      "signal": "watch"
     }
   ]
 }
