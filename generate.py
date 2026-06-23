@@ -172,29 +172,138 @@ def fetch_live_mlb_games(yesterday_str):
     return live
 
 def fetch_odds():
-    print("Fetching MLB odds...")
-    r = requests.get(
-        "https://api.the-odds-api.com/v4/sports/baseball_mlb/odds/",
-        params={"apiKey":ODDS_API_KEY,"regions":"us","markets":"h2h,totals",
-                "oddsFormat":"american","dateFormat":"iso"},
-        timeout=30,
-    )
-    r.raise_for_status()
-    all_games    = r.json()
+    """
+    Fetch MLB odds from Action Network's unofficial API.
+    No API key required, no monthly limit.
+    Returns games in the same format as The Odds API so the rest of the
+    code works unchanged.
+    """
+    print("Fetching MLB odds (Action Network)...")
     now_et       = datetime.now(EASTERN)
     now_utc      = datetime.now(timezone.utc)
     today_et     = now_et.date()
     yesterday_et = today_et - timedelta(days=1)
+    tomorrow_et  = today_et + timedelta(days=1)
+    headers      = {"User-Agent":"Mozilla/5.0","Accept":"application/json"}
+
+    # Action Network book ID → name mapping
+    BOOK_MAP = {
+        15:"DraftKings", 16:"FanDuel", 3:"BetMGM", 283:"Caesars",
+        69:"PointsBet", 19:"BetOnline.ag", 4:"Pinnacle", 347:"ESPNBet",
+        68:"MyBookie.ag", 30:"BetUS", 123:"Bovada", 75:"William Hill",
+        76:"Unibet", 71:"PointsBet", 972:"Fliff",
+    }
+
+    all_games = []
+    seen_keys = set()
+
+    for fetch_date in [today_et.strftime("%Y%m%d"), tomorrow_et.strftime("%Y%m%d")]:
+        try:
+            r = requests.get(
+                "https://api.actionnetwork.com/web/v1/scoreboard/mlb",
+                params={"period":"game","date":fetch_date},
+                headers=headers,
+                timeout=20,
+            )
+            if r.status_code != 200:
+                print(f"  Action Network {fetch_date}: HTTP {r.status_code}")
+                continue
+            data = r.json()
+            games = data.get("games",[])
+            print(f"  Action Network {fetch_date}: {len(games)} games")
+
+            for game in games:
+                teams = game.get("teams",[])
+                if len(teams) < 2: continue
+                away_t = next((t for t in teams if not t.get("is_home",True)), teams[0])
+                home_t = next((t for t in teams if t.get("is_home",False)), teams[1])
+                away_name = away_t.get("full_name","")
+                home_name = home_t.get("full_name","")
+
+                if not away_name or not home_name: continue
+                game_key = f"{away_name}@{home_name}"
+                if game_key in seen_keys: continue
+                seen_keys.add(game_key)
+
+                # Parse start time
+                start_time = game.get("start_time","")
+                try:
+                    start_utc = datetime.fromisoformat(start_time.replace("Z","+00:00"))
+                    start_iso = start_utc.strftime("%Y-%m-%dT%H:%M:%SZ")
+                except Exception:
+                    start_iso = ""
+
+                # Build bookmakers list in Odds API format
+                bookmakers = []
+                for odds in game.get("odds",[]):
+                    bid  = odds.get("book_id")
+                    bname = BOOK_MAP.get(bid, str(bid))
+                    if not bname or bname == "None": continue
+
+                    markets = []
+                    # Moneyline (h2h)
+                    ml_away = odds.get("ml_away")
+                    ml_home = odds.get("ml_home")
+                    if ml_away is not None and ml_home is not None:
+                        try:
+                            markets.append({
+                                "key": "h2h",
+                                "outcomes": [
+                                    {"name": away_name, "price": int(ml_away)},
+                                    {"name": home_name, "price": int(ml_home)},
+                                ]
+                            })
+                        except Exception:
+                            pass
+
+                    # Total (over/under)
+                    total = odds.get("total")
+                    over  = odds.get("over")
+                    under = odds.get("under")
+                    if total is not None and over is not None and under is not None:
+                        try:
+                            markets.append({
+                                "key": "totals",
+                                "outcomes": [
+                                    {"name": "Over",  "price": int(over),  "point": float(total)},
+                                    {"name": "Under", "price": int(under), "point": float(total)},
+                                ]
+                            })
+                        except Exception:
+                            pass
+
+                    if markets:
+                        bookmakers.append({"title": bname, "key": bname.lower(), "markets": markets})
+
+                if not bookmakers: continue
+
+                all_games.append({
+                    "id":           str(game.get("id","")),
+                    "away_team":    away_name,
+                    "home_team":    home_name,
+                    "commence_time":start_iso,
+                    "bookmakers":   bookmakers,
+                })
+
+        except Exception as e:
+            print(f"  Action Network {fetch_date} error: {e}")
+
+    if not all_games:
+        print("  No games returned from Action Network")
+        return [], []
+
+    # Sort into pregame / tracking using same logic as before
     live_yesterday = fetch_live_mlb_games(yesterday_et.strftime("%Y-%m-%d"))
-    pregame  = []   # not yet started -- full odds analysis
-    tracking = []   # started today -- show locked tracking card until midnight
+    pregame  = []
+    tracking = []
+
     for g in all_games:
         try:
             start      = datetime.fromisoformat(g["commence_time"].replace("Z","+00:00"))
             start_et   = start.astimezone(EASTERN)
             start_date = start_et.date()
             if start_date == today_et:
-                if start > now_utc:
+                if start.replace(tzinfo=timezone.utc) > now_utc:
                     pregame.append(g)
                 else:
                     print(f"  Tracking (started): {g['away_team']} @ {g['home_team']} ({start_et.strftime('%-I:%M %p ET')})")
@@ -207,24 +316,11 @@ def fetch_odds():
                 if aid and hid and (aid,hid) in live_yesterday:
                     print(f"  Keeping live past-midnight: {g['away_team']} @ {g['home_team']}")
                     pregame.append(g)
-                else:
-                    print(f"  Skipping finished: {g['away_team']} @ {g['home_team']}")
-            else:
-                print(f"  Skipping old: {g['away_team']} @ {g['home_team']}")
         except Exception:
             pregame.append(g)
+
     print(f"Got {len(all_games)} total -- {len(pregame)} pre-game, {len(tracking)} tracking")
-    # Deduplicate by game ID (odds API can return same game multiple times)
-    seen = set()
-    pregame_deduped = []
-    for g in pregame:
-        gid = g.get("id","") or f"{g.get('away_team','')}@{g.get('home_team','')}"
-        if gid not in seen:
-            seen.add(gid)
-            pregame_deduped.append(g)
-    if len(pregame_deduped) < len(pregame):
-        print(f"  Deduped: {len(pregame)} -> {len(pregame_deduped)} pre-game games")
-    return pregame_deduped, tracking
+    return pregame, tracking
 
 
 # =============================================================
@@ -5157,7 +5253,11 @@ def main():
     try:
         games_raw, tracking_games = fetch_odds()
     except Exception as e:
-        print(f"ERROR fetching odds: {e}"); sys.exit(1)
+        print(f"ERROR fetching odds: {e}")
+        if "401" in str(e) or "Unauthorized" in str(e):
+            print("  → API key expired or quota exceeded. Check your-odds-api.com account.")
+            print("  → Running in degraded mode with no odds data.")
+        games_raw = []; tracking_games = []
 
     if not games_raw and not tracking_games:
         with open("index.html","w",encoding="utf-8") as f:
