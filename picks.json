@@ -3,6 +3,38 @@
   "date_display": "June 24, 2026",
   "bets": [
     {
+      "game": "Toronto Blue Jays @ Texas Rangers",
+      "away": "Toronto Blue Jays",
+      "home": "Texas Rangers",
+      "away_id": 141,
+      "home_id": 140,
+      "play": "Texas Rangers Moneyline",
+      "price": "-149",
+      "book": "DraftKings",
+      "type": "ml",
+      "pick_team": "Texas Rangers",
+      "side": null,
+      "total_line": null,
+      "edge": "+1.4%",
+      "signal": "watch"
+    },
+    {
+      "game": "Boston Red Sox @ New York Yankees",
+      "away": "Boston Red Sox",
+      "home": "New York Yankees",
+      "away_id": 111,
+      "home_id": 147,
+      "play": "New York Yankees Moneyline",
+      "price": "+135",
+      "book": "BetUS",
+      "type": "ml",
+      "pick_team": "New York Yankees",
+      "side": null,
+      "total_line": null,
+      "edge": "+3.5%",
+      "signal": "watch"
+    },
+    {
       "game": "Cleveland Guardians @ Chicago White Sox",
       "away": "Cleveland Guardians",
       "home": "Chicago White Sox",
