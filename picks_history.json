@@ -1858,6 +1858,149 @@
       "type": "ml",
       "edge": "+1.9%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-06-24",
+      "date_display": "June 24, 2026",
+      "game": "Cleveland Guardians @ Chicago White Sox",
+      "play": "Over 8.5 Runs",
+      "price": "-104",
+      "book": "PointsBet",
+      "type": "total",
+      "edge": "+2.7%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-24",
+      "date_display": "June 24, 2026",
+      "game": "Los Angeles Angels @ Baltimore Orioles",
+      "play": "Baltimore Orioles Moneyline",
+      "price": "-118",
+      "book": "William Hill",
+      "type": "ml",
+      "edge": "+0.8%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-24",
+      "date_display": "June 24, 2026",
+      "game": "Seattle Mariners @ Pittsburgh Pirates",
+      "play": "Under 8.0 Runs",
+      "price": "-103",
+      "book": "DraftKings",
+      "type": "total",
+      "edge": "+2.6%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-24",
+      "date_display": "June 24, 2026",
+      "game": "Arizona Diamondbacks @ St. Louis Cardinals",
+      "play": "St. Louis Cardinals Moneyline",
+      "price": "-116",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+2.9%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-24",
+      "date_display": "June 24, 2026",
+      "game": "Atlanta Braves @ San Diego Padres",
+      "play": "Atlanta Braves Moneyline",
+      "price": "-120",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+3.5%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-24",
+      "date_display": "June 24, 2026",
+      "game": "Athletics @ San Francisco Giants",
+      "play": "Over 8.0 Runs",
+      "price": "-106",
+      "book": "PointsBet",
+      "type": "total",
+      "edge": "+1.5%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-24",
+      "date_display": "June 24, 2026",
+      "game": "Boston Red Sox @ Colorado Rockies",
+      "play": "Over 10.5 Runs",
+      "price": "-115",
+      "book": "DraftKings",
+      "type": "total",
+      "edge": "+2.2%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-24",
+      "date_display": "June 24, 2026",
+      "game": "Detroit Tigers @ New York Yankees",
+      "play": "New York Yankees Moneyline",
+      "price": "-132",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+2.1%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-24",
+      "date_display": "June 24, 2026",
+      "game": "Tampa Bay Rays @ Kansas City Royals",
+      "play": "Tampa Bay Rays Moneyline",
+      "price": "+129",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+3.6%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-24",
+      "date_display": "June 24, 2026",
+      "game": "Philadelphia Phillies @ Washington Nationals",
+      "play": "Washington Nationals Moneyline",
+      "price": "+115",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+4.8%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-24",
+      "date_display": "June 24, 2026",
+      "game": "Houston Astros @ Toronto Blue Jays",
+      "play": "Houston Astros Moneyline",
+      "price": "+128",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+1.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-24",
+      "date_display": "June 24, 2026",
+      "game": "Milwaukee Brewers @ Cincinnati Reds",
+      "play": "Over 9.5 Runs",
+      "price": "+105",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+4.6%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-24",
+      "date_display": "June 24, 2026",
+      "game": "Los Angeles Dodgers @ Minnesota Twins",
+      "play": "Los Angeles Dodgers Moneyline",
+      "price": "-164",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+1.3%",
+      "signal": "watch"
     }
   ]
 }
