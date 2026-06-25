@@ -3,14 +3,14 @@
   "games": {
     "Houston Astros @ Detroit Tigers": {
       "play": "Detroit Tigers Moneyline",
-      "price": "-112",
-      "book": "BetUS",
+      "price": "-110",
+      "book": "PointsBet",
       "is_pass": false,
-      "edge": "+2.6%",
+      "edge": "+2.9%",
       "away_true": 47,
       "home_true": 53,
-      "away_fair": "+115",
-      "home_fair": "-115",
+      "away_fair": "+114",
+      "home_fair": "-114",
       "signal": "fire",
       "signal_label": "SPLIT MARKET"
     },
