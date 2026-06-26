@@ -48,8 +48,8 @@
       "edge": "+2.0%",
       "away_true": 50,
       "home_true": 50,
-      "away_fair": "+101",
-      "home_fair": "-101",
+      "away_fair": "+102",
+      "home_fair": "-102",
       "signal": "fire",
       "signal_label": "SPLIT MARKET"
     },
@@ -67,11 +67,11 @@
       "signal_label": "SPLIT MARKET"
     },
     "Miami Marlins @ St. Louis Cardinals": {
-      "play": "Under 8.0 Runs",
-      "price": "-104",
-      "book": "PointsBet",
+      "play": "Miami Marlins Moneyline",
+      "price": "+105",
+      "book": "BetUS",
       "is_pass": false,
-      "edge": "+1.7%",
+      "edge": "+1.1%",
       "away_true": 48,
       "home_true": 52,
       "away_fair": "+109",
@@ -175,11 +175,11 @@
       "price": "-148",
       "book": "PointsBet",
       "is_pass": false,
-      "edge": "+1.4%",
+      "edge": "+1.1%",
       "away_true": 59,
       "home_true": 41,
-      "away_fair": "-143",
-      "home_fair": "+143",
+      "away_fair": "-141",
+      "home_fair": "+141",
       "signal": "watch",
       "signal_label": ""
     }
