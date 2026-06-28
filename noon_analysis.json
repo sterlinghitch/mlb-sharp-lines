@@ -45,11 +45,11 @@
       "price": "-105",
       "book": "BetUS",
       "is_pass": false,
-      "edge": "+9.8%",
+      "edge": "+10.1%",
       "away_true": 41,
       "home_true": 59,
-      "away_fair": "+142",
-      "home_fair": "-142",
+      "away_fair": "+144",
+      "home_fair": "-144",
       "signal": "fire",
       "signal_label": "SPLIT MARKET"
     },
@@ -184,15 +184,15 @@
       "signal_label": ""
     },
     "Los Angeles Dodgers @ San Diego Padres": {
-      "play": "Under 8.0 Runs",
-      "price": "-110",
+      "play": "San Diego Padres Moneyline",
+      "price": "+125",
       "book": "William Hill",
       "is_pass": false,
-      "edge": "+1.7%",
+      "edge": "+2.4%",
       "away_true": 55,
       "home_true": 45,
-      "away_fair": "-121",
-      "home_fair": "+121",
+      "away_fair": "-122",
+      "home_fair": "+122",
       "signal": "watch",
       "signal_label": ""
     }
