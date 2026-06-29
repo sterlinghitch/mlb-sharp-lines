@@ -3,6 +3,22 @@
   "date_display": "June 29, 2026",
   "bets": [
     {
+      "game": "Tampa Bay Rays @ Kansas City Royals",
+      "away": "Tampa Bay Rays",
+      "home": "Kansas City Royals",
+      "away_id": 139,
+      "home_id": 118,
+      "play": "Over 10.5 Runs",
+      "price": "-102",
+      "book": "PointsBet",
+      "type": "total",
+      "pick_team": null,
+      "side": "Over",
+      "total_line": 10.5,
+      "edge": "+6.6%",
+      "signal": "fire"
+    },
+    {
       "game": "Philadelphia Phillies @ Pittsburgh Pirates",
       "away": "Philadelphia Phillies",
       "home": "Pittsburgh Pirates",
