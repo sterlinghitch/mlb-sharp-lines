@@ -2573,6 +2573,160 @@
       "type": "total",
       "edge": "+1.7%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-06-29",
+      "date_display": "June 29, 2026",
+      "game": "Philadelphia Phillies @ Pittsburgh Pirates",
+      "play": "Philadelphia Phillies Moneyline",
+      "price": "-100",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+5.0%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-29",
+      "date_display": "June 29, 2026",
+      "game": "New York Mets @ Toronto Blue Jays",
+      "play": "New York Mets Moneyline",
+      "price": "+110",
+      "book": "59",
+      "type": "ml",
+      "edge": "+2.3%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-29",
+      "date_display": "June 29, 2026",
+      "game": "Cleveland Guardians @ Texas Rangers",
+      "play": "Texas Rangers Moneyline",
+      "price": "-120",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.7%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-29",
+      "date_display": "June 29, 2026",
+      "game": "Houston Astros @ Minnesota Twins",
+      "play": "Over 9.0 Runs",
+      "price": "-104",
+      "book": "PointsBet",
+      "type": "total",
+      "edge": "+4.7%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-29",
+      "date_display": "June 29, 2026",
+      "game": "Miami Marlins @ Colorado Rockies",
+      "play": "Over 11.5 Runs",
+      "price": "-100",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+7.1%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-29",
+      "date_display": "June 29, 2026",
+      "game": "Athletics @ Los Angeles Dodgers",
+      "play": "Los Angeles Dodgers Moneyline",
+      "price": "-100",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+2.7%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-29",
+      "date_display": "June 29, 2026",
+      "game": "Arizona Diamondbacks @ San Francisco Giants",
+      "play": "San Francisco Giants Moneyline",
+      "price": "-120",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.1%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-29",
+      "date_display": "June 29, 2026",
+      "game": "Chicago White Sox @ Baltimore Orioles",
+      "play": "Under 9.5 Runs",
+      "price": "-113",
+      "book": "MyBookie.ag",
+      "type": "total",
+      "edge": "+1.0%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-29",
+      "date_display": "June 29, 2026",
+      "game": "Detroit Tigers @ New York Yankees",
+      "play": "Under 8.0 Runs",
+      "price": "-104",
+      "book": "DraftKings",
+      "type": "total",
+      "edge": "+2.3%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-29",
+      "date_display": "June 29, 2026",
+      "game": "Washington Nationals @ Boston Red Sox",
+      "play": "Washington Nationals Moneyline",
+      "price": "+160",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+5.2%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-29",
+      "date_display": "June 29, 2026",
+      "game": "Milwaukee Brewers @ Cincinnati Reds",
+      "play": "Milwaukee Brewers Moneyline",
+      "price": "+125",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+3.4%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-29",
+      "date_display": "June 29, 2026",
+      "game": "Chicago Cubs @ San Diego Padres",
+      "play": "Under 11.0 Runs",
+      "price": "+100",
+      "book": "21",
+      "type": "total",
+      "edge": "+1.9%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-29",
+      "date_display": "June 29, 2026",
+      "game": "Los Angeles Angels @ Seattle Mariners",
+      "play": "Seattle Mariners Moneyline",
+      "price": "-200",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+1.9%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-29",
+      "date_display": "June 29, 2026",
+      "game": "Atlanta Braves @ St. Louis Cardinals",
+      "play": "Over 9.0 Runs",
+      "price": "-115",
+      "book": "DraftKings",
+      "type": "total",
+      "edge": "+1.8%",
+      "signal": "watch"
     }
   ]
 }
