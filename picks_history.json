@@ -2727,6 +2727,171 @@
       "type": "total",
       "edge": "+1.8%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-06-30",
+      "date_display": "June 30, 2026",
+      "game": "Cleveland Guardians @ Texas Rangers",
+      "play": "Cleveland Guardians Moneyline",
+      "price": "-120",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+1.4%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-30",
+      "date_display": "June 30, 2026",
+      "game": "Detroit Tigers @ New York Yankees",
+      "play": "Over 7.0 Runs",
+      "price": "-118",
+      "book": "DraftKings",
+      "type": "total",
+      "edge": "+2.1%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-30",
+      "date_display": "June 30, 2026",
+      "game": "New York Mets @ Toronto Blue Jays",
+      "play": "New York Mets Moneyline",
+      "price": "+105",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+2.6%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-30",
+      "date_display": "June 30, 2026",
+      "game": "Washington Nationals @ Boston Red Sox",
+      "play": "Washington Nationals Moneyline",
+      "price": "+114",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+4.8%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-30",
+      "date_display": "June 30, 2026",
+      "game": "Tampa Bay Rays @ Kansas City Royals",
+      "play": "Over 10.0 Runs",
+      "price": "-101",
+      "book": "DraftKings",
+      "type": "total",
+      "edge": "+3.7%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-30",
+      "date_display": "June 30, 2026",
+      "game": "Houston Astros @ Minnesota Twins",
+      "play": "Under 8.5 Runs",
+      "price": "-112",
+      "book": "PointsBet",
+      "type": "total",
+      "edge": "+1.6%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-30",
+      "date_display": "June 30, 2026",
+      "game": "Arizona Diamondbacks @ San Francisco Giants",
+      "play": "San Francisco Giants Moneyline",
+      "price": "-108",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+1.5%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-06-30",
+      "date_display": "June 30, 2026",
+      "game": "Chicago White Sox @ Baltimore Orioles",
+      "play": "Baltimore Orioles Moneyline",
+      "price": "-135",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.6%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-30",
+      "date_display": "June 30, 2026",
+      "game": "Philadelphia Phillies @ Pittsburgh Pirates",
+      "play": "Philadelphia Phillies Moneyline",
+      "price": "+188",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+4.1%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-30",
+      "date_display": "June 30, 2026",
+      "game": "Atlanta Braves @ St. Louis Cardinals",
+      "play": "Atlanta Braves Moneyline",
+      "price": "+135",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+1.9%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-30",
+      "date_display": "June 30, 2026",
+      "game": "Milwaukee Brewers @ Cincinnati Reds",
+      "play": "Milwaukee Brewers Moneyline",
+      "price": "+148",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+5.4%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-30",
+      "date_display": "June 30, 2026",
+      "game": "Chicago Cubs @ San Diego Padres",
+      "play": "San Diego Padres Moneyline",
+      "price": "-141",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+1.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-30",
+      "date_display": "June 30, 2026",
+      "game": "Miami Marlins @ Colorado Rockies",
+      "play": "Over 11.5 Runs",
+      "price": "+100",
+      "book": "William Hill",
+      "type": "total",
+      "edge": "+4.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-30",
+      "date_display": "June 30, 2026",
+      "game": "Los Angeles Angels @ Seattle Mariners",
+      "play": "Seattle Mariners Moneyline",
+      "price": "-161",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.8%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-06-30",
+      "date_display": "June 30, 2026",
+      "game": "Athletics @ Los Angeles Dodgers",
+      "play": "Athletics Moneyline",
+      "price": "-149",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.9%",
+      "signal": "watch"
     }
   ]
 }
