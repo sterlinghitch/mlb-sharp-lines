@@ -172,10 +172,10 @@
     },
     "Atlanta Braves @ St. Louis Cardinals": {
       "play": "Over 9.5 Runs",
-      "price": "-105",
-      "book": "DraftKings",
+      "price": "-104",
+      "book": "PointsBet",
       "is_pass": false,
-      "edge": "+2.0%",
+      "edge": "+2.9%",
       "away_true": 41,
       "home_true": 59,
       "away_fair": "+145",
@@ -188,11 +188,11 @@
       "price": "-102",
       "book": "PointsBet",
       "is_pass": false,
-      "edge": "+6.7%",
+      "edge": "+5.3%",
       "away_true": 52,
       "home_true": 48,
-      "away_fair": "-107",
-      "home_fair": "+107",
+      "away_fair": "-108",
+      "home_fair": "+108",
       "signal": "fire",
       "signal_label": "SPLIT MARKET"
     }
