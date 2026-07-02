@@ -3002,6 +3002,94 @@
       "type": "ml",
       "edge": "+3.0%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-07-02",
+      "date_display": "July 02, 2026",
+      "game": "Cleveland Guardians @ Chicago White Sox",
+      "play": "Chicago White Sox Moneyline",
+      "price": "-100",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+2.6%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-02",
+      "date_display": "July 02, 2026",
+      "game": "Atlanta Braves @ St. Louis Cardinals",
+      "play": "Under 8.5 Runs",
+      "price": "+105",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+2.3%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-02",
+      "date_display": "July 02, 2026",
+      "game": "Tampa Bay Rays @ Kansas City Royals",
+      "play": "Over 10.5 Runs",
+      "price": "-105",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+2.0%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-02",
+      "date_display": "July 02, 2026",
+      "game": "Detroit Tigers @ Texas Rangers",
+      "play": "Texas Rangers Moneyline",
+      "price": "-115",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+3.0%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-02",
+      "date_display": "July 02, 2026",
+      "game": "Milwaukee Brewers @ Cincinnati Reds",
+      "play": "Cincinnati Reds Moneyline",
+      "price": "-172",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-02",
+      "date_display": "July 02, 2026",
+      "game": "Miami Marlins @ Colorado Rockies",
+      "play": "Over 12.0 Runs",
+      "price": "-108",
+      "book": "DraftKings",
+      "type": "total",
+      "edge": "+2.8%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-02",
+      "date_display": "July 02, 2026",
+      "game": "Los Angeles Angels @ Seattle Mariners",
+      "play": "Los Angeles Angels Moneyline",
+      "price": "+179",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+2.4%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-02",
+      "date_display": "July 02, 2026",
+      "game": "Los Angeles Dodgers @ San Diego Padres",
+      "play": "Los Angeles Dodgers Moneyline",
+      "price": "+166",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+2.5%",
+      "signal": "watch"
     }
   ]
 }
