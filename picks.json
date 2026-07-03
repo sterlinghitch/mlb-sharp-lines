@@ -3,6 +3,38 @@
   "date_display": "July 03, 2026",
   "bets": [
     {
+      "game": "Detroit Tigers @ Texas Rangers",
+      "away": "Detroit Tigers",
+      "home": "Texas Rangers",
+      "away_id": 116,
+      "home_id": 140,
+      "play": "Detroit Tigers Moneyline",
+      "price": "-112",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "pick_team": "Detroit Tigers",
+      "side": null,
+      "total_line": null,
+      "edge": "+3.2%",
+      "signal": "fire"
+    },
+    {
+      "game": "Philadelphia Phillies @ Kansas City Royals",
+      "away": "Philadelphia Phillies",
+      "home": "Kansas City Royals",
+      "away_id": 143,
+      "home_id": 118,
+      "play": "Philadelphia Phillies Moneyline",
+      "price": "-149",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "pick_team": "Philadelphia Phillies",
+      "side": null,
+      "total_line": null,
+      "edge": "+5.6%",
+      "signal": "watch"
+    },
+    {
       "game": "Baltimore Orioles @ Cincinnati Reds",
       "away": "Baltimore Orioles",
       "home": "Cincinnati Reds",
