@@ -146,10 +146,10 @@
     },
     "San Francisco Giants @ Colorado Rockies": {
       "play": "Over 11.5 Runs",
-      "price": "-110",
-      "book": "William Hill",
+      "price": "-115",
+      "book": "DraftKings",
       "is_pass": false,
-      "edge": "+2.7%",
+      "edge": "+2.2%",
       "away_true": 55,
       "home_true": 45,
       "away_fair": "-123",
