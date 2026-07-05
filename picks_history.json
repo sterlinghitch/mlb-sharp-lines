@@ -3387,6 +3387,160 @@
       "type": "ml",
       "edge": "+2.9%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-07-05",
+      "date_display": "July 05, 2026",
+      "game": "Washington Nationals @ Pittsburgh Pirates",
+      "play": "Pittsburgh Pirates Moneyline",
+      "price": "-120",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+2.4%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-05",
+      "date_display": "July 05, 2026",
+      "game": "Baltimore Orioles @ Cincinnati Reds",
+      "play": "Over 9.5 Runs",
+      "price": "-105",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+3.7%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-05",
+      "date_display": "July 05, 2026",
+      "game": "Houston Astros @ Tampa Bay Rays",
+      "play": "Houston Astros Moneyline",
+      "price": "+100",
+      "book": "William Hill",
+      "type": "ml",
+      "edge": "+5.4%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-05",
+      "date_display": "July 05, 2026",
+      "game": "Detroit Tigers @ Texas Rangers",
+      "play": "Detroit Tigers Moneyline",
+      "price": "-105",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.6%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-05",
+      "date_display": "July 05, 2026",
+      "game": "San Francisco Giants @ Colorado Rockies",
+      "play": "Colorado Rockies Moneyline",
+      "price": "+109",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.3%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-05",
+      "date_display": "July 05, 2026",
+      "game": "Miami Marlins @ Athletics",
+      "play": "Under 10.0 Runs",
+      "price": "-110",
+      "book": "William Hill",
+      "type": "total",
+      "edge": "+0.8%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-05",
+      "date_display": "July 05, 2026",
+      "game": "New York Yankees @ Minnesota Twins",
+      "play": "New York Yankees Moneyline",
+      "price": "+140",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-05",
+      "date_display": "July 05, 2026",
+      "game": "Cleveland Guardians @ Chicago White Sox",
+      "play": "Cleveland Guardians Moneyline",
+      "price": "+135",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+4.8%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-05",
+      "date_display": "July 05, 2026",
+      "game": "St. Louis Cardinals @ Chicago Cubs",
+      "play": "St. Louis Cardinals Moneyline",
+      "price": "+129",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+5.8%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-05",
+      "date_display": "July 05, 2026",
+      "game": "Philadelphia Phillies @ Kansas City Royals",
+      "play": "Kansas City Royals Moneyline",
+      "price": "+117",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+3.2%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-05",
+      "date_display": "July 05, 2026",
+      "game": "Arizona Diamondbacks @ Milwaukee Brewers",
+      "play": "Milwaukee Brewers Moneyline",
+      "price": "+104",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+2.0%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-05",
+      "date_display": "July 05, 2026",
+      "game": "Seattle Mariners @ Toronto Blue Jays",
+      "play": "Toronto Blue Jays Moneyline",
+      "price": "-124",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+3.3%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-05",
+      "date_display": "July 05, 2026",
+      "game": "Los Angeles Dodgers @ San Diego Padres",
+      "play": "Los Angeles Dodgers Moneyline",
+      "price": "+180",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+3.3%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-05",
+      "date_display": "July 05, 2026",
+      "game": "Los Angeles Angels @ Boston Red Sox",
+      "play": "Under 8.0 Runs",
+      "price": "-104",
+      "book": "PointsBet",
+      "type": "total",
+      "edge": "+2.7%",
+      "signal": "watch"
     }
   ]
 }
