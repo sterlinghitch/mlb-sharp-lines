@@ -3541,6 +3541,149 @@
       "type": "total",
       "edge": "+2.7%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-07-06",
+      "date_display": "July 06, 2026",
+      "game": "Tampa Bay Rays @ New York Yankees",
+      "play": "Under 7.5 Runs",
+      "price": "-115",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+3.8%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-06",
+      "date_display": "July 06, 2026",
+      "game": "Houston Astros @ Washington Nationals",
+      "play": "Washington Nationals Moneyline",
+      "price": "-116",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+6.6%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-06",
+      "date_display": "July 06, 2026",
+      "game": "New York Mets @ Atlanta Braves",
+      "play": "New York Mets Moneyline",
+      "price": "+110",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+1.9%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-06",
+      "date_display": "July 06, 2026",
+      "game": "Milwaukee Brewers @ St. Louis Cardinals",
+      "play": "Over 8.0 Runs",
+      "price": "-109",
+      "book": "PointsBet",
+      "type": "total",
+      "edge": "+1.0%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-06",
+      "date_display": "July 06, 2026",
+      "game": "Arizona Diamondbacks @ San Diego Padres",
+      "play": "Under 8.5 Runs",
+      "price": "-100",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+4.1%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-06",
+      "date_display": "July 06, 2026",
+      "game": "San Francisco Giants @ Toronto Blue Jays",
+      "play": "Under 8.0 Runs",
+      "price": "-110",
+      "book": "DraftKings",
+      "type": "total",
+      "edge": "+1.8%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-06",
+      "date_display": "July 06, 2026",
+      "game": "Los Angeles Dodgers @ Colorado Rockies",
+      "play": "Colorado Rockies Moneyline",
+      "price": "-156",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+7.5%",
+      "signal": "value"
+    },
+    {
+      "date": "2026-07-06",
+      "date_display": "July 06, 2026",
+      "game": "Philadelphia Phillies @ Kansas City Royals",
+      "play": "Philadelphia Phillies Moneyline",
+      "price": "-164",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+6.2%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-06",
+      "date_display": "July 06, 2026",
+      "game": "Chicago Cubs @ Baltimore Orioles",
+      "play": "Baltimore Orioles Moneyline",
+      "price": "-104",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+2.5%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-06",
+      "date_display": "July 06, 2026",
+      "game": "Boston Red Sox @ Chicago White Sox",
+      "play": "Chicago White Sox Moneyline",
+      "price": "-100",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.0%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-06",
+      "date_display": "July 06, 2026",
+      "game": "Athletics @ Detroit Tigers",
+      "play": "Under 8.0 Runs",
+      "price": "-111",
+      "book": "DraftKings",
+      "type": "total",
+      "edge": "+3.3%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-06",
+      "date_display": "July 06, 2026",
+      "game": "Cleveland Guardians @ Minnesota Twins",
+      "play": "Cleveland Guardians Moneyline",
+      "price": "+104",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+3.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-06",
+      "date_display": "July 06, 2026",
+      "game": "Los Angeles Angels @ Texas Rangers",
+      "play": "Texas Rangers Moneyline",
+      "price": "-161",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+1.0%",
+      "signal": "watch"
     }
   ]
 }
