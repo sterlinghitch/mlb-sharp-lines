@@ -19,7 +19,7 @@
       "price": "-116",
       "book": "BetUS",
       "is_pass": false,
-      "edge": "+4.4%",
+      "edge": "+4.5%",
       "away_true": 44,
       "home_true": 56,
       "away_fair": "+127",
@@ -94,14 +94,14 @@
     },
     "Cleveland Guardians @ Minnesota Twins": {
       "play": "Cleveland Guardians Moneyline",
-      "price": "+113",
+      "price": "+112",
       "book": "MyBookie.ag",
       "is_pass": false,
-      "edge": "+4.7%",
+      "edge": "+4.6%",
       "away_true": 50,
       "home_true": 50,
-      "away_fair": "+102",
-      "home_fair": "-102",
+      "away_fair": "+101",
+      "home_fair": "-101",
       "signal": "watch",
       "signal_label": ""
     },
@@ -180,6 +180,19 @@
       "home_true": 55,
       "away_fair": "+123",
       "home_fair": "-123",
+      "signal": "watch",
+      "signal_label": ""
+    },
+    "Philadelphia Phillies @ Cincinnati Reds": {
+      "play": "Over 9.5 Runs",
+      "price": "+105",
+      "book": "BetUS",
+      "is_pass": false,
+      "edge": "+2.4%",
+      "away_true": 45,
+      "home_true": 55,
+      "away_fair": "+122",
+      "home_fair": "-122",
       "signal": "watch",
       "signal_label": ""
     }
