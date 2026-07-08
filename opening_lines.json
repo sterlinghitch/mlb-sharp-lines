@@ -1,920 +1,920 @@
 {
-  "timestamp": "2026-07-07T12:31:26.085765-04:00",
-  "time_display": "12:31 PM ET",
+  "timestamp": "2026-07-08T12:01:56.955604-04:00",
+  "time_display": "12:01 PM ET",
   "type": "opening",
   "games": {
-    "Milwaukee Brewers @ St. Louis Cardinals": {
-      "away": "Milwaukee Brewers",
-      "home": "St. Louis Cardinals",
-      "commence_time": "2026-07-07T23:46:00Z",
+    "Toronto Blue Jays @ San Francisco Giants": {
+      "away": "Toronto Blue Jays",
+      "home": "San Francisco Giants",
+      "commence_time": "2026-07-08T19:46:00Z",
       "books": {
         "FanDuel": {
-          "away_price": -122,
-          "home_price": 104,
-          "total_line": 8.5,
-          "over_price": 100
-        },
-        "BetOnline.ag": {
-          "away_price": -119,
-          "home_price": 108,
-          "total_line": 8.0,
-          "over_price": -120
+          "away_price": -118,
+          "home_price": 100,
+          "total_line": 7.0,
+          "over_price": -108
         },
         "LowVig.ag": {
-          "away_price": -119,
-          "home_price": 108,
-          "total_line": 8.0,
-          "over_price": -118
-        },
-        "Bovada": {
-          "away_price": -124,
+          "away_price": -115,
           "home_price": 104,
-          "total_line": 8.0,
-          "over_price": -115
+          "total_line": 7.0,
+          "over_price": -104
+        },
+        "BetOnline.ag": {
+          "away_price": -115,
+          "home_price": 104,
+          "total_line": 7.0,
+          "over_price": -107
+        },
+        "MyBookie.ag": {
+          "away_price": -120,
+          "home_price": 102,
+          "total_line": 7.0,
+          "over_price": -104
         },
         "DraftKings": {
-          "away_price": -125,
-          "home_price": 104,
-          "total_line": 8.0,
-          "over_price": -115
-        },
-        "BetUS": {
-          "away_price": -126,
-          "home_price": 115,
-          "total_line": 8.0,
-          "over_price": -120
-        },
-        "BetRivers": {
-          "away_price": -136,
-          "home_price": 110,
-          "total_line": 8.5,
+          "away_price": -122,
+          "home_price": 101,
+          "total_line": 7.0,
           "over_price": -105
         },
         "BetMGM": {
-          "away_price": -125,
-          "home_price": 105,
-          "total_line": 8.0,
-          "over_price": -120
+          "away_price": -120,
+          "home_price": 100,
+          "total_line": 7.0,
+          "over_price": -105
         },
-        "MyBookie.ag": {
-          "away_price": -124,
-          "home_price": 106,
-          "total_line": 8.0,
-          "over_price": -119
+        "BetRivers": {
+          "away_price": -121,
+          "home_price": -104,
+          "total_line": 7.0,
+          "over_price": -113
+        },
+        "BetUS": {
+          "away_price": -115,
+          "home_price": 105,
+          "total_line": 7.0,
+          "over_price": -105
+        },
+        "Bovada": {
+          "away_price": -121,
+          "home_price": 101,
+          "total_line": 7.0,
+          "over_price": -105
         }
       }
     },
     "Chicago Cubs @ Baltimore Orioles": {
       "away": "Chicago Cubs",
       "home": "Baltimore Orioles",
-      "commence_time": "2026-07-07T22:36:00Z",
+      "commence_time": "2026-07-08T22:36:00Z",
       "books": {
         "FanDuel": {
-          "away_price": -112,
-          "home_price": -104,
-          "total_line": 9.5,
-          "over_price": 100
+          "away_price": 108,
+          "home_price": -126,
+          "total_line": 10.0,
+          "over_price": -104
         },
         "LowVig.ag": {
-          "away_price": -109,
-          "home_price": -101,
+          "away_price": 112,
+          "home_price": -123,
           "total_line": 9.5,
-          "over_price": 103
+          "over_price": -123
         },
         "BetOnline.ag": {
-          "away_price": -109,
-          "home_price": -101,
+          "away_price": 112,
+          "home_price": -123,
           "total_line": 9.5,
-          "over_price": 100
-        },
-        "BetUS": {
-          "away_price": -110,
-          "home_price": 100,
-          "total_line": 9.5,
-          "over_price": 100
+          "over_price": -125
         },
         "DraftKings": {
-          "away_price": -115,
-          "home_price": -105,
-          "total_line": 9.5,
-          "over_price": 101
+          "away_price": 105,
+          "home_price": -126,
+          "total_line": 10.0,
+          "over_price": -109
         },
         "BetMGM": {
-          "away_price": -115,
-          "home_price": -105,
-          "total_line": 9.5,
-          "over_price": -102
-        },
-        "BetRivers": {
-          "away_price": -118,
-          "home_price": -105,
-          "total_line": 9.5,
-          "over_price": -103
+          "away_price": 105,
+          "home_price": -125,
+          "total_line": 10.0,
+          "over_price": -105
         },
         "MyBookie.ag": {
-          "away_price": -113,
-          "home_price": -103,
+          "away_price": 107,
+          "home_price": -126,
+          "total_line": 10.0,
+          "over_price": -108
+        },
+        "BetUS": {
+          "away_price": 110,
+          "home_price": -121,
+          "total_line": 10.0,
+          "over_price": -110
+        },
+        "BetRivers": {
+          "away_price": 102,
+          "home_price": -127,
           "total_line": 9.5,
-          "over_price": 101
+          "over_price": -127
         },
         "Bovada": {
-          "away_price": -113,
-          "home_price": -107,
-          "total_line": 9.0,
-          "over_price": -115
+          "away_price": 107,
+          "home_price": -128,
+          "total_line": 10.0,
+          "over_price": -110
         }
       }
     },
     "Athletics @ Detroit Tigers": {
       "away": "Athletics",
       "home": "Detroit Tigers",
-      "commence_time": "2026-07-07T22:41:00Z",
+      "commence_time": "2026-07-08T22:41:00Z",
       "books": {
         "FanDuel": {
-          "away_price": 172,
-          "home_price": -205,
-          "total_line": 8.0,
-          "over_price": -115
-        },
-        "BetOnline.ag": {
-          "away_price": 182,
-          "home_price": -203,
-          "total_line": 8.0,
-          "over_price": -115
+          "away_price": 114,
+          "home_price": -134,
+          "total_line": 9.0,
+          "over_price": -118
         },
         "LowVig.ag": {
-          "away_price": 182,
-          "home_price": -203,
-          "total_line": 8.0,
-          "over_price": -113
+          "away_price": 119,
+          "home_price": -131,
+          "total_line": 9.0,
+          "over_price": -120
         },
-        "BetUS": {
-          "away_price": 178,
-          "home_price": -205,
-          "total_line": 8.0,
-          "over_price": -115
+        "BetOnline.ag": {
+          "away_price": 119,
+          "home_price": -131,
+          "total_line": 9.0,
+          "over_price": -122
         },
         "DraftKings": {
-          "away_price": 178,
-          "home_price": -219,
-          "total_line": 8.0,
-          "over_price": -112
+          "away_price": 114,
+          "home_price": -137,
+          "total_line": 9.0,
+          "over_price": -119
         },
         "BetMGM": {
-          "away_price": 170,
-          "home_price": -210,
-          "total_line": 8.0,
-          "over_price": -115
-        },
-        "BetRivers": {
-          "away_price": 170,
-          "home_price": -220,
-          "total_line": 8.0,
+          "away_price": 115,
+          "home_price": -140,
+          "total_line": 9.0,
           "over_price": -118
         },
         "MyBookie.ag": {
-          "away_price": 173,
-          "home_price": -206,
-          "total_line": 8.0,
-          "over_price": -114
+          "away_price": 116,
+          "home_price": -137,
+          "total_line": 9.0,
+          "over_price": -122
+        },
+        "BetUS": {
+          "away_price": 120,
+          "home_price": -132,
+          "total_line": 9.0,
+          "over_price": -120
+        },
+        "BetRivers": {
+          "away_price": 120,
+          "home_price": -152,
+          "total_line": 9.0,
+          "over_price": -107
         },
         "Bovada": {
-          "away_price": 180,
-          "home_price": -220,
-          "total_line": 8.0,
-          "over_price": -110
+          "away_price": 115,
+          "home_price": -138,
+          "total_line": 9.0,
+          "over_price": -120
         }
       }
     },
     "Atlanta Braves @ Pittsburgh Pirates": {
       "away": "Atlanta Braves",
       "home": "Pittsburgh Pirates",
-      "commence_time": "2026-07-07T22:41:00Z",
+      "commence_time": "2026-07-08T22:41:00Z",
       "books": {
         "FanDuel": {
-          "away_price": 128,
-          "home_price": -152,
-          "total_line": 8.0,
-          "over_price": -110
-        },
-        "MyBookie.ag": {
-          "away_price": 126,
-          "home_price": -149,
-          "total_line": 8.0,
-          "over_price": -108
-        },
-        "BetRivers": {
-          "away_price": 125,
-          "home_price": -157,
-          "total_line": 8.0,
-          "over_price": -110
+          "away_price": 102,
+          "home_price": -120,
+          "total_line": 9.5,
+          "over_price": 100
         },
         "LowVig.ag": {
-          "away_price": 130,
-          "home_price": -143,
-          "total_line": 8.0,
-          "over_price": -107
+          "away_price": 103,
+          "home_price": -113,
+          "total_line": 9.0,
+          "over_price": -118
         },
         "BetOnline.ag": {
-          "away_price": 130,
-          "home_price": -143,
-          "total_line": 8.0,
-          "over_price": -110
-        },
-        "BetUS": {
-          "away_price": 129,
-          "home_price": -143,
-          "total_line": 8.0,
-          "over_price": -110
+          "away_price": 103,
+          "home_price": -113,
+          "total_line": 9.0,
+          "over_price": -120
         },
         "DraftKings": {
-          "away_price": 124,
-          "home_price": -149,
-          "total_line": 8.0,
-          "over_price": -110
-        },
-        "Bovada": {
-          "away_price": 125,
-          "home_price": -149,
-          "total_line": 8.0,
-          "over_price": -110
+          "away_price": -101,
+          "home_price": -120,
+          "total_line": 9.0,
+          "over_price": -122
         },
         "BetMGM": {
-          "away_price": 125,
-          "home_price": -150,
-          "total_line": 8.0,
-          "over_price": -110
+          "away_price": -102,
+          "home_price": -118,
+          "total_line": 9.0,
+          "over_price": -120
+        },
+        "MyBookie.ag": {
+          "away_price": -101,
+          "home_price": -115,
+          "total_line": 9.5,
+          "over_price": -101
+        },
+        "BetUS": {
+          "away_price": 103,
+          "home_price": -113,
+          "total_line": 9.0,
+          "over_price": -120
+        },
+        "BetRivers": {
+          "away_price": -103,
+          "home_price": -122,
+          "total_line": 9.0,
+          "over_price": -118
+        },
+        "Bovada": {
+          "away_price": -102,
+          "home_price": -118,
+          "total_line": 9.5,
+          "over_price": 100
         }
       }
     },
     "Seattle Mariners @ Miami Marlins": {
       "away": "Seattle Mariners",
       "home": "Miami Marlins",
-      "commence_time": "2026-07-07T22:41:00Z",
+      "commence_time": "2026-07-08T22:41:00Z",
       "books": {
         "FanDuel": {
-          "away_price": 100,
-          "home_price": -118,
-          "total_line": 8.0,
-          "over_price": -105
+          "away_price": -130,
+          "home_price": 110,
+          "total_line": 8.5,
+          "over_price": -110
         },
         "MyBookie.ag": {
-          "away_price": 104,
-          "home_price": -123,
-          "total_line": 8.0,
-          "over_price": -107
-        },
-        "BetRivers": {
-          "away_price": -103,
-          "home_price": -122,
-          "total_line": 8.0,
-          "over_price": -108
-        },
-        "LowVig.ag": {
-          "away_price": 107,
-          "home_price": -118,
-          "total_line": 8.0,
-          "over_price": -101
-        },
-        "BetOnline.ag": {
-          "away_price": 107,
-          "home_price": -118,
-          "total_line": 8.0,
-          "over_price": -104
+          "away_price": -130,
+          "home_price": 111,
+          "total_line": 8.5,
+          "over_price": -112
         },
         "DraftKings": {
-          "away_price": 104,
-          "home_price": -125,
-          "total_line": 8.0,
-          "over_price": -105
+          "away_price": -131,
+          "home_price": 108,
+          "total_line": 8.5,
+          "over_price": -110
         },
         "BetMGM": {
-          "away_price": 105,
-          "home_price": -125,
-          "total_line": 8.0,
-          "over_price": -105
+          "away_price": -130,
+          "home_price": 110,
+          "total_line": 8.5,
+          "over_price": -115
         },
         "Bovada": {
-          "away_price": 108,
-          "home_price": -130,
-          "total_line": 8.0,
-          "over_price": -105
+          "away_price": -128,
+          "home_price": 107,
+          "total_line": 8.5,
+          "over_price": -110
+        },
+        "BetRivers": {
+          "away_price": -143,
+          "home_price": 116,
+          "total_line": 8.5,
+          "over_price": -104
+        },
+        "LowVig.ag": {
+          "away_price": -125,
+          "home_price": 113,
+          "total_line": 8.5,
+          "over_price": -107
+        },
+        "BetOnline.ag": {
+          "away_price": -125,
+          "home_price": 113,
+          "total_line": 8.5,
+          "over_price": -110
         },
         "BetUS": {
-          "away_price": 108,
-          "home_price": -118,
-          "total_line": 8.0,
-          "over_price": -105
+          "away_price": -125,
+          "home_price": 114,
+          "total_line": 8.5,
+          "over_price": -115
         }
       }
     },
     "New York Yankees @ Tampa Bay Rays": {
       "away": "New York Yankees",
       "home": "Tampa Bay Rays",
-      "commence_time": "2026-07-07T22:41:00Z",
+      "commence_time": "2026-07-08T22:41:00Z",
       "books": {
         "FanDuel": {
-          "away_price": 100,
-          "home_price": -118,
-          "total_line": 8.0,
-          "over_price": -105
-        },
-        "MyBookie.ag": {
-          "away_price": 101,
-          "home_price": -119,
-          "total_line": 8.0,
-          "over_price": 100
-        },
-        "BetRivers": {
-          "away_price": -103,
-          "home_price": -122,
-          "total_line": 8.0,
-          "over_price": -103
+          "away_price": 102,
+          "home_price": -120,
+          "total_line": 7.0,
+          "over_price": -122
         },
         "LowVig.ag": {
-          "away_price": 105,
-          "home_price": -116,
-          "total_line": 8.0,
-          "over_price": -101
+          "away_price": 104,
+          "home_price": -115,
+          "total_line": 7.0,
+          "over_price": -113
         },
         "BetOnline.ag": {
-          "away_price": 105,
-          "home_price": -116,
-          "total_line": 8.0,
-          "over_price": -104
+          "away_price": 104,
+          "home_price": -115,
+          "total_line": 7.0,
+          "over_price": -115
         },
         "DraftKings": {
-          "away_price": 101,
-          "home_price": -122,
-          "total_line": 7.5,
+          "away_price": -101,
+          "home_price": -120,
+          "total_line": 7.0,
           "over_price": -117
-        },
-        "BetUS": {
-          "away_price": 107,
-          "home_price": -117,
-          "total_line": 8.0,
-          "over_price": -105
-        },
-        "Bovada": {
-          "away_price": 105,
-          "home_price": -125,
-          "total_line": 7.5,
-          "over_price": -120
         },
         "BetMGM": {
           "away_price": 100,
           "home_price": -120,
-          "total_line": 8.0,
-          "over_price": -102
+          "total_line": 7.0,
+          "over_price": -120
+        },
+        "MyBookie.ag": {
+          "away_price": 101,
+          "home_price": -119,
+          "total_line": 7.0,
+          "over_price": -120
+        },
+        "BetUS": {
+          "away_price": 104,
+          "home_price": -114,
+          "total_line": 7.0,
+          "over_price": -120
+        },
+        "BetRivers": {
+          "away_price": 105,
+          "home_price": -130,
+          "total_line": 7.5,
+          "over_price": -103
+        },
+        "Bovada": {
+          "away_price": -101,
+          "home_price": -119,
+          "total_line": 7.0,
+          "over_price": -120
         }
       }
     },
     "Houston Astros @ Washington Nationals": {
       "away": "Houston Astros",
       "home": "Washington Nationals",
-      "commence_time": "2026-07-07T22:46:00Z",
+      "commence_time": "2026-07-08T22:46:00Z",
       "books": {
         "FanDuel": {
-          "away_price": 100,
-          "home_price": -118,
-          "total_line": 9.0,
-          "over_price": -118
+          "away_price": 116,
+          "home_price": -134,
+          "total_line": 9.5,
+          "over_price": -115
         },
         "LowVig.ag": {
-          "away_price": 107,
-          "home_price": -118,
-          "total_line": 9.0,
+          "away_price": 122,
+          "home_price": -135,
+          "total_line": 9.5,
           "over_price": -118
         },
         "BetOnline.ag": {
-          "away_price": 107,
-          "home_price": -118,
-          "total_line": 9.0,
+          "away_price": 122,
+          "home_price": -135,
+          "total_line": 9.5,
           "over_price": -120
         },
         "DraftKings": {
-          "away_price": 101,
-          "home_price": -122,
-          "total_line": 9.0,
-          "over_price": -120
+          "away_price": 113,
+          "home_price": -136,
+          "total_line": 10.0,
+          "over_price": -102
         },
         "BetMGM": {
-          "away_price": 100,
-          "home_price": -120,
-          "total_line": 9.0,
-          "over_price": -120
-        },
-        "BetRivers": {
-          "away_price": 102,
-          "home_price": -127,
-          "total_line": 9.0,
-          "over_price": -115
+          "away_price": 118,
+          "home_price": -140,
+          "total_line": 10.0,
+          "over_price": -102
         },
         "MyBookie.ag": {
-          "away_price": 103,
-          "home_price": -120,
-          "total_line": 9.0,
-          "over_price": -120
+          "away_price": 115,
+          "home_price": -135,
+          "total_line": 9.5,
+          "over_price": -117
         },
         "BetUS": {
-          "away_price": 106,
-          "home_price": -116,
-          "total_line": 9.0,
+          "away_price": 122,
+          "home_price": -135,
+          "total_line": 9.5,
           "over_price": -120
         },
         "Bovada": {
-          "away_price": 102,
-          "home_price": -122,
+          "away_price": 115,
+          "home_price": -138,
           "total_line": 9.5,
-          "over_price": 100
+          "over_price": -120
+        },
+        "BetRivers": {
+          "away_price": 114,
+          "home_price": -141,
+          "total_line": 9.5,
+          "over_price": -120
         }
       }
     },
     "Philadelphia Phillies @ Cincinnati Reds": {
       "away": "Philadelphia Phillies",
       "home": "Cincinnati Reds",
-      "commence_time": "2026-07-07T23:10:00Z",
+      "commence_time": "2026-07-08T23:11:00Z",
       "books": {
-        "DraftKings": {
-          "away_price": -175,
-          "home_price": 144,
+        "FanDuel": {
+          "away_price": 120,
+          "home_price": -142,
           "total_line": 9.0,
-          "over_price": -104
-        },
-        "LowVig.ag": {
-          "away_price": -167,
-          "home_price": 151,
-          "total_line": 9.0,
-          "over_price": 103
+          "over_price": -118
         },
         "MyBookie.ag": {
-          "away_price": -172,
-          "home_price": 145,
+          "away_price": 119,
+          "home_price": -140,
           "total_line": 9.0,
-          "over_price": -102
-        },
-        "BetOnline.ag": {
-          "away_price": -167,
-          "home_price": 151,
-          "total_line": 9.0,
-          "over_price": 100
-        },
-        "FanDuel": {
-          "away_price": -174,
-          "home_price": 146,
-          "total_line": 9.0,
-          "over_price": -102
-        },
-        "BetMGM": {
-          "away_price": -175,
-          "home_price": 145,
-          "total_line": 9.0,
-          "over_price": -102
-        },
-        "Bovada": {
-          "away_price": -174,
-          "home_price": 143,
-          "total_line": 9.0,
-          "over_price": -105
+          "over_price": -121
         },
         "BetRivers": {
-          "away_price": -167,
-          "home_price": 135,
+          "away_price": 112,
+          "home_price": -139,
           "total_line": 9.0,
-          "over_price": 100
+          "over_price": -115
+        },
+        "DraftKings": {
+          "away_price": 119,
+          "home_price": -143,
+          "total_line": 9.0,
+          "over_price": -119
+        },
+        "BetMGM": {
+          "away_price": 120,
+          "home_price": -145,
+          "total_line": 9.0,
+          "over_price": -118
         },
         "BetUS": {
-          "away_price": -168,
-          "home_price": 149,
+          "away_price": 125,
+          "home_price": -138,
           "total_line": 9.0,
-          "over_price": 100
+          "over_price": -120
+        },
+        "Bovada": {
+          "away_price": 122,
+          "home_price": -145,
+          "total_line": 9.0,
+          "over_price": -120
+        },
+        "BetOnline.ag": {
+          "away_price": 125,
+          "home_price": -138,
+          "total_line": 9.0,
+          "over_price": -115
+        },
+        "LowVig.ag": {
+          "away_price": 125,
+          "home_price": -138,
+          "total_line": 9.0,
+          "over_price": -113
         }
       }
     },
     "Kansas City Royals @ New York Mets": {
       "away": "Kansas City Royals",
       "home": "New York Mets",
-      "commence_time": "2026-07-07T23:11:00Z",
+      "commence_time": "2026-07-08T23:11:00Z",
       "books": {
         "FanDuel": {
-          "away_price": 124,
-          "home_price": -146,
-          "total_line": 8.5,
-          "over_price": -106
+          "away_price": 144,
+          "home_price": -172,
+          "total_line": 9.0,
+          "over_price": -110
         },
         "MyBookie.ag": {
-          "away_price": 129,
-          "home_price": -152,
-          "total_line": 8.5,
+          "away_price": 151,
+          "home_price": -180,
+          "total_line": 9.0,
+          "over_price": -109
+        },
+        "DraftKings": {
+          "away_price": 148,
+          "home_price": -180,
+          "total_line": 9.0,
           "over_price": -109
         },
         "BetRivers": {
-          "away_price": 128,
-          "home_price": -159,
-          "total_line": 8.5,
-          "over_price": -113
-        },
-        "LowVig.ag": {
-          "away_price": 130,
-          "home_price": -143,
-          "total_line": 8.5,
-          "over_price": -103
-        },
-        "BetOnline.ag": {
-          "away_price": 130,
-          "home_price": -143,
-          "total_line": 8.5,
-          "over_price": -106
-        },
-        "DraftKings": {
-          "away_price": 128,
-          "home_price": -155,
-          "total_line": 8.5,
-          "over_price": -107
+          "away_price": 143,
+          "home_price": -180,
+          "total_line": 9.0,
+          "over_price": -112
         },
         "BetMGM": {
-          "away_price": 125,
-          "home_price": -150,
-          "total_line": 8.5,
-          "over_price": -102
-        },
-        "Bovada": {
-          "away_price": 125,
-          "home_price": -149,
-          "total_line": 8.5,
+          "away_price": 150,
+          "home_price": -185,
+          "total_line": 9.0,
           "over_price": -110
         },
         "BetUS": {
-          "away_price": 129,
-          "home_price": -143,
-          "total_line": 8.5,
-          "over_price": -105
+          "away_price": 154,
+          "home_price": -175,
+          "total_line": 9.0,
+          "over_price": -110
+        },
+        "BetOnline.ag": {
+          "away_price": 158,
+          "home_price": -175,
+          "total_line": 9.0,
+          "over_price": -110
+        },
+        "LowVig.ag": {
+          "away_price": 158,
+          "home_price": -175,
+          "total_line": 9.0,
+          "over_price": -107
+        },
+        "Bovada": {
+          "away_price": 149,
+          "home_price": -181,
+          "total_line": 9.0,
+          "over_price": -115
         }
       }
     },
     "Boston Red Sox @ Chicago White Sox": {
       "away": "Boston Red Sox",
       "home": "Chicago White Sox",
-      "commence_time": "2026-07-07T23:41:00Z",
+      "commence_time": "2026-07-08T23:41:00Z",
       "books": {
         "FanDuel": {
-          "away_price": -124,
-          "home_price": 106,
-          "total_line": 8.5,
-          "over_price": -106
-        },
-        "BetOnline.ag": {
-          "away_price": -118,
-          "home_price": 107,
-          "total_line": 8.5,
-          "over_price": -108
+          "away_price": -102,
+          "home_price": -116,
+          "total_line": 8.0,
+          "over_price": -115
         },
         "LowVig.ag": {
-          "away_price": -118,
-          "home_price": 107,
-          "total_line": 8.5,
-          "over_price": -105
+          "away_price": -101,
+          "home_price": -109,
+          "total_line": 8.0,
+          "over_price": -113
         },
-        "BetUS": {
-          "away_price": -118,
-          "home_price": 108,
-          "total_line": 8.5,
-          "over_price": -105
+        "BetOnline.ag": {
+          "away_price": -101,
+          "home_price": -109,
+          "total_line": 8.0,
+          "over_price": -115
         },
         "DraftKings": {
-          "away_price": -126,
-          "home_price": 104,
-          "total_line": 8.5,
-          "over_price": -105
+          "away_price": -105,
+          "home_price": -114,
+          "total_line": 8.0,
+          "over_price": -112
         },
         "BetMGM": {
-          "away_price": -125,
-          "home_price": 105,
-          "total_line": 8.5,
-          "over_price": -105
-        },
-        "BetRivers": {
-          "away_price": -130,
-          "home_price": 105,
-          "total_line": 8.5,
-          "over_price": -107
+          "away_price": -105,
+          "home_price": -115,
+          "total_line": 8.0,
+          "over_price": -118
         },
         "MyBookie.ag": {
-          "away_price": -124,
-          "home_price": 106,
-          "total_line": 8.5,
-          "over_price": -105
+          "away_price": -104,
+          "home_price": -112,
+          "total_line": 8.0,
+          "over_price": -116
+        },
+        "BetUS": {
+          "away_price": 100,
+          "home_price": -110,
+          "total_line": 8.0,
+          "over_price": -115
+        },
+        "BetRivers": {
+          "away_price": -107,
+          "home_price": -117,
+          "total_line": 8.0,
+          "over_price": -118
         },
         "Bovada": {
-          "away_price": -126,
-          "home_price": 106,
-          "total_line": 8.5,
-          "over_price": -110
+          "away_price": -107,
+          "home_price": -113,
+          "total_line": 8.0,
+          "over_price": -115
         }
       }
     },
     "Cleveland Guardians @ Minnesota Twins": {
       "away": "Cleveland Guardians",
       "home": "Minnesota Twins",
-      "commence_time": "2026-07-07T23:41:00Z",
+      "commence_time": "2026-07-08T23:41:00Z",
       "books": {
         "FanDuel": {
-          "away_price": -102,
-          "home_price": -116,
+          "away_price": 110,
+          "home_price": -130,
           "total_line": 8.5,
-          "over_price": -118
+          "over_price": -102
         },
         "BetOnline.ag": {
-          "away_price": -101,
-          "home_price": -109,
+          "away_price": 109,
+          "home_price": -120,
           "total_line": 8.5,
-          "over_price": -117
+          "over_price": 103
         },
         "LowVig.ag": {
-          "away_price": -101,
-          "home_price": -109,
+          "away_price": 109,
+          "home_price": -120,
           "total_line": 8.5,
-          "over_price": -115
-        },
-        "BetUS": {
-          "away_price": -102,
-          "home_price": -108,
-          "total_line": 8.5,
-          "over_price": -120
+          "over_price": 106
         },
         "DraftKings": {
-          "away_price": -105,
-          "home_price": -114,
-          "total_line": 8.5,
+          "away_price": 108,
+          "home_price": -131,
+          "total_line": 8.0,
           "over_price": -119
         },
         "BetMGM": {
-          "away_price": -105,
-          "home_price": -115,
+          "away_price": 110,
+          "home_price": -130,
           "total_line": 8.5,
-          "over_price": -118
-        },
-        "BetRivers": {
-          "away_price": -106,
-          "home_price": -118,
-          "total_line": 8.5,
-          "over_price": -112
+          "over_price": 100
         },
         "MyBookie.ag": {
-          "away_price": -103,
-          "home_price": -114,
+          "away_price": 110,
+          "home_price": -129,
+          "total_line": 8.0,
+          "over_price": -118
+        },
+        "BetUS": {
+          "away_price": 110,
+          "home_price": -121,
           "total_line": 8.5,
-          "over_price": -117
+          "over_price": 100
+        },
+        "BetRivers": {
+          "away_price": 107,
+          "home_price": -132,
+          "total_line": 8.5,
+          "over_price": -105
         },
         "Bovada": {
-          "away_price": -106,
-          "home_price": -114,
-          "total_line": 8.5,
+          "away_price": 107,
+          "home_price": -128,
+          "total_line": 8.0,
+          "over_price": -120
+        }
+      }
+    },
+    "Milwaukee Brewers @ St. Louis Cardinals": {
+      "away": "Milwaukee Brewers",
+      "home": "St. Louis Cardinals",
+      "commence_time": "2026-07-08T23:46:00Z",
+      "books": {
+        "FanDuel": {
+          "away_price": -148,
+          "home_price": 126,
+          "total_line": 8.0,
+          "over_price": -114
+        },
+        "LowVig.ag": {
+          "away_price": -145,
+          "home_price": 131,
+          "total_line": 8.0,
+          "over_price": -109
+        },
+        "BetOnline.ag": {
+          "away_price": -145,
+          "home_price": 131,
+          "total_line": 8.0,
+          "over_price": -112
+        },
+        "DraftKings": {
+          "away_price": -148,
+          "home_price": 123,
+          "total_line": 8.0,
+          "over_price": -112
+        },
+        "BetMGM": {
+          "away_price": -150,
+          "home_price": 125,
+          "total_line": 8.0,
           "over_price": -115
+        },
+        "MyBookie.ag": {
+          "away_price": -144,
+          "home_price": 122,
+          "total_line": 8.0,
+          "over_price": -116
+        },
+        "BetUS": {
+          "away_price": -145,
+          "home_price": 130,
+          "total_line": 8.0,
+          "over_price": -115
+        },
+        "Bovada": {
+          "away_price": -147,
+          "home_price": 123,
+          "total_line": 8.0,
+          "over_price": -115
+        },
+        "BetRivers": {
+          "away_price": -148,
+          "home_price": 118,
+          "total_line": 8.0,
+          "over_price": -109
         }
       }
     },
     "Los Angeles Angels @ Texas Rangers": {
       "away": "Los Angeles Angels",
       "home": "Texas Rangers",
-      "commence_time": "2026-07-08T00:06:00Z",
+      "commence_time": "2026-07-09T00:06:00Z",
       "books": {
         "FanDuel": {
-          "away_price": 140,
-          "home_price": -166,
-          "total_line": 7.0,
-          "over_price": -115
-        },
-        "BetOnline.ag": {
-          "away_price": 143,
-          "home_price": -158,
-          "total_line": 7.0,
-          "over_price": -113
+          "away_price": 128,
+          "home_price": -152,
+          "total_line": 7.5,
+          "over_price": -120
         },
         "LowVig.ag": {
-          "away_price": 143,
-          "home_price": -158,
-          "total_line": 7.0,
-          "over_price": -110
+          "away_price": 136,
+          "home_price": -150,
+          "total_line": 7.5,
+          "over_price": -113
         },
-        "BetUS": {
-          "away_price": 139,
-          "home_price": -156,
-          "total_line": 7.0,
+        "BetOnline.ag": {
+          "away_price": 136,
+          "home_price": -150,
+          "total_line": 7.5,
           "over_price": -115
         },
         "DraftKings": {
-          "away_price": 135,
-          "home_price": -163,
-          "total_line": 7.0,
-          "over_price": -112
+          "away_price": 129,
+          "home_price": -156,
+          "total_line": 7.5,
+          "over_price": -114
         },
         "BetMGM": {
-          "away_price": 135,
-          "home_price": -165,
-          "total_line": 7.0,
+          "away_price": 130,
+          "home_price": -155,
+          "total_line": 7.5,
           "over_price": -115
         },
-        "BetRivers": {
-          "away_price": 140,
-          "home_price": -177,
-          "total_line": 7.0,
+        "BetUS": {
+          "away_price": 131,
+          "home_price": -146,
+          "total_line": 7.5,
           "over_price": -115
         },
         "MyBookie.ag": {
-          "away_price": 137,
-          "home_price": -162,
-          "total_line": 7.0,
-          "over_price": -111
+          "away_price": 129,
+          "home_price": -153,
+          "total_line": 7.5,
+          "over_price": -114
+        },
+        "BetRivers": {
+          "away_price": 133,
+          "home_price": -167,
+          "total_line": 7.5,
+          "over_price": -118
         },
         "Bovada": {
-          "away_price": 139,
-          "home_price": -165,
-          "total_line": 7.0,
-          "over_price": -110
+          "away_price": 127,
+          "home_price": -152,
+          "total_line": 7.5,
+          "over_price": -115
         }
       }
     },
     "Arizona Diamondbacks @ San Diego Padres": {
       "away": "Arizona Diamondbacks",
       "home": "San Diego Padres",
-      "commence_time": "2026-07-08T01:41:00Z",
+      "commence_time": "2026-07-09T02:11:00Z",
       "books": {
         "FanDuel": {
-          "away_price": 106,
-          "home_price": -124,
+          "away_price": 120,
+          "home_price": -142,
           "total_line": 8.5,
-          "over_price": -124
-        },
-        "MyBookie.ag": {
-          "away_price": 103,
-          "home_price": -122,
-          "total_line": 9.0,
-          "over_price": -106
-        },
-        "BetOnline.ag": {
-          "away_price": 104,
-          "home_price": -115,
-          "total_line": 8.5,
-          "over_price": -125
-        },
-        "LowVig.ag": {
-          "away_price": 104,
-          "home_price": -115,
-          "total_line": 8.5,
-          "over_price": -123
-        },
-        "DraftKings": {
-          "away_price": 101,
-          "home_price": -122,
-          "total_line": 9.0,
-          "over_price": -101
-        },
-        "BetRivers": {
-          "away_price": 102,
-          "home_price": -127,
-          "total_line": 9.0,
-          "over_price": 100
-        },
-        "BetMGM": {
-          "away_price": 100,
-          "home_price": -120,
-          "total_line": 9.0,
-          "over_price": 100
-        },
-        "Bovada": {
-          "away_price": 100,
-          "home_price": -120,
-          "total_line": 9.0,
-          "over_price": -105
-        },
-        "BetUS": {
-          "away_price": 106,
-          "home_price": -116,
-          "total_line": 8.5,
-          "over_price": -125
-        }
-      }
-    },
-    "Toronto Blue Jays @ San Francisco Giants": {
-      "away": "Toronto Blue Jays",
-      "home": "San Francisco Giants",
-      "commence_time": "2026-07-08T01:46:00Z",
-      "books": {
-        "FanDuel": {
-          "away_price": -112,
-          "home_price": -104,
-          "total_line": 7.5,
-          "over_price": -120
-        },
-        "BetRivers": {
-          "away_price": -118,
-          "home_price": -106,
-          "total_line": 8.0,
           "over_price": -104
         },
-        "MyBookie.ag": {
-          "away_price": -114,
-          "home_price": -103,
-          "total_line": 7.5,
-          "over_price": -119
-        },
         "LowVig.ag": {
-          "away_price": -110,
-          "home_price": 100,
-          "total_line": 7.5,
+          "away_price": 125,
+          "home_price": -138,
+          "total_line": 8.0,
           "over_price": -118
         },
         "BetOnline.ag": {
-          "away_price": -110,
-          "home_price": 100,
-          "total_line": 7.5,
+          "away_price": 125,
+          "home_price": -138,
+          "total_line": 8.0,
           "over_price": -120
         },
         "DraftKings": {
-          "away_price": -115,
-          "home_price": -105,
-          "total_line": 7.5,
-          "over_price": -119
+          "away_price": 119,
+          "home_price": -143,
+          "total_line": 8.0,
+          "over_price": -118
         },
         "BetMGM": {
-          "away_price": -115,
-          "home_price": -105,
-          "total_line": 7.5,
+          "away_price": 120,
+          "home_price": -145,
+          "total_line": 8.0,
+          "over_price": -120
+        },
+        "BetRivers": {
+          "away_price": 130,
+          "home_price": -162,
+          "total_line": 8.0,
           "over_price": -118
         },
         "Bovada": {
-          "away_price": -118,
-          "home_price": -102,
-          "total_line": 8.0,
+          "away_price": 118,
+          "home_price": -141,
+          "total_line": 8.5,
           "over_price": -105
         },
         "BetUS": {
-          "away_price": -110,
-          "home_price": 100,
-          "total_line": 7.5,
+          "away_price": 123,
+          "home_price": -136,
+          "total_line": 8.0,
           "over_price": -120
+        },
+        "MyBookie.ag": {
+          "away_price": 121,
+          "home_price": -142,
+          "total_line": 8.5,
+          "over_price": -103
         }
       }
     },
     "Colorado Rockies @ Los Angeles Dodgers": {
       "away": "Colorado Rockies",
       "home": "Los Angeles Dodgers",
-      "commence_time": "2026-07-08T02:11:00Z",
+      "commence_time": "2026-07-09T02:11:00Z",
       "books": {
         "FanDuel": {
-          "away_price": 225,
-          "home_price": -275,
-          "total_line": 9.5,
-          "over_price": -108
-        },
-        "BetOnline.ag": {
-          "away_price": 236,
-          "home_price": -265,
-          "total_line": 9.5,
-          "over_price": -115
+          "away_price": 200,
+          "home_price": -245,
+          "total_line": 10.0,
+          "over_price": -102
         },
         "LowVig.ag": {
-          "away_price": 236,
-          "home_price": -265,
-          "total_line": 9.5,
-          "over_price": -113
+          "away_price": 201,
+          "home_price": -225,
+          "total_line": 10.0,
+          "over_price": -102
+        },
+        "BetOnline.ag": {
+          "away_price": 201,
+          "home_price": -225,
+          "total_line": 10.0,
+          "over_price": -105
         },
         "DraftKings": {
-          "away_price": 233,
-          "home_price": -292,
-          "total_line": 9.5,
-          "over_price": -112
+          "away_price": 199,
+          "home_price": -246,
+          "total_line": 10.0,
+          "over_price": -105
         },
         "BetMGM": {
-          "away_price": 225,
-          "home_price": -285,
-          "total_line": 9.5,
-          "over_price": -115
-        },
-        "BetRivers": {
-          "away_price": 225,
-          "home_price": -295,
+          "away_price": 195,
+          "home_price": -235,
           "total_line": 10.0,
           "over_price": -105
         },
         "Bovada": {
-          "away_price": 230,
-          "home_price": -290,
-          "total_line": 9.5,
-          "over_price": -110
+          "away_price": 200,
+          "home_price": -245,
+          "total_line": 10.0,
+          "over_price": -105
         },
-        "BetUS": {
-          "away_price": 230,
-          "home_price": -270,
-          "total_line": 9.5,
-          "over_price": -115
+        "BetRivers": {
+          "away_price": 195,
+          "home_price": -250,
+          "total_line": 10.0,
+          "over_price": -104
         },
         "MyBookie.ag": {
-          "away_price": 226,
-          "home_price": -275,
+          "away_price": 197,
+          "home_price": -236,
           "total_line": 9.5,
-          "over_price": -114
+          "over_price": -117
+        },
+        "BetUS": {
+          "away_price": 202,
+          "home_price": -235,
+          "total_line": 10.0,
+          "over_price": -105
         }
       }
     }
