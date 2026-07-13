@@ -2,15 +2,15 @@
   "date": "2026-07-13",
   "games": {
     "American League @ National League": {
-      "play": "Over 7.5 Runs",
-      "price": "-110",
-      "book": "PointsBet",
+      "play": "National League Moneyline",
+      "price": "-130",
+      "book": "MyBookie.ag",
       "is_pass": false,
-      "edge": "+1.1%",
-      "away_true": 43,
-      "home_true": 57,
-      "away_fair": "+132",
-      "home_fair": "-132",
+      "edge": "+2.2%",
+      "away_true": 44,
+      "home_true": 56,
+      "away_fair": "+127",
+      "home_fair": "-127",
       "signal": "watch",
       "signal_label": ""
     }
