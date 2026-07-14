@@ -4586,6 +4586,17 @@
       "type": "ml",
       "edge": "+1.5%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-07-14",
+      "date_display": "July 14, 2026",
+      "game": "American League @ National League",
+      "play": "American League Moneyline",
+      "price": "+125",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+2.4%",
+      "signal": "watch"
     }
   ]
 }
