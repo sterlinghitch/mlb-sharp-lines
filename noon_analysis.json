@@ -2,11 +2,11 @@
   "date": "2026-07-13",
   "games": {
     "American League @ National League": {
-      "play": "American League Moneyline",
-      "price": "+125",
-      "book": "BetUS",
+      "play": "Over 8.0 Runs",
+      "price": "-106",
+      "book": "PointsBet",
       "is_pass": false,
-      "edge": "+1.5%",
+      "edge": "+1.8%",
       "away_true": 44,
       "home_true": 56,
       "away_fair": "+127",
