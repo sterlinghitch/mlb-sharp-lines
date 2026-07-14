@@ -3,14 +3,14 @@
   "games": {
     "American League @ National League": {
       "play": "Over 8.0 Runs",
-      "price": "-106",
+      "price": "-105",
       "book": "PointsBet",
       "is_pass": false,
-      "edge": "+1.8%",
+      "edge": "+2.1%",
       "away_true": 44,
       "home_true": 56,
-      "away_fair": "+127",
-      "home_fair": "-127",
+      "away_fair": "+126",
+      "home_fair": "-126",
       "signal": "watch",
       "signal_label": ""
     }
