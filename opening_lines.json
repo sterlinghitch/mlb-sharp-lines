@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-07-13T12:34:00.165573-04:00",
-  "time_display": "12:34 PM ET",
+  "timestamp": "2026-07-14T11:23:14.107882-04:00",
+  "time_display": "11:23 AM ET",
   "type": "opening",
   "games": {
     "American League @ National League": {
@@ -9,34 +9,34 @@
       "commence_time": "2026-07-15T00:01:00Z",
       "books": {
         "FanDuel": {
-          "away_price": 120,
-          "home_price": -142,
-          "total_line": 7.5,
-          "over_price": -118
+          "away_price": 110,
+          "home_price": -130,
+          "total_line": 8.0,
+          "over_price": -114
         },
         "BetOnline.ag": {
-          "away_price": 122,
-          "home_price": -135,
-          "total_line": 7.5,
-          "over_price": -120
-        },
-        "BetUS": {
-          "away_price": 122,
-          "home_price": -135,
-          "total_line": 7.5,
-          "over_price": -120
-        },
-        "LowVig.ag": {
-          "away_price": 122,
-          "home_price": -135,
-          "total_line": 7.5,
+          "away_price": 116,
+          "home_price": -128,
+          "total_line": 8.0,
           "over_price": -118
         },
+        "BetUS": {
+          "away_price": 119,
+          "home_price": -131,
+          "total_line": 8.0,
+          "over_price": -115
+        },
+        "LowVig.ag": {
+          "away_price": 116,
+          "home_price": -128,
+          "total_line": 8.0,
+          "over_price": -116
+        },
         "BetMGM": {
-          "away_price": 118,
-          "home_price": -140,
-          "total_line": 7.5,
-          "over_price": -120
+          "away_price": 110,
+          "home_price": -130,
+          "total_line": 8.0,
+          "over_price": -115
         }
       }
     }
