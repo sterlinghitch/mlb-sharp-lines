@@ -4597,6 +4597,17 @@
       "type": "ml",
       "edge": "+2.4%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-07-15",
+      "date_display": "July 15, 2026",
+      "game": "Philadelphia Phillies @ New York Mets",
+      "play": "Philadelphia Phillies Moneyline",
+      "price": "+122",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.4%",
+      "signal": "watch"
     }
   ]
 }

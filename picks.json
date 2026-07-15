@@ -1,21 +1,21 @@
 {
-  "date": "2026-07-14",
-  "date_display": "July 14, 2026",
+  "date": "2026-07-15",
+  "date_display": "July 15, 2026",
   "bets": [
     {
-      "game": "American League @ National League",
-      "away": "American League",
-      "home": "National League",
-      "away_id": null,
-      "home_id": null,
-      "play": "American League Moneyline",
-      "price": "+125",
+      "game": "Philadelphia Phillies @ New York Mets",
+      "away": "Philadelphia Phillies",
+      "home": "New York Mets",
+      "away_id": 143,
+      "home_id": 121,
+      "play": "Philadelphia Phillies Moneyline",
+      "price": "+122",
       "book": "BetUS",
       "type": "ml",
-      "pick_team": "American League",
+      "pick_team": "Philadelphia Phillies",
       "side": null,
       "total_line": null,
-      "edge": "+2.4%",
+      "edge": "+3.4%",
       "signal": "watch"
     }
   ]
