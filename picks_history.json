@@ -4608,6 +4608,83 @@
       "type": "ml",
       "edge": "+3.4%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-07-16",
+      "date_display": "July 16, 2026",
+      "game": "Philadelphia Phillies @ New York Mets",
+      "play": "Philadelphia Phillies Moneyline",
+      "price": "+122",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+4.9%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-16",
+      "date_display": "July 16, 2026",
+      "game": "Tampa Bay Rays @ Boston Red Sox",
+      "play": "Tampa Bay Rays Moneyline",
+      "price": "-100",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+4.0%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-16",
+      "date_display": "July 16, 2026",
+      "game": "Los Angeles Dodgers @ New York Yankees",
+      "play": "Over 9.0 Runs",
+      "price": "-115",
+      "book": "MyBookie.ag",
+      "type": "total",
+      "edge": "+2.3%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-16",
+      "date_display": "July 16, 2026",
+      "game": "Kansas City Royals @ San Diego Padres",
+      "play": "Kansas City Royals Moneyline",
+      "price": "+102",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+5.4%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-16",
+      "date_display": "July 16, 2026",
+      "game": "Colorado Rockies @ Cincinnati Reds",
+      "play": "Colorado Rockies Moneyline",
+      "price": "-100",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+2.5%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-16",
+      "date_display": "July 16, 2026",
+      "game": "Cleveland Guardians @ Pittsburgh Pirates",
+      "play": "Cleveland Guardians Moneyline",
+      "price": "+109",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+3.2%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-16",
+      "date_display": "July 16, 2026",
+      "game": "Toronto Blue Jays @ Chicago White Sox",
+      "play": "Chicago White Sox Moneyline",
+      "price": "-132",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+2.0%",
+      "signal": "watch"
     }
   ]
 }
