@@ -1,24 +1,85 @@
 {
-  "timestamp": "2026-07-14T20:50:07.107574-04:00",
-  "time_display": "08:50 PM ET",
+  "timestamp": "2026-07-15T20:56:13.217229-04:00",
+  "time_display": "08:56 PM ET",
   "type": "closing",
   "games": {
-    "American League @ National League": {
-      "away": "American League",
-      "home": "National League",
-      "commence_time": "2026-07-15T00:29:00Z",
+    "New York Mets @ Philadelphia Phillies": {
+      "away": "New York Mets",
+      "home": "Philadelphia Phillies",
+      "commence_time": "2026-07-16T23:11:00Z",
       "books": {
         "FanDuel": {
-          "away_price": -320,
-          "home_price": 235,
-          "total_line": 10.5,
-          "over_price": -122
+          "away_price": 106,
+          "home_price": -124,
+          "total_line": 9.5,
+          "over_price": -118
+        },
+        "BetOnline.ag": {
+          "away_price": 116,
+          "home_price": -128,
+          "total_line": 9.5,
+          "over_price": -110
+        },
+        "LowVig.ag": {
+          "away_price": 116,
+          "home_price": -128,
+          "total_line": 9.5,
+          "over_price": -107
+        },
+        "BetUS": {
+          "away_price": 117,
+          "home_price": -128,
+          "total_line": 9.5,
+          "over_price": -110
         },
         "BetMGM": {
-          "away_price": -300,
-          "home_price": 230,
+          "away_price": 110,
+          "home_price": -135,
           "total_line": 9.5,
-          "over_price": -135
+          "over_price": -110
+        },
+        "MyBookie.ag": {
+          "away_price": 112,
+          "home_price": -132,
+          "total_line": 9.5,
+          "over_price": -111
+        },
+        "Bovada": {
+          "away_price": 111,
+          "home_price": -133,
+          "total_line": 9.5,
+          "over_price": -110
+        },
+        "DraftKings": {
+          "away_price": 112,
+          "home_price": -135,
+          "total_line": 9.5,
+          "over_price": -112
+        },
+        "BetRivers": {
+          "away_price": 112,
+          "home_price": -132,
+          "total_line": 9.5,
+          "over_price": -110
+        }
+      }
+    },
+    "Chicago White Sox @ Toronto Blue Jays": {
+      "away": "Chicago White Sox",
+      "home": "Toronto Blue Jays",
+      "commence_time": "2026-07-17T23:16:00Z",
+      "books": {
+        "FanDuel": {
+          "away_price": 112,
+          "home_price": -132,
+          "total_line": null,
+          "over_price": null
+        },
+        "MyBookie.ag": {
+          "away_price": 112,
+          "home_price": -132,
+          "total_line": null,
+          "over_price": null
         }
       }
     }
