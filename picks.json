@@ -3,6 +3,38 @@
   "date_display": "July 16, 2026",
   "bets": [
     {
+      "game": "Atlanta Braves @ Texas Rangers",
+      "away": "Atlanta Braves",
+      "home": "Texas Rangers",
+      "away_id": 144,
+      "home_id": 140,
+      "play": "Texas Rangers Moneyline",
+      "price": "-192",
+      "book": "BetUS",
+      "type": "ml",
+      "pick_team": "Texas Rangers",
+      "side": null,
+      "total_line": null,
+      "edge": "+2.0%",
+      "signal": "watch"
+    },
+    {
+      "game": "Miami Marlins @ Milwaukee Brewers",
+      "away": "Miami Marlins",
+      "home": "Milwaukee Brewers",
+      "away_id": 146,
+      "home_id": 158,
+      "play": "Milwaukee Brewers Moneyline",
+      "price": "-135",
+      "book": "BetUS",
+      "type": "ml",
+      "pick_team": "Milwaukee Brewers",
+      "side": null,
+      "total_line": null,
+      "edge": "+6.3%",
+      "signal": "watch"
+    },
+    {
       "game": "Philadelphia Phillies @ New York Mets",
       "away": "Philadelphia Phillies",
       "home": "New York Mets",
