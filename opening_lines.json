@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-07-15T11:26:10.094363-04:00",
-  "time_display": "11:26 AM ET",
+  "timestamp": "2026-07-16T11:38:32.862703-04:00",
+  "time_display": "11:38 AM ET",
   "type": "opening",
   "games": {
     "New York Mets @ Philadelphia Phillies": {
@@ -9,22 +9,194 @@
       "commence_time": "2026-07-16T23:11:00Z",
       "books": {
         "FanDuel": {
-          "away_price": 112,
-          "home_price": -132,
+          "away_price": 110,
+          "home_price": -130,
           "total_line": 9.5,
-          "over_price": -122
+          "over_price": -110
         },
         "BetOnline.ag": {
-          "away_price": 123,
-          "home_price": -136,
-          "total_line": 10.0,
-          "over_price": -105
+          "away_price": 113,
+          "home_price": -125,
+          "total_line": 9.5,
+          "over_price": -106
         },
         "LowVig.ag": {
-          "away_price": 123,
+          "away_price": 113,
+          "home_price": -125,
+          "total_line": 9.5,
+          "over_price": -103
+        },
+        "BetUS": {
+          "away_price": 114,
+          "home_price": -125,
+          "total_line": 9.5,
+          "over_price": -110
+        },
+        "BetMGM": {
+          "away_price": 110,
+          "home_price": -135,
+          "total_line": 9.5,
+          "over_price": -110
+        },
+        "MyBookie.ag": {
+          "away_price": 110,
+          "home_price": -130,
+          "total_line": 9.5,
+          "over_price": -112
+        },
+        "Bovada": {
+          "away_price": 111,
+          "home_price": -133,
+          "total_line": 9.5,
+          "over_price": -110
+        },
+        "DraftKings": {
+          "away_price": 109,
+          "home_price": -131,
+          "total_line": 9.5,
+          "over_price": -109
+        },
+        "BetRivers": {
+          "away_price": 108,
+          "home_price": -127,
+          "total_line": 9.5,
+          "over_price": -112
+        }
+      }
+    },
+    "Los Angeles Dodgers @ New York Yankees": {
+      "away": "Los Angeles Dodgers",
+      "home": "New York Yankees",
+      "commence_time": "2026-07-17T23:06:00Z",
+      "books": {
+        "FanDuel": {
+          "away_price": -108,
+          "home_price": -108,
+          "total_line": null,
+          "over_price": null
+        },
+        "DraftKings": {
+          "away_price": -110,
+          "home_price": -110,
+          "total_line": null,
+          "over_price": null
+        },
+        "Bovada": {
+          "away_price": -110,
+          "home_price": -110,
+          "total_line": null,
+          "over_price": null
+        }
+      }
+    },
+    "Pittsburgh Pirates @ Cleveland Guardians": {
+      "away": "Pittsburgh Pirates",
+      "home": "Cleveland Guardians",
+      "commence_time": "2026-07-17T23:11:00Z",
+      "books": {
+        "FanDuel": {
+          "away_price": 106,
+          "home_price": -124,
+          "total_line": 7.5,
+          "over_price": -114
+        },
+        "DraftKings": {
+          "away_price": 109,
+          "home_price": -131,
+          "total_line": 7.5,
+          "over_price": -115
+        },
+        "Bovada": {
+          "away_price": 106,
+          "home_price": -126,
+          "total_line": 7.5,
+          "over_price": -115
+        },
+        "BetOnline.ag": {
+          "away_price": 113,
+          "home_price": -125,
+          "total_line": 8.0,
+          "over_price": 100
+        },
+        "LowVig.ag": {
+          "away_price": 113,
+          "home_price": -125,
+          "total_line": 8.0,
+          "over_price": 103
+        }
+      }
+    },
+    "Chicago White Sox @ Toronto Blue Jays": {
+      "away": "Chicago White Sox",
+      "home": "Toronto Blue Jays",
+      "commence_time": "2026-07-17T23:16:00Z",
+      "books": {
+        "FanDuel": {
+          "away_price": 116,
           "home_price": -136,
+          "total_line": 8.5,
+          "over_price": -110
+        },
+        "DraftKings": {
+          "away_price": 104,
+          "home_price": -126,
+          "total_line": 8.5,
+          "over_price": -110
+        },
+        "Bovada": {
+          "away_price": 115,
+          "home_price": -138,
+          "total_line": 8.5,
+          "over_price": -110
+        },
+        "BetOnline.ag": {
+          "away_price": 113,
+          "home_price": -125,
+          "total_line": 8.5,
+          "over_price": -110
+        },
+        "LowVig.ag": {
+          "away_price": 113,
+          "home_price": -125,
+          "total_line": 8.5,
+          "over_price": -107
+        }
+      }
+    },
+    "San Diego Padres @ Kansas City Royals": {
+      "away": "San Diego Padres",
+      "home": "Kansas City Royals",
+      "commence_time": "2026-07-18T00:11:00Z",
+      "books": {
+        "FanDuel": {
+          "away_price": -108,
+          "home_price": -108,
           "total_line": 10.0,
-          "over_price": -102
+          "over_price": -118
+        },
+        "DraftKings": {
+          "away_price": -109,
+          "home_price": -110,
+          "total_line": 10.0,
+          "over_price": -108
+        },
+        "Bovada": {
+          "away_price": -110,
+          "home_price": -110,
+          "total_line": 10.0,
+          "over_price": -115
+        },
+        "BetOnline.ag": {
+          "away_price": -110,
+          "home_price": 100,
+          "total_line": 9.5,
+          "over_price": -120
+        },
+        "LowVig.ag": {
+          "away_price": -110,
+          "home_price": 100,
+          "total_line": 9.5,
+          "over_price": -118
         }
       }
     }
