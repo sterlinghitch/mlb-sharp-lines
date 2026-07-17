@@ -3,6 +3,22 @@
   "date_display": "July 17, 2026",
   "bets": [
     {
+      "game": "Philadelphia Phillies @ New York Mets",
+      "away": "Philadelphia Phillies",
+      "home": "New York Mets",
+      "away_id": 143,
+      "home_id": 121,
+      "play": "Philadelphia Phillies Moneyline",
+      "price": "+138",
+      "book": "PointsBet",
+      "type": "ml",
+      "pick_team": "Philadelphia Phillies",
+      "side": null,
+      "total_line": null,
+      "edge": "+3.2%",
+      "signal": "watch"
+    },
+    {
       "game": "Tampa Bay Rays @ Boston Red Sox",
       "away": "Tampa Bay Rays",
       "home": "Boston Red Sox",
