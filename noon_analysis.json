@@ -185,14 +185,14 @@
     },
     "Philadelphia Phillies @ New York Mets": {
       "play": "Philadelphia Phillies Moneyline",
-      "price": "+140",
-      "book": "William Hill",
+      "price": "+138",
+      "book": "MyBookie.ag",
       "is_pass": false,
-      "edge": "+3.2%",
+      "edge": "+3.1%",
       "away_true": 43,
       "home_true": 57,
-      "away_fair": "+132",
-      "home_fair": "-132",
+      "away_fair": "+131",
+      "home_fair": "-131",
       "signal": "watch",
       "signal_label": ""
     }
