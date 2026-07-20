@@ -5147,6 +5147,171 @@
       "type": "ml",
       "edge": "+2.0%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-07-20",
+      "date_display": "July 20, 2026",
+      "game": "Pittsburgh Pirates @ New York Yankees",
+      "play": "New York Yankees Moneyline",
+      "price": "-115",
+      "book": "William Hill",
+      "type": "ml",
+      "edge": "+2.2%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-20",
+      "date_display": "July 20, 2026",
+      "game": "Boston Red Sox @ Baltimore Orioles",
+      "play": "Baltimore Orioles Moneyline",
+      "price": "-120",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+6.5%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-20",
+      "date_display": "July 20, 2026",
+      "game": "Kansas City Royals @ San Francisco Giants",
+      "play": "Under 10.5 Runs",
+      "price": "-112",
+      "book": "PointsBet",
+      "type": "total",
+      "edge": "+1.7%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-20",
+      "date_display": "July 20, 2026",
+      "game": "Detroit Tigers @ Chicago Cubs",
+      "play": "Under 11.5 Runs",
+      "price": "-105",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+2.7%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-20",
+      "date_display": "July 20, 2026",
+      "game": "Miami Marlins @ Houston Astros",
+      "play": "Miami Marlins Moneyline",
+      "price": "+122",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+4.6%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-20",
+      "date_display": "July 20, 2026",
+      "game": "Washington Nationals @ Colorado Rockies",
+      "play": "Over 12.0 Runs",
+      "price": "-105",
+      "book": "DraftKings",
+      "type": "total",
+      "edge": "+2.3%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-20",
+      "date_display": "July 20, 2026",
+      "game": "Los Angeles Angels @ St. Louis Cardinals",
+      "play": "St. Louis Cardinals Moneyline",
+      "price": "-114",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+2.8%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-20",
+      "date_display": "July 20, 2026",
+      "game": "Cleveland Guardians @ Minnesota Twins",
+      "play": "Cleveland Guardians Moneyline",
+      "price": "-125",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+2.6%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-20",
+      "date_display": "July 20, 2026",
+      "game": "Tampa Bay Rays @ Toronto Blue Jays",
+      "play": "Tampa Bay Rays Moneyline",
+      "price": "+140",
+      "book": "William Hill",
+      "type": "ml",
+      "edge": "+6.4%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-20",
+      "date_display": "July 20, 2026",
+      "game": "Philadelphia Phillies @ Los Angeles Dodgers",
+      "play": "Philadelphia Phillies Moneyline",
+      "price": "+125",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+6.1%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-20",
+      "date_display": "July 20, 2026",
+      "game": "Atlanta Braves @ San Diego Padres",
+      "play": "Atlanta Braves Moneyline",
+      "price": "+114",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+1.4%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-20",
+      "date_display": "July 20, 2026",
+      "game": "New York Mets @ Milwaukee Brewers",
+      "play": "Milwaukee Brewers Moneyline",
+      "price": "-161",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+5.3%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-20",
+      "date_display": "July 20, 2026",
+      "game": "Chicago White Sox @ Texas Rangers",
+      "play": "Chicago White Sox Moneyline",
+      "price": "+145",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+2.3%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-20",
+      "date_display": "July 20, 2026",
+      "game": "Arizona Diamondbacks @ Athletics",
+      "play": "Athletics Moneyline",
+      "price": "-148",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+1.2%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-20",
+      "date_display": "July 20, 2026",
+      "game": "Seattle Mariners @ Cincinnati Reds",
+      "play": "Seattle Mariners Moneyline",
+      "price": "+140",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+5.4%",
+      "signal": "watch"
     }
   ]
 }
