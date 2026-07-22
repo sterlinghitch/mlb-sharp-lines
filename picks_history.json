@@ -5477,6 +5477,160 @@
       "type": "total",
       "edge": "+3.4%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-07-22",
+      "date_display": "July 22, 2026",
+      "game": "New York Mets @ Milwaukee Brewers",
+      "play": "New York Mets Moneyline",
+      "price": "+134",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+4.2%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-22",
+      "date_display": "July 22, 2026",
+      "game": "Kansas City Royals @ San Francisco Giants",
+      "play": "Kansas City Royals Moneyline",
+      "price": "-116",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+2.6%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-22",
+      "date_display": "July 22, 2026",
+      "game": "Arizona Diamondbacks @ Athletics",
+      "play": "Arizona Diamondbacks Moneyline",
+      "price": "+115",
+      "book": "William Hill",
+      "type": "ml",
+      "edge": "+4.0%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-22",
+      "date_display": "July 22, 2026",
+      "game": "Cleveland Guardians @ Minnesota Twins",
+      "play": "Cleveland Guardians Moneyline",
+      "price": "+108",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+4.1%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-22",
+      "date_display": "July 22, 2026",
+      "game": "Philadelphia Phillies @ Los Angeles Dodgers",
+      "play": "Philadelphia Phillies Moneyline",
+      "price": "-105",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+4.2%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-22",
+      "date_display": "July 22, 2026",
+      "game": "Tampa Bay Rays @ Toronto Blue Jays",
+      "play": "Toronto Blue Jays Moneyline",
+      "price": "-108",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+1.7%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-22",
+      "date_display": "July 22, 2026",
+      "game": "Atlanta Braves @ San Diego Padres",
+      "play": "Atlanta Braves Moneyline",
+      "price": "-100",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+5.3%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-22",
+      "date_display": "July 22, 2026",
+      "game": "Chicago White Sox @ Texas Rangers",
+      "play": "Chicago White Sox Moneyline",
+      "price": "-100",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+5.7%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-22",
+      "date_display": "July 22, 2026",
+      "game": "Detroit Tigers @ Chicago Cubs",
+      "play": "Detroit Tigers Moneyline",
+      "price": "+104",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+6.1%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-22",
+      "date_display": "July 22, 2026",
+      "game": "Miami Marlins @ Houston Astros",
+      "play": "Miami Marlins Moneyline",
+      "price": "+105",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.6%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-22",
+      "date_display": "July 22, 2026",
+      "game": "Boston Red Sox @ Baltimore Orioles",
+      "play": "Over 9.5 Runs",
+      "price": "-105",
+      "book": "DraftKings",
+      "type": "total",
+      "edge": "+2.2%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-22",
+      "date_display": "July 22, 2026",
+      "game": "Washington Nationals @ Colorado Rockies",
+      "play": "Over 11.5 Runs",
+      "price": "-104",
+      "book": "MyBookie.ag",
+      "type": "total",
+      "edge": "+2.4%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-22",
+      "date_display": "July 22, 2026",
+      "game": "Seattle Mariners @ Cincinnati Reds",
+      "play": "Cincinnati Reds Moneyline",
+      "price": "-154",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+1.3%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-22",
+      "date_display": "July 22, 2026",
+      "game": "Los Angeles Angels @ St. Louis Cardinals",
+      "play": "St. Louis Cardinals Moneyline",
+      "price": "-125",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.5%",
+      "signal": "watch"
     }
   ]
 }
