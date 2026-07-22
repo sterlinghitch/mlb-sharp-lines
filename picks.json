@@ -3,6 +3,38 @@
   "date_display": "July 22, 2026",
   "bets": [
     {
+      "game": "Arizona Diamondbacks @ St. Louis Cardinals",
+      "away": "Arizona Diamondbacks",
+      "home": "St. Louis Cardinals",
+      "away_id": 109,
+      "home_id": 138,
+      "play": "St. Louis Cardinals Moneyline",
+      "price": "-126",
+      "book": "BetUS",
+      "type": "ml",
+      "pick_team": "St. Louis Cardinals",
+      "side": null,
+      "total_line": null,
+      "edge": "+2.6%",
+      "signal": "watch"
+    },
+    {
+      "game": "Kansas City Royals @ Detroit Tigers",
+      "away": "Kansas City Royals",
+      "home": "Detroit Tigers",
+      "away_id": 118,
+      "home_id": 116,
+      "play": "Detroit Tigers Moneyline",
+      "price": "-172",
+      "book": "BetUS",
+      "type": "ml",
+      "pick_team": "Detroit Tigers",
+      "side": null,
+      "total_line": null,
+      "edge": "+2.3%",
+      "signal": "watch"
+    },
+    {
       "game": "New York Mets @ Milwaukee Brewers",
       "away": "New York Mets",
       "home": "Milwaukee Brewers",
