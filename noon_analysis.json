@@ -3,14 +3,14 @@
   "games": {
     "Cleveland Guardians @ Minnesota Twins": {
       "play": "Cleveland Guardians Moneyline",
-      "price": "+118",
+      "price": "+120",
       "book": "William Hill",
       "is_pass": false,
-      "edge": "+6.8%",
+      "edge": "+6.9%",
       "away_true": 50,
       "home_true": 50,
-      "away_fair": "-102",
-      "home_fair": "+102",
+      "away_fair": "-101",
+      "home_fair": "+101",
       "signal": "fire",
       "signal_label": "SPLIT MARKET"
     },
@@ -29,14 +29,14 @@
     },
     "Atlanta Braves @ San Diego Padres": {
       "play": "Atlanta Braves Moneyline",
-      "price": "+200",
+      "price": "+210",
       "book": "PointsBet",
       "is_pass": false,
-      "edge": "+3.6%",
-      "away_true": 36,
-      "home_true": 64,
-      "away_fair": "+181",
-      "home_fair": "-181",
+      "edge": "+4.2%",
+      "away_true": 35,
+      "home_true": 65,
+      "away_fair": "+183",
+      "home_fair": "-183",
       "signal": "watch",
       "signal_label": ""
     },
@@ -61,8 +61,8 @@
       "edge": "+3.0%",
       "away_true": 38,
       "home_true": 62,
-      "away_fair": "+165",
-      "home_fair": "-165",
+      "away_fair": "+166",
+      "home_fair": "-166",
       "signal": "watch",
       "signal_label": ""
     }
