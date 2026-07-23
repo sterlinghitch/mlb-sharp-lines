@@ -4,13 +4,13 @@
     "Cleveland Guardians @ Minnesota Twins": {
       "play": "Cleveland Guardians Moneyline",
       "price": "+118",
-      "book": "William Hill",
+      "book": "DraftKings",
       "is_pass": false,
-      "edge": "+6.5%",
+      "edge": "+6.1%",
       "away_true": 50,
       "home_true": 50,
-      "away_fair": "-101",
-      "home_fair": "+101",
+      "away_fair": "-100",
+      "home_fair": "+100",
       "signal": "fire",
       "signal_label": "SPLIT MARKET"
     },
