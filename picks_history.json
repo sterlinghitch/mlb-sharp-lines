@@ -5631,6 +5631,50 @@
       "type": "ml",
       "edge": "+3.5%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-07-23",
+      "date_display": "July 23, 2026",
+      "game": "Cleveland Guardians @ Minnesota Twins",
+      "play": "Minnesota Twins Moneyline",
+      "price": "-116",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+6.5%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-23",
+      "date_display": "July 23, 2026",
+      "game": "Tampa Bay Rays @ Toronto Blue Jays",
+      "play": "Tampa Bay Rays Moneyline",
+      "price": "-105",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+4.5%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-23",
+      "date_display": "July 23, 2026",
+      "game": "Arizona Diamondbacks @ St. Louis Cardinals",
+      "play": "St. Louis Cardinals Moneyline",
+      "price": "-121",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+3.0%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-23",
+      "date_display": "July 23, 2026",
+      "game": "Kansas City Royals @ Detroit Tigers",
+      "play": "Kansas City Royals Moneyline",
+      "price": "+185",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+3.5%",
+      "signal": "watch"
     }
   ]
 }
