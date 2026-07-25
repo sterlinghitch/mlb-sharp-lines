@@ -9,8 +9,8 @@
       "edge": "+8.7%",
       "away_true": 39,
       "home_true": 61,
-      "away_fair": "+155",
-      "home_fair": "-155",
+      "away_fair": "+156",
+      "home_fair": "-156",
       "signal": "fire",
       "signal_label": "SPLIT MARKET"
     },
@@ -165,8 +165,8 @@
       "edge": "+2.3%",
       "away_true": 34,
       "home_true": 66,
-      "away_fair": "+196",
-      "home_fair": "-196",
+      "away_fair": "+197",
+      "home_fair": "-197",
       "signal": "watch",
       "signal_label": ""
     },
