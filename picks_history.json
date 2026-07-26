@@ -6005,6 +6005,160 @@
       "type": "ml",
       "edge": "+2.1%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-07-26",
+      "date_display": "July 26, 2026",
+      "game": "Pittsburgh Pirates @ Chicago Cubs",
+      "play": "Pittsburgh Pirates Moneyline",
+      "price": "+112",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+2.3%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-26",
+      "date_display": "July 26, 2026",
+      "game": "Toronto Blue Jays @ Boston Red Sox",
+      "play": "Boston Red Sox Moneyline",
+      "price": "-120",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+4.7%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-26",
+      "date_display": "July 26, 2026",
+      "game": "Atlanta Braves @ Baltimore Orioles",
+      "play": "Atlanta Braves Moneyline",
+      "price": "-100",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.6%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-26",
+      "date_display": "July 26, 2026",
+      "game": "Arizona Diamondbacks @ Washington Nationals",
+      "play": "Over 10.0 Runs",
+      "price": "-108",
+      "book": "PointsBet",
+      "type": "total",
+      "edge": "+1.3%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-26",
+      "date_display": "July 26, 2026",
+      "game": "Miami Marlins @ San Diego Padres",
+      "play": "Under 8.5 Runs",
+      "price": "+105",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+3.2%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-26",
+      "date_display": "July 26, 2026",
+      "game": "Houston Astros @ Chicago White Sox",
+      "play": "Chicago White Sox Moneyline",
+      "price": "-108",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+3.9%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-26",
+      "date_display": "July 26, 2026",
+      "game": "Seattle Mariners @ Texas Rangers",
+      "play": "Seattle Mariners Moneyline",
+      "price": "-103",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+3.8%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-26",
+      "date_display": "July 26, 2026",
+      "game": "Los Angeles Angels @ San Francisco Giants",
+      "play": "San Francisco Giants Moneyline",
+      "price": "-104",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+1.8%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-26",
+      "date_display": "July 26, 2026",
+      "game": "New York Mets @ Los Angeles Dodgers",
+      "play": "Los Angeles Dodgers Moneyline",
+      "price": "+135",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+1.1%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-26",
+      "date_display": "July 26, 2026",
+      "game": "Kansas City Royals @ Detroit Tigers",
+      "play": "Detroit Tigers Moneyline",
+      "price": "-182",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+2.0%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-26",
+      "date_display": "July 26, 2026",
+      "game": "Milwaukee Brewers @ Colorado Rockies",
+      "play": "Milwaukee Brewers Moneyline",
+      "price": "+300",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+5.7%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-26",
+      "date_display": "July 26, 2026",
+      "game": "Athletics @ Minnesota Twins",
+      "play": "Athletics Moneyline",
+      "price": "+135",
+      "book": "William Hill",
+      "type": "ml",
+      "edge": "+1.6%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-26",
+      "date_display": "July 26, 2026",
+      "game": "St. Louis Cardinals @ Cincinnati Reds",
+      "play": "Over 8.5 Runs",
+      "price": "-110",
+      "book": "William Hill",
+      "type": "total",
+      "edge": "+1.4%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-26",
+      "date_display": "July 26, 2026",
+      "game": "Philadelphia Phillies @ New York Yankees",
+      "play": "New York Yankees Moneyline",
+      "price": "-162",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+2.9%",
+      "signal": "watch"
     }
   ]
 }
