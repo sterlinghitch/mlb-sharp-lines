@@ -6599,6 +6599,105 @@
       "type": "total",
       "edge": "+3.0%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-07-30",
+      "date_display": "July 30, 2026",
+      "game": "Kansas City Royals @ Minnesota Twins",
+      "play": "Kansas City Royals Moneyline",
+      "price": "+115",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+6.0%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-30",
+      "date_display": "July 30, 2026",
+      "game": "Chicago White Sox @ New York Yankees",
+      "play": "Chicago White Sox Moneyline",
+      "price": "-105",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+4.9%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-30",
+      "date_display": "July 30, 2026",
+      "game": "St. Louis Cardinals @ Chicago Cubs",
+      "play": "Chicago Cubs Moneyline",
+      "price": "+110",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+5.9%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-30",
+      "date_display": "July 30, 2026",
+      "game": "Pittsburgh Pirates @ Cincinnati Reds",
+      "play": "Cincinnati Reds Moneyline",
+      "price": "-104",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+2.4%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-30",
+      "date_display": "July 30, 2026",
+      "game": "San Francisco Giants @ San Diego Padres",
+      "play": "San Francisco Giants Moneyline",
+      "price": "+135",
+      "book": "William Hill",
+      "type": "ml",
+      "edge": "+6.3%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-07-30",
+      "date_display": "July 30, 2026",
+      "game": "Miami Marlins @ New York Mets",
+      "play": "Under 7.0 Runs",
+      "price": "-102",
+      "book": "William Hill",
+      "type": "total",
+      "edge": "+3.3%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-30",
+      "date_display": "July 30, 2026",
+      "game": "Atlanta Braves @ Washington Nationals",
+      "play": "Under 9.5 Runs",
+      "price": "+100",
+      "book": "William Hill",
+      "type": "total",
+      "edge": "+3.0%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-30",
+      "date_display": "July 30, 2026",
+      "game": "Athletics @ Boston Red Sox",
+      "play": "Athletics Moneyline",
+      "price": "-158",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+4.8%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-07-30",
+      "date_display": "July 30, 2026",
+      "game": "Seattle Mariners @ Los Angeles Dodgers",
+      "play": "Seattle Mariners Moneyline",
+      "price": "+135",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+1.5%",
+      "signal": "watch"
     }
   ]
 }
