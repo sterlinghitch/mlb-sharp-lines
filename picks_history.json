@@ -7193,6 +7193,94 @@
       "type": "ml",
       "edge": "+1.6%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-08-03",
+      "date_display": "August 03, 2026",
+      "game": "Arizona Diamondbacks @ San Diego Padres",
+      "play": "Arizona Diamondbacks Moneyline",
+      "price": "+102",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+3.0%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-08-03",
+      "date_display": "August 03, 2026",
+      "game": "Philadelphia Phillies @ Washington Nationals",
+      "play": "Philadelphia Phillies Moneyline",
+      "price": "+144",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+2.3%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-03",
+      "date_display": "August 03, 2026",
+      "game": "St. Louis Cardinals @ New York Yankees",
+      "play": "Over 8.0 Runs",
+      "price": "-102",
+      "book": "MyBookie.ag",
+      "type": "total",
+      "edge": "+3.6%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-03",
+      "date_display": "August 03, 2026",
+      "game": "Milwaukee Brewers @ Pittsburgh Pirates",
+      "play": "Under 8.5 Runs",
+      "price": "-118",
+      "book": "DraftKings",
+      "type": "total",
+      "edge": "+1.6%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-03",
+      "date_display": "August 03, 2026",
+      "game": "San Francisco Giants @ Texas Rangers",
+      "play": "Over 8.0 Runs",
+      "price": "-112",
+      "book": "PointsBet",
+      "type": "total",
+      "edge": "+1.1%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-03",
+      "date_display": "August 03, 2026",
+      "game": "Los Angeles Dodgers @ Chicago Cubs",
+      "play": "Los Angeles Dodgers Moneyline",
+      "price": "-120",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+0.9%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-03",
+      "date_display": "August 03, 2026",
+      "game": "Houston Astros @ Toronto Blue Jays",
+      "play": "Houston Astros Moneyline",
+      "price": "+115",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+1.0%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-03",
+      "date_display": "August 03, 2026",
+      "game": "Tampa Bay Rays @ Colorado Rockies",
+      "play": "Tampa Bay Rays Moneyline",
+      "price": "-148",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+4.3%",
+      "signal": "watch"
     }
   ]
 }
