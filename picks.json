@@ -3,6 +3,22 @@
   "date_display": "August 05, 2026",
   "bets": [
     {
+      "game": "Toronto Blue Jays @ Chicago Cubs",
+      "away": "Toronto Blue Jays",
+      "home": "Chicago Cubs",
+      "away_id": 141,
+      "home_id": 112,
+      "play": "Toronto Blue Jays Moneyline",
+      "price": "-115",
+      "book": "79",
+      "type": "ml",
+      "pick_team": "Toronto Blue Jays",
+      "side": null,
+      "total_line": null,
+      "edge": "+2.4%",
+      "signal": "fire"
+    },
+    {
       "game": "Houston Astros @ Toronto Blue Jays",
       "away": "Houston Astros",
       "home": "Toronto Blue Jays",
