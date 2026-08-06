@@ -197,15 +197,15 @@
       "signal_label": ""
     },
     "Toronto Blue Jays @ Chicago Cubs": {
-      "play": "Under 7.5 Runs",
-      "price": "-104",
-      "book": "PointsBet",
+      "play": "Over 7.5 Runs",
+      "price": "-105",
+      "book": "MyBookie.ag",
       "is_pass": false,
-      "edge": "+2.0%",
-      "away_true": 52,
-      "home_true": 48,
-      "away_fair": "-108",
-      "home_fair": "+108",
+      "edge": "+1.5%",
+      "away_true": 53,
+      "home_true": 47,
+      "away_fair": "-111",
+      "home_fair": "+111",
       "signal": "fire",
       "signal_label": "SPLIT MARKET"
     }
