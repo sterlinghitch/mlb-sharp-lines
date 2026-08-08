@@ -7897,6 +7897,171 @@
       "type": "ml",
       "edge": "+3.8%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-08-08",
+      "date_display": "August 08, 2026",
+      "game": "Houston Astros @ San Diego Padres",
+      "play": "San Diego Padres Moneyline",
+      "price": "-115",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+0.8%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-08-08",
+      "date_display": "August 08, 2026",
+      "game": "San Francisco Giants @ Detroit Tigers",
+      "play": "Over 8.0 Runs",
+      "price": "-109",
+      "book": "PointsBet",
+      "type": "total",
+      "edge": "+1.2%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-08-08",
+      "date_display": "August 08, 2026",
+      "game": "Seattle Mariners @ Tampa Bay Rays",
+      "play": "Under 7.0 Runs",
+      "price": "-110",
+      "book": "PointsBet",
+      "type": "total",
+      "edge": "+0.8%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-08-08",
+      "date_display": "August 08, 2026",
+      "game": "Atlanta Braves @ New York Yankees",
+      "play": "Atlanta Braves Moneyline",
+      "price": "-135",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.9%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-08",
+      "date_display": "August 08, 2026",
+      "game": "Miami Marlins @ Los Angeles Angels",
+      "play": "Los Angeles Angels Moneyline",
+      "price": "-145",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+0.7%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-08",
+      "date_display": "August 08, 2026",
+      "game": "Athletics @ Boston Red Sox",
+      "play": "Athletics Moneyline",
+      "price": "+230",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+4.2%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-08",
+      "date_display": "August 08, 2026",
+      "game": "Philadelphia Phillies @ Toronto Blue Jays",
+      "play": "Philadelphia Phillies Moneyline",
+      "price": "+149",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+2.1%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-08",
+      "date_display": "August 08, 2026",
+      "game": "New York Mets @ Pittsburgh Pirates",
+      "play": "New York Mets Moneyline",
+      "price": "+120",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.3%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-08",
+      "date_display": "August 08, 2026",
+      "game": "Washington Nationals @ Cincinnati Reds",
+      "play": "Washington Nationals Moneyline",
+      "price": "-140",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+2.8%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-08",
+      "date_display": "August 08, 2026",
+      "game": "Milwaukee Brewers @ Minnesota Twins",
+      "play": "Milwaukee Brewers Moneyline",
+      "price": "+126",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+1.0%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-08",
+      "date_display": "August 08, 2026",
+      "game": "Kansas City Royals @ Chicago Cubs",
+      "play": "Under 9.5 Runs",
+      "price": "-105",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+4.6%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-08",
+      "date_display": "August 08, 2026",
+      "game": "Cleveland Guardians @ Chicago White Sox",
+      "play": "Chicago White Sox Moneyline",
+      "price": "+125",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+3.9%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-08",
+      "date_display": "August 08, 2026",
+      "game": "St. Louis Cardinals @ Colorado Rockies",
+      "play": "Over 8.5 Runs",
+      "price": "-113",
+      "book": "MyBookie.ag",
+      "type": "total",
+      "edge": "+2.8%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-08",
+      "date_display": "August 08, 2026",
+      "game": "Baltimore Orioles @ Texas Rangers",
+      "play": "Under 7.5 Runs",
+      "price": "-100",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+3.1%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-08",
+      "date_display": "August 08, 2026",
+      "game": "Arizona Diamondbacks @ Los Angeles Dodgers",
+      "play": "Los Angeles Dodgers Moneyline",
+      "price": "+173",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+5.1%",
+      "signal": "watch"
     }
   ]
 }
