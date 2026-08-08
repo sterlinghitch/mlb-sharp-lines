@@ -188,11 +188,11 @@
       "price": "-167",
       "book": "BetUS",
       "is_pass": false,
-      "edge": "+5.6%",
+      "edge": "+5.5%",
       "away_true": 66,
       "home_true": 34,
-      "away_fair": "-191",
-      "home_fair": "+191",
+      "away_fair": "-190",
+      "home_fair": "+190",
       "signal": "watch",
       "signal_label": ""
     }
