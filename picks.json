@@ -3,6 +3,38 @@
   "date_display": "August 12, 2026",
   "bets": [
     {
+      "game": "Philadelphia Phillies @ Minnesota Twins",
+      "away": "Philadelphia Phillies",
+      "home": "Minnesota Twins",
+      "away_id": 143,
+      "home_id": 142,
+      "play": "Philadelphia Phillies Moneyline",
+      "price": "-102",
+      "book": "BetUS",
+      "type": "ml",
+      "pick_team": "Philadelphia Phillies",
+      "side": null,
+      "total_line": null,
+      "edge": "+3.4%",
+      "signal": "fire"
+    },
+    {
+      "game": "Milwaukee Brewers @ Los Angeles Dodgers",
+      "away": "Milwaukee Brewers",
+      "home": "Los Angeles Dodgers",
+      "away_id": 158,
+      "home_id": 119,
+      "play": "Milwaukee Brewers Moneyline",
+      "price": "+115",
+      "book": "DraftKings",
+      "type": "ml",
+      "pick_team": "Milwaukee Brewers",
+      "side": null,
+      "total_line": null,
+      "edge": "+2.5%",
+      "signal": "watch"
+    },
+    {
       "game": "Minnesota Twins @ Baltimore Orioles",
       "away": "Minnesota Twins",
       "home": "Baltimore Orioles",
