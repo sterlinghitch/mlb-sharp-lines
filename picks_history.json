@@ -8656,6 +8656,105 @@
       "type": "total",
       "edge": "+2.8%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-08-13",
+      "date_display": "August 13, 2026",
+      "game": "Cleveland Guardians @ Detroit Tigers",
+      "play": "Cleveland Guardians Moneyline",
+      "price": "-108",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+4.3%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-08-13",
+      "date_display": "August 13, 2026",
+      "game": "Philadelphia Phillies @ Minnesota Twins",
+      "play": "Philadelphia Phillies Moneyline",
+      "price": "-100",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+5.4%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-08-13",
+      "date_display": "August 13, 2026",
+      "game": "Miami Marlins @ Pittsburgh Pirates",
+      "play": "Pittsburgh Pirates Moneyline",
+      "price": "+111",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+2.6%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-13",
+      "date_display": "August 13, 2026",
+      "game": "Chicago White Sox @ Cincinnati Reds",
+      "play": "Cincinnati Reds Moneyline",
+      "price": "-128",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+2.7%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-13",
+      "date_display": "August 13, 2026",
+      "game": "Seattle Mariners @ New York Yankees",
+      "play": "New York Yankees Moneyline",
+      "price": "-150",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+0.7%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-13",
+      "date_display": "August 13, 2026",
+      "game": "Toronto Blue Jays @ Boston Red Sox",
+      "play": "Boston Red Sox Moneyline",
+      "price": "+135",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+2.4%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-13",
+      "date_display": "August 13, 2026",
+      "game": "Washington Nationals @ Chicago Cubs",
+      "play": "Washington Nationals Moneyline",
+      "price": "-141",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+6.7%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-13",
+      "date_display": "August 13, 2026",
+      "game": "Los Angeles Angels @ Texas Rangers",
+      "play": "Texas Rangers Moneyline",
+      "price": "+140",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+4.4%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-13",
+      "date_display": "August 13, 2026",
+      "game": "Milwaukee Brewers @ Los Angeles Dodgers",
+      "play": "Under 8.5 Runs",
+      "price": "-110",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+2.1%",
+      "signal": "watch"
     }
   ]
 }
