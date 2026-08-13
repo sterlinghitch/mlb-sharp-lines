@@ -210,15 +210,15 @@
       "signal_label": "SPLIT MARKET"
     },
     "Milwaukee Brewers @ Los Angeles Dodgers": {
-      "play": "Over 8.5 Runs",
-      "price": "-105",
-      "book": "DraftKings",
+      "play": "Under 8.5 Runs",
+      "price": "-110",
+      "book": "BetUS",
       "is_pass": false,
-      "edge": "+1.6%",
+      "edge": "+1.5%",
       "away_true": 44,
       "home_true": 56,
-      "away_fair": "+128",
-      "home_fair": "-128",
+      "away_fair": "+129",
+      "home_fair": "-129",
       "signal": "watch",
       "signal_label": ""
     }
