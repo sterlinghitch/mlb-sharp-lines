@@ -217,8 +217,8 @@
       "edge": "+1.6%",
       "away_true": 44,
       "home_true": 56,
-      "away_fair": "+129",
-      "home_fair": "-129",
+      "away_fair": "+128",
+      "home_fair": "-128",
       "signal": "watch",
       "signal_label": ""
     }
