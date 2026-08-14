@@ -3,6 +3,22 @@
   "date_display": "August 14, 2026",
   "bets": [
     {
+      "game": "Philadelphia Phillies @ Minnesota Twins",
+      "away": "Philadelphia Phillies",
+      "home": "Minnesota Twins",
+      "away_id": 143,
+      "home_id": 142,
+      "play": "Philadelphia Phillies Moneyline",
+      "price": "-141",
+      "book": "BetUS",
+      "type": "ml",
+      "pick_team": "Philadelphia Phillies",
+      "side": null,
+      "total_line": null,
+      "edge": "+1.7%",
+      "signal": "watch"
+    },
+    {
       "game": "Miami Marlins @ Cincinnati Reds",
       "away": "Miami Marlins",
       "home": "Cincinnati Reds",
