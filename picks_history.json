@@ -8755,6 +8755,160 @@
       "type": "total",
       "edge": "+2.1%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-08-14",
+      "date_display": "August 14, 2026",
+      "game": "Miami Marlins @ Cincinnati Reds",
+      "play": "Miami Marlins Moneyline",
+      "price": "+105",
+      "book": "1270",
+      "type": "ml",
+      "edge": "+4.0%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-08-14",
+      "date_display": "August 14, 2026",
+      "game": "Los Angeles Angels @ Kansas City Royals",
+      "play": "Kansas City Royals Moneyline",
+      "price": "+101",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+2.4%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-08-14",
+      "date_display": "August 14, 2026",
+      "game": "Athletics @ Texas Rangers",
+      "play": "Texas Rangers Moneyline",
+      "price": "-102",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+4.1%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-08-14",
+      "date_display": "August 14, 2026",
+      "game": "St. Louis Cardinals @ Chicago Cubs",
+      "play": "St. Louis Cardinals Moneyline",
+      "price": "+172",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+3.2%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-14",
+      "date_display": "August 14, 2026",
+      "game": "Pittsburgh Pirates @ Boston Red Sox",
+      "play": "Over 8.0 Runs",
+      "price": "-105",
+      "book": "MyBookie.ag",
+      "type": "total",
+      "edge": "+3.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-14",
+      "date_display": "August 14, 2026",
+      "game": "Detroit Tigers @ Chicago White Sox",
+      "play": "Chicago White Sox Moneyline",
+      "price": "-125",
+      "book": "1270",
+      "type": "ml",
+      "edge": "+2.1%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-14",
+      "date_display": "August 14, 2026",
+      "game": "Cleveland Guardians @ San Diego Padres",
+      "play": "Cleveland Guardians Moneyline",
+      "price": "+119",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+4.2%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-14",
+      "date_display": "August 14, 2026",
+      "game": "New York Mets @ Washington Nationals",
+      "play": "New York Mets Moneyline",
+      "price": "+108",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+1.0%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-14",
+      "date_display": "August 14, 2026",
+      "game": "Tampa Bay Rays @ Baltimore Orioles",
+      "play": "Tampa Bay Rays Moneyline",
+      "price": "+147",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+4.4%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-14",
+      "date_display": "August 14, 2026",
+      "game": "Toronto Blue Jays @ New York Yankees",
+      "play": "New York Yankees Moneyline",
+      "price": "+135",
+      "book": "1270",
+      "type": "ml",
+      "edge": "+1.1%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-14",
+      "date_display": "August 14, 2026",
+      "game": "Arizona Diamondbacks @ Atlanta Braves",
+      "play": "Atlanta Braves Moneyline",
+      "price": "-184",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+2.8%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-14",
+      "date_display": "August 14, 2026",
+      "game": "Houston Astros @ Seattle Mariners",
+      "play": "Seattle Mariners Moneyline",
+      "price": "-114",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+1.6%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-14",
+      "date_display": "August 14, 2026",
+      "game": "Milwaukee Brewers @ Los Angeles Dodgers",
+      "play": "Under 7.5 Runs",
+      "price": "+100",
+      "book": "2668",
+      "type": "total",
+      "edge": "+1.2%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-14",
+      "date_display": "August 14, 2026",
+      "game": "San Francisco Giants @ Colorado Rockies",
+      "play": "Over 7.5 Runs",
+      "price": "-100",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+5.2%",
+      "signal": "watch"
     }
   ]
 }
