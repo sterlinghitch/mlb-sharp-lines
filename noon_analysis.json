@@ -186,9 +186,9 @@
     "Philadelphia Phillies @ Minnesota Twins": {
       "play": "Over 8.0 Runs",
       "price": "-110",
-      "book": "21",
+      "book": "PointsBet",
       "is_pass": false,
-      "edge": "+1.7%",
+      "edge": "+1.8%",
       "away_true": 57,
       "home_true": 43,
       "away_fair": "-134",
