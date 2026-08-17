@@ -9239,6 +9239,116 @@
       "type": "ml",
       "edge": "+3.6%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-08-17",
+      "date_display": "August 17, 2026",
+      "game": "St. Louis Cardinals @ Cincinnati Reds",
+      "play": "Cincinnati Reds Moneyline",
+      "price": "+102",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+1.4%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-08-17",
+      "date_display": "August 17, 2026",
+      "game": "Pittsburgh Pirates @ Detroit Tigers",
+      "play": "Detroit Tigers Moneyline",
+      "price": "+100",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+1.9%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-08-17",
+      "date_display": "August 17, 2026",
+      "game": "New York Mets @ San Diego Padres",
+      "play": "New York Mets Moneyline",
+      "price": "+111",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+1.4%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-08-17",
+      "date_display": "August 17, 2026",
+      "game": "Atlanta Braves @ Minnesota Twins",
+      "play": "Atlanta Braves Moneyline",
+      "price": "-120",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+4.2%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-08-17",
+      "date_display": "August 17, 2026",
+      "game": "Tampa Bay Rays @ Baltimore Orioles",
+      "play": "Tampa Bay Rays Moneyline",
+      "price": "+147",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+6.9%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-17",
+      "date_display": "August 17, 2026",
+      "game": "Philadelphia Phillies @ Miami Marlins",
+      "play": "Philadelphia Phillies Moneyline",
+      "price": "+225",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+4.9%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-17",
+      "date_display": "August 17, 2026",
+      "game": "Arizona Diamondbacks @ Boston Red Sox",
+      "play": "Boston Red Sox Moneyline",
+      "price": "-130",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+3.3%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-17",
+      "date_display": "August 17, 2026",
+      "game": "Athletics @ Kansas City Royals",
+      "play": "Kansas City Royals Moneyline",
+      "price": "-168",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+4.7%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-17",
+      "date_display": "August 17, 2026",
+      "game": "Chicago White Sox @ Chicago Cubs",
+      "play": "Chicago Cubs Moneyline",
+      "price": "-152",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+2.2%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-17",
+      "date_display": "August 17, 2026",
+      "game": "Los Angeles Dodgers @ Colorado Rockies",
+      "play": "Colorado Rockies Moneyline",
+      "price": "+239",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+3.4%",
+      "signal": "watch"
     }
   ]
 }
