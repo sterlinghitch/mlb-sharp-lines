@@ -3,6 +3,22 @@
   "date_display": "August 19, 2026",
   "bets": [
     {
+      "game": "Atlanta Braves @ Chicago White Sox",
+      "away": "Atlanta Braves",
+      "home": "Chicago White Sox",
+      "away_id": 144,
+      "home_id": 145,
+      "play": "Chicago White Sox Moneyline",
+      "price": "+105",
+      "book": "BetUS",
+      "type": "ml",
+      "pick_team": "Chicago White Sox",
+      "side": null,
+      "total_line": null,
+      "edge": "+1.8%",
+      "signal": "fire"
+    },
+    {
       "game": "Atlanta Braves @ Minnesota Twins",
       "away": "Atlanta Braves",
       "home": "Minnesota Twins",
