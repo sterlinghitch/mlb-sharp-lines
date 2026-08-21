@@ -9778,6 +9778,171 @@
       "type": "total",
       "edge": "+1.3%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-08-21",
+      "date_display": "August 21, 2026",
+      "game": "Kansas City Royals @ Detroit Tigers",
+      "play": "Over 8.5 Runs",
+      "price": "-100",
+      "book": "DraftKings",
+      "type": "total",
+      "edge": "+3.3%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-08-21",
+      "date_display": "August 21, 2026",
+      "game": "Seattle Mariners @ Chicago Cubs",
+      "play": "Seattle Mariners Moneyline",
+      "price": "-106",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+1.2%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-08-21",
+      "date_display": "August 21, 2026",
+      "game": "Atlanta Braves @ Milwaukee Brewers",
+      "play": "Atlanta Braves Moneyline",
+      "price": "+125",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.1%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-21",
+      "date_display": "August 21, 2026",
+      "game": "Philadelphia Phillies @ St. Louis Cardinals",
+      "play": "Philadelphia Phillies Moneyline",
+      "price": "+225",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+5.4%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-21",
+      "date_display": "August 21, 2026",
+      "game": "Toronto Blue Jays @ New York Yankees",
+      "play": "Under 7.5 Runs",
+      "price": "-111",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+2.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-21",
+      "date_display": "August 21, 2026",
+      "game": "Miami Marlins @ Washington Nationals",
+      "play": "Miami Marlins Moneyline",
+      "price": "+130",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+0.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-21",
+      "date_display": "August 21, 2026",
+      "game": "San Francisco Giants @ Boston Red Sox",
+      "play": "Over 7.5 Runs",
+      "price": "-100",
+      "book": "DraftKings",
+      "type": "total",
+      "edge": "+3.1%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-21",
+      "date_display": "August 21, 2026",
+      "game": "Tampa Bay Rays @ Baltimore Orioles",
+      "play": "Baltimore Orioles Moneyline",
+      "price": "-128",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+1.1%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-21",
+      "date_display": "August 21, 2026",
+      "game": "New York Mets @ Chicago White Sox",
+      "play": "Chicago White Sox Moneyline",
+      "price": "-140",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+3.2%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-21",
+      "date_display": "August 21, 2026",
+      "game": "Houston Astros @ Athletics",
+      "play": "Houston Astros Moneyline",
+      "price": "+158",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+5.8%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-21",
+      "date_display": "August 21, 2026",
+      "game": "Los Angeles Angels @ Texas Rangers",
+      "play": "Los Angeles Angels Moneyline",
+      "price": "+126",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+0.4%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-21",
+      "date_display": "August 21, 2026",
+      "game": "Cleveland Guardians @ Colorado Rockies",
+      "play": "Over 10.5 Runs",
+      "price": "-113",
+      "book": "DraftKings",
+      "type": "total",
+      "edge": "+3.0%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-21",
+      "date_display": "August 21, 2026",
+      "game": "Arizona Diamondbacks @ Cincinnati Reds",
+      "play": "Over 8.5 Runs",
+      "price": "-100",
+      "book": "DraftKings",
+      "type": "total",
+      "edge": "+1.3%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-21",
+      "date_display": "August 21, 2026",
+      "game": "Minnesota Twins @ San Diego Padres",
+      "play": "Minnesota Twins Moneyline",
+      "price": "+110",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+0.8%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-21",
+      "date_display": "August 21, 2026",
+      "game": "Los Angeles Dodgers @ Pittsburgh Pirates",
+      "play": "Los Angeles Dodgers Moneyline",
+      "price": "+197",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+2.6%",
+      "signal": "watch"
     }
   ]
 }
