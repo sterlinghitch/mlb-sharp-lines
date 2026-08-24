@@ -10273,6 +10273,116 @@
       "type": "ml",
       "edge": "+2.9%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-08-24",
+      "date_display": "August 24, 2026",
+      "game": "Pittsburgh Pirates @ San Diego Padres",
+      "play": "Pittsburgh Pirates Moneyline",
+      "price": "+102",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+1.3%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-08-24",
+      "date_display": "August 24, 2026",
+      "game": "Philadelphia Phillies @ Seattle Mariners",
+      "play": "Over 6.5 Runs",
+      "price": "-110",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+1.8%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-08-24",
+      "date_display": "August 24, 2026",
+      "game": "Miami Marlins @ Boston Red Sox",
+      "play": "Boston Red Sox Moneyline",
+      "price": "+120",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+1.9%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-24",
+      "date_display": "August 24, 2026",
+      "game": "Tampa Bay Rays @ Detroit Tigers",
+      "play": "Under 7.5 Runs",
+      "price": "+100",
+      "book": "79",
+      "type": "total",
+      "edge": "+0.7%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-24",
+      "date_display": "August 24, 2026",
+      "game": "Washington Nationals @ Colorado Rockies",
+      "play": "Over 8.0 Runs",
+      "price": "-112",
+      "book": "MyBookie.ag",
+      "type": "total",
+      "edge": "+2.8%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-24",
+      "date_display": "August 24, 2026",
+      "game": "Chicago White Sox @ Texas Rangers",
+      "play": "Chicago White Sox Moneyline",
+      "price": "+120",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+1.7%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-24",
+      "date_display": "August 24, 2026",
+      "game": "Los Angeles Angels @ Cleveland Guardians",
+      "play": "Cleveland Guardians Moneyline",
+      "price": "+147",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+3.8%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-24",
+      "date_display": "August 24, 2026",
+      "game": "Arizona Diamondbacks @ Chicago Cubs",
+      "play": "Arizona Diamondbacks Moneyline",
+      "price": "-125",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.2%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-24",
+      "date_display": "August 24, 2026",
+      "game": "Athletics @ Minnesota Twins",
+      "play": "Minnesota Twins Moneyline",
+      "price": "+142",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+3.3%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-08-24",
+      "date_display": "August 24, 2026",
+      "game": "San Francisco Giants @ Cincinnati Reds",
+      "play": "San Francisco Giants Moneyline",
+      "price": "-134",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+6.3%",
+      "signal": "watch"
     }
   ]
 }
