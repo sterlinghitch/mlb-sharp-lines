@@ -184,15 +184,15 @@
       "signal_label": ""
     },
     "Los Angeles Dodgers @ Cincinnati Reds": {
-      "play": "Over 8.5 Runs",
-      "price": "-106",
+      "play": "Los Angeles Dodgers Moneyline",
+      "price": "+240",
       "book": "PointsBet",
       "is_pass": false,
-      "edge": "+3.6%",
-      "away_true": 28,
-      "home_true": 72,
-      "away_fair": "+261",
-      "home_fair": "-261",
+      "edge": "+3.4%",
+      "away_true": 31,
+      "home_true": 69,
+      "away_fair": "+219",
+      "home_fair": "-219",
       "signal": "watch",
       "signal_label": ""
     }
