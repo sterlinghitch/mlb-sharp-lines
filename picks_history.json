@@ -12671,6 +12671,160 @@
       "type": "ml",
       "edge": "+3.3%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-09-11",
+      "date_display": "September 11, 2026",
+      "game": "Cleveland Guardians @ Minnesota Twins",
+      "play": "Cleveland Guardians Moneyline",
+      "price": "-118",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+1.1%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-09-11",
+      "date_display": "September 11, 2026",
+      "game": "St. Louis Cardinals @ Chicago White Sox",
+      "play": "St. Louis Cardinals Moneyline",
+      "price": "-111",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+0.6%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-09-11",
+      "date_display": "September 11, 2026",
+      "game": "Arizona Diamondbacks @ Texas Rangers",
+      "play": "Texas Rangers Moneyline",
+      "price": "-118",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+1.5%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-09-11",
+      "date_display": "September 11, 2026",
+      "game": "Colorado Rockies @ Detroit Tigers",
+      "play": "Colorado Rockies Moneyline",
+      "price": "+154",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+2.3%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-11",
+      "date_display": "September 11, 2026",
+      "game": "Los Angeles Angels @ Washington Nationals",
+      "play": "Washington Nationals Moneyline",
+      "price": "-155",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+5.3%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-11",
+      "date_display": "September 11, 2026",
+      "game": "New York Mets @ New York Yankees",
+      "play": "New York Mets Moneyline",
+      "price": "+120",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+0.6%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-11",
+      "date_display": "September 11, 2026",
+      "game": "Toronto Blue Jays @ Baltimore Orioles",
+      "play": "Toronto Blue Jays Moneyline",
+      "price": "+115",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+2.2%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-11",
+      "date_display": "September 11, 2026",
+      "game": "Houston Astros @ Tampa Bay Rays",
+      "play": "Tampa Bay Rays Moneyline",
+      "price": "-161",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.6%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-11",
+      "date_display": "September 11, 2026",
+      "game": "Miami Marlins @ Los Angeles Dodgers",
+      "play": "Los Angeles Dodgers Moneyline",
+      "price": "+200",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+2.1%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-11",
+      "date_display": "September 11, 2026",
+      "game": "Boston Red Sox @ Kansas City Royals",
+      "play": "Under 8.5 Runs",
+      "price": "-105",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+2.4%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-11",
+      "date_display": "September 11, 2026",
+      "game": "Atlanta Braves @ Philadelphia Phillies",
+      "play": "Philadelphia Phillies Moneyline",
+      "price": "-156",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+2.2%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-11",
+      "date_display": "September 11, 2026",
+      "game": "Milwaukee Brewers @ Cincinnati Reds",
+      "play": "Milwaukee Brewers Moneyline",
+      "price": "+169",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+3.7%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-11",
+      "date_display": "September 11, 2026",
+      "game": "Athletics @ Seattle Mariners",
+      "play": "Seattle Mariners Moneyline",
+      "price": "+138",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+4.9%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-11",
+      "date_display": "September 11, 2026",
+      "game": "San Francisco Giants @ San Diego Padres",
+      "play": "Over 8.0 Runs",
+      "price": "-102",
+      "book": "MyBookie.ag",
+      "type": "total",
+      "edge": "+2.4%",
+      "signal": "watch"
     }
   ]
 }
