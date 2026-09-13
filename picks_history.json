@@ -12968,6 +12968,50 @@
       "type": "ml",
       "edge": "+4.5%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-09-13",
+      "date_display": "September 13, 2026",
+      "game": "Boston Red Sox @ Kansas City Royals",
+      "play": "Kansas City Royals Moneyline",
+      "price": "-172",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+2.2%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-13",
+      "date_display": "September 13, 2026",
+      "game": "Athletics @ Seattle Mariners",
+      "play": "Under 9.5 Runs",
+      "price": "-105",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+4.2%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-13",
+      "date_display": "September 13, 2026",
+      "game": "Arizona Diamondbacks @ Texas Rangers",
+      "play": "Arizona Diamondbacks Moneyline",
+      "price": "+120",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+1.7%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-13",
+      "date_display": "September 13, 2026",
+      "game": "San Francisco Giants @ San Diego Padres",
+      "play": "Under 7.5 Runs",
+      "price": "-115",
+      "book": "MyBookie.ag",
+      "type": "total",
+      "edge": "+1.7%",
+      "signal": "watch"
     }
   ]
 }
