@@ -13012,6 +13012,160 @@
       "type": "total",
       "edge": "+1.7%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-09-14",
+      "date_display": "September 14, 2026",
+      "game": "St. Louis Cardinals @ San Francisco Giants",
+      "play": "San Francisco Giants Moneyline",
+      "price": "-116",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+4.3%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-09-14",
+      "date_display": "September 14, 2026",
+      "game": "Los Angeles Angels @ Seattle Mariners",
+      "play": "Seattle Mariners Moneyline",
+      "price": "-100",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.6%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-09-14",
+      "date_display": "September 14, 2026",
+      "game": "Cleveland Guardians @ Chicago White Sox",
+      "play": "Cleveland Guardians Moneyline",
+      "price": "+135",
+      "book": "William Hill",
+      "type": "ml",
+      "edge": "+2.6%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-14",
+      "date_display": "September 14, 2026",
+      "game": "Los Angeles Dodgers @ Cincinnati Reds",
+      "play": "Los Angeles Dodgers Moneyline",
+      "price": "-215",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+1.4%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-14",
+      "date_display": "September 14, 2026",
+      "game": "Toronto Blue Jays @ Detroit Tigers",
+      "play": "Detroit Tigers Moneyline",
+      "price": "-135",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+1.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-14",
+      "date_display": "September 14, 2026",
+      "game": "New York Mets @ Baltimore Orioles",
+      "play": "Baltimore Orioles Moneyline",
+      "price": "-122",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+4.6%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-14",
+      "date_display": "September 14, 2026",
+      "game": "New York Yankees @ Minnesota Twins",
+      "play": "Minnesota Twins Moneyline",
+      "price": "+118",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.6%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-14",
+      "date_display": "September 14, 2026",
+      "game": "Atlanta Braves @ Chicago Cubs",
+      "play": "Atlanta Braves Moneyline",
+      "price": "+117",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+3.8%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-14",
+      "date_display": "September 14, 2026",
+      "game": "Colorado Rockies @ San Diego Padres",
+      "play": "Colorado Rockies Moneyline",
+      "price": "-185",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+4.1%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-14",
+      "date_display": "September 14, 2026",
+      "game": "Miami Marlins @ Arizona Diamondbacks",
+      "play": "Miami Marlins Moneyline",
+      "price": "+115",
+      "book": "William Hill",
+      "type": "ml",
+      "edge": "+1.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-14",
+      "date_display": "September 14, 2026",
+      "game": "Athletics @ Tampa Bay Rays",
+      "play": "Tampa Bay Rays Moneyline",
+      "price": "-225",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+2.7%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-14",
+      "date_display": "September 14, 2026",
+      "game": "Milwaukee Brewers @ Pittsburgh Pirates",
+      "play": "Milwaukee Brewers Moneyline",
+      "price": "-250",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+1.2%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-14",
+      "date_display": "September 14, 2026",
+      "game": "Philadelphia Phillies @ Washington Nationals",
+      "play": "Under 8.0 Runs",
+      "price": "-110",
+      "book": "DraftKings",
+      "type": "total",
+      "edge": "+2.4%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-14",
+      "date_display": "September 14, 2026",
+      "game": "Houston Astros @ Kansas City Royals",
+      "play": "Over 8.0 Runs",
+      "price": "+104",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+5.3%",
+      "signal": "watch"
     }
   ]
 }
