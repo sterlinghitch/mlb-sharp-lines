@@ -3,6 +3,38 @@
   "date_display": "September 16, 2026",
   "bets": [
     {
+      "game": "Philadelphia Phillies @ New York Mets",
+      "away": "Philadelphia Phillies",
+      "home": "New York Mets",
+      "away_id": 143,
+      "home_id": 121,
+      "play": "Philadelphia Phillies Moneyline",
+      "price": "+120",
+      "book": "DraftKings",
+      "type": "ml",
+      "pick_team": "Philadelphia Phillies",
+      "side": null,
+      "total_line": null,
+      "edge": "+4.0%",
+      "signal": "watch"
+    },
+    {
+      "game": "Detroit Tigers @ Chicago White Sox",
+      "away": "Detroit Tigers",
+      "home": "Chicago White Sox",
+      "away_id": 116,
+      "home_id": 145,
+      "play": "Under 8.5 Runs",
+      "price": "-114",
+      "book": "PointsBet",
+      "type": "total",
+      "pick_team": null,
+      "side": "Under",
+      "total_line": 8.5,
+      "edge": "+2.3%",
+      "signal": "watch"
+    },
+    {
       "game": "New York Mets @ Baltimore Orioles",
       "away": "New York Mets",
       "home": "Baltimore Orioles",
