@@ -3,6 +3,22 @@
   "date_display": "September 17, 2026",
   "bets": [
     {
+      "game": "Cleveland Guardians @ Athletics",
+      "away": "Cleveland Guardians",
+      "home": "Athletics",
+      "away_id": 114,
+      "home_id": 133,
+      "play": "Cleveland Guardians Moneyline",
+      "price": "+166",
+      "book": "PointsBet",
+      "type": "ml",
+      "pick_team": "Cleveland Guardians",
+      "side": null,
+      "total_line": null,
+      "edge": "+1.8%",
+      "signal": "watch"
+    },
+    {
       "game": "Detroit Tigers @ Chicago White Sox",
       "away": "Detroit Tigers",
       "home": "Chicago White Sox",
