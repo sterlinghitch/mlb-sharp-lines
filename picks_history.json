@@ -13903,6 +13903,83 @@
       "type": "ml",
       "edge": "+4.7%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-09-20",
+      "date_display": "September 20, 2026",
+      "game": "Los Angeles Angels @ Minnesota Twins",
+      "play": "Los Angeles Angels Moneyline",
+      "price": "-111",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+5.3%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-09-20",
+      "date_display": "September 20, 2026",
+      "game": "Arizona Diamondbacks @ New York Yankees",
+      "play": "New York Yankees Moneyline",
+      "price": "-111",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+1.5%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-09-20",
+      "date_display": "September 20, 2026",
+      "game": "Toronto Blue Jays @ Texas Rangers",
+      "play": "Under 7.5 Runs",
+      "price": "-100",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+4.7%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-20",
+      "date_display": "September 20, 2026",
+      "game": "Seattle Mariners @ Colorado Rockies",
+      "play": "Seattle Mariners Moneyline",
+      "price": "-164",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+3.1%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-20",
+      "date_display": "September 20, 2026",
+      "game": "Miami Marlins @ San Diego Padres",
+      "play": "Miami Marlins Moneyline",
+      "price": "+130",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+3.3%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-20",
+      "date_display": "September 20, 2026",
+      "game": "Los Angeles Dodgers @ San Francisco Giants",
+      "play": "San Francisco Giants Moneyline",
+      "price": "-270",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.8%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-20",
+      "date_display": "September 20, 2026",
+      "game": "Milwaukee Brewers @ Baltimore Orioles",
+      "play": "Milwaukee Brewers Moneyline",
+      "price": "-205",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.5%",
+      "signal": "watch"
     }
   ]
 }
