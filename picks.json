@@ -3,6 +3,38 @@
   "date_display": "September 20, 2026",
   "bets": [
     {
+      "game": "Toronto Blue Jays @ Baltimore Orioles",
+      "away": "Toronto Blue Jays",
+      "home": "Baltimore Orioles",
+      "away_id": 141,
+      "home_id": 110,
+      "play": "Toronto Blue Jays Moneyline",
+      "price": "-104",
+      "book": "PointsBet",
+      "type": "ml",
+      "pick_team": "Toronto Blue Jays",
+      "side": null,
+      "total_line": null,
+      "edge": "+1.1%",
+      "signal": "fire"
+    },
+    {
+      "game": "San Francisco Giants @ Minnesota Twins",
+      "away": "San Francisco Giants",
+      "home": "Minnesota Twins",
+      "away_id": 137,
+      "home_id": 142,
+      "play": "San Francisco Giants Moneyline",
+      "price": "-118",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "pick_team": "San Francisco Giants",
+      "side": null,
+      "total_line": null,
+      "edge": "+5.7%",
+      "signal": "fire"
+    },
+    {
       "game": "Los Angeles Angels @ Minnesota Twins",
       "away": "Los Angeles Angels",
       "home": "Minnesota Twins",
