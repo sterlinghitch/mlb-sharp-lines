@@ -3,6 +3,22 @@
   "date_display": "September 21, 2026",
   "bets": [
     {
+      "game": "Los Angeles Dodgers @ San Diego Padres",
+      "away": "Los Angeles Dodgers",
+      "home": "San Diego Padres",
+      "away_id": 119,
+      "home_id": 135,
+      "play": "Los Angeles Dodgers Moneyline",
+      "price": "+102",
+      "book": "PointsBet",
+      "type": "ml",
+      "pick_team": "Los Angeles Dodgers",
+      "side": null,
+      "total_line": null,
+      "edge": "+3.1%",
+      "signal": "fire"
+    },
+    {
       "game": "Toronto Blue Jays @ Baltimore Orioles",
       "away": "Toronto Blue Jays",
       "home": "Baltimore Orioles",
