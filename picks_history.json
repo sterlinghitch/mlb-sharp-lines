@@ -14420,6 +14420,116 @@
       "type": "ml",
       "edge": "+4.6%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-09-24",
+      "date_display": "September 24, 2026",
+      "game": "Philadelphia Phillies @ Milwaukee Brewers",
+      "play": "Milwaukee Brewers Moneyline",
+      "price": "-120",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.1%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-09-24",
+      "date_display": "September 24, 2026",
+      "game": "Cleveland Guardians @ Boston Red Sox",
+      "play": "Cleveland Guardians Moneyline",
+      "price": "+115",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+4.1%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-24",
+      "date_display": "September 24, 2026",
+      "game": "Tampa Bay Rays @ New York Yankees",
+      "play": "Tampa Bay Rays Moneyline",
+      "price": "+129",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+6.9%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-24",
+      "date_display": "September 24, 2026",
+      "game": "Atlanta Braves @ Cincinnati Reds",
+      "play": "Atlanta Braves Moneyline",
+      "price": "+188",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+3.0%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-24",
+      "date_display": "September 24, 2026",
+      "game": "Los Angeles Angels @ Seattle Mariners",
+      "play": "Seattle Mariners Moneyline",
+      "price": "-198",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+2.8%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-24",
+      "date_display": "September 24, 2026",
+      "game": "Houston Astros @ Athletics",
+      "play": "Under 10.5 Runs",
+      "price": "+114",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+4.8%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-24",
+      "date_display": "September 24, 2026",
+      "game": "Los Angeles Dodgers @ San Diego Padres",
+      "play": "Under 8.0 Runs",
+      "price": "-105",
+      "book": "DraftKings",
+      "type": "total",
+      "edge": "+2.2%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-24",
+      "date_display": "September 24, 2026",
+      "game": "Pittsburgh Pirates @ Detroit Tigers",
+      "play": "Over 8.5 Runs",
+      "price": "-100",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+0.1%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-09-24",
+      "date_display": "September 24, 2026",
+      "game": "Philadelphia Phillies @ Tampa Bay Rays",
+      "play": "Tampa Bay Rays Moneyline",
+      "price": "-161",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+1.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-24",
+      "date_display": "September 24, 2026",
+      "game": "Milwaukee Brewers @ St. Louis Cardinals",
+      "play": "Milwaukee Brewers Moneyline",
+      "price": "+139",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+2.8%",
+      "signal": "watch"
     }
   ]
 }
