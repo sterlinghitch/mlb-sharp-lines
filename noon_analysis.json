@@ -195,6 +195,19 @@
       "home_fair": "-145",
       "signal": "watch",
       "signal_label": ""
+    },
+    "Los Angeles Angels @ Seattle Mariners": {
+      "play": "Seattle Mariners Moneyline",
+      "price": "-198",
+      "book": "BetUS",
+      "is_pass": false,
+      "edge": "+3.6%",
+      "away_true": 33,
+      "home_true": 67,
+      "away_fair": "+207",
+      "home_fair": "-207",
+      "signal": "watch",
+      "signal_label": ""
     }
   }
 }
