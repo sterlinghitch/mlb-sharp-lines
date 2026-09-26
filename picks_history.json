@@ -14684,6 +14684,127 @@
       "type": "ml",
       "edge": "+5.1%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-09-26",
+      "date_display": "September 26, 2026",
+      "game": "Miami Marlins @ Atlanta Braves",
+      "play": "Miami Marlins Moneyline",
+      "price": "-117",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+4.1%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-09-26",
+      "date_display": "September 26, 2026",
+      "game": "Cleveland Guardians @ Kansas City Royals",
+      "play": "Kansas City Royals Moneyline",
+      "price": "+108",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+2.5%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-09-26",
+      "date_display": "September 26, 2026",
+      "game": "Philadelphia Phillies @ Tampa Bay Rays",
+      "play": "Philadelphia Phillies Moneyline",
+      "price": "-108",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+1.7%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-09-26",
+      "date_display": "September 26, 2026",
+      "game": "Toronto Blue Jays @ Cincinnati Reds",
+      "play": "Cincinnati Reds Moneyline",
+      "price": "-161",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.0%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-26",
+      "date_display": "September 26, 2026",
+      "game": "Los Angeles Dodgers @ San Francisco Giants",
+      "play": "San Francisco Giants Moneyline",
+      "price": "+275",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+4.0%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-26",
+      "date_display": "September 26, 2026",
+      "game": "Minnesota Twins @ Texas Rangers",
+      "play": "Texas Rangers Moneyline",
+      "price": "+105",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+1.6%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-26",
+      "date_display": "September 26, 2026",
+      "game": "Colorado Rockies @ Chicago White Sox",
+      "play": "Colorado Rockies Moneyline",
+      "price": "+203",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+4.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-26",
+      "date_display": "September 26, 2026",
+      "game": "Milwaukee Brewers @ St. Louis Cardinals",
+      "play": "Milwaukee Brewers Moneyline",
+      "price": "+140",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.1%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-26",
+      "date_display": "September 26, 2026",
+      "game": "Arizona Diamondbacks @ San Diego Padres",
+      "play": "San Diego Padres Moneyline",
+      "price": "-120",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+1.9%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-26",
+      "date_display": "September 26, 2026",
+      "game": "Houston Astros @ Athletics",
+      "play": "Athletics Moneyline",
+      "price": "+135",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+2.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-26",
+      "date_display": "September 26, 2026",
+      "game": "Los Angeles Angels @ Seattle Mariners",
+      "play": "Under 7.5 Runs",
+      "price": "-111",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+3.0%",
+      "signal": "watch"
     }
   ]
 }
