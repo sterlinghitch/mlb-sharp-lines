@@ -1,5 +1,70 @@
 {
-  "date": "2026-09-27",
-  "date_display": "September 27, 2026",
-  "bets": []
+  "date": "2026-09-28",
+  "date_display": "September 28, 2026",
+  "bets": [
+    {
+      "game": "Atlanta Braves @ Philadelphia Phillies",
+      "away": "Atlanta Braves",
+      "home": "Philadelphia Phillies",
+      "away_id": 144,
+      "home_id": 143,
+      "play": "Under 6.5 Runs",
+      "price": "+102",
+      "book": "PointsBet",
+      "type": "total",
+      "pick_team": null,
+      "side": "Under",
+      "total_line": 6.5,
+      "edge": "+2.1%",
+      "signal": "watch"
+    },
+    {
+      "game": "Houston Astros @ Chicago White Sox",
+      "away": "Houston Astros",
+      "home": "Chicago White Sox",
+      "away_id": 117,
+      "home_id": 145,
+      "play": "Chicago White Sox Moneyline",
+      "price": "-122",
+      "book": "PointsBet",
+      "type": "ml",
+      "pick_team": "Chicago White Sox",
+      "side": null,
+      "total_line": null,
+      "edge": "+3.5%",
+      "signal": "watch"
+    },
+    {
+      "game": "Boston Red Sox @ New York Yankees",
+      "away": "Boston Red Sox",
+      "home": "New York Yankees",
+      "away_id": 111,
+      "home_id": 147,
+      "play": "Under 6.5 Runs",
+      "price": "-102",
+      "book": "BetUS",
+      "type": "total",
+      "pick_team": null,
+      "side": "Under",
+      "total_line": 6.5,
+      "edge": "+5.5%",
+      "signal": "watch"
+    },
+    {
+      "game": "Chicago Cubs @ San Diego Padres",
+      "away": "Chicago Cubs",
+      "home": "San Diego Padres",
+      "away_id": 112,
+      "home_id": 135,
+      "play": "San Diego Padres Moneyline",
+      "price": "-124",
+      "book": "PointsBet",
+      "type": "ml",
+      "pick_team": "San Diego Padres",
+      "side": null,
+      "total_line": null,
+      "edge": "+2.9%",
+      "signal": "watch"
+    }
+  ]
 }

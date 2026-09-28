@@ -14805,6 +14805,50 @@
       "type": "total",
       "edge": "+3.0%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-09-28",
+      "date_display": "September 28, 2026",
+      "game": "Atlanta Braves @ Philadelphia Phillies",
+      "play": "Under 6.5 Runs",
+      "price": "+102",
+      "book": "PointsBet",
+      "type": "total",
+      "edge": "+2.1%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-28",
+      "date_display": "September 28, 2026",
+      "game": "Houston Astros @ Chicago White Sox",
+      "play": "Chicago White Sox Moneyline",
+      "price": "-122",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+3.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-28",
+      "date_display": "September 28, 2026",
+      "game": "Boston Red Sox @ New York Yankees",
+      "play": "Under 6.5 Runs",
+      "price": "-102",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+5.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-28",
+      "date_display": "September 28, 2026",
+      "game": "Chicago Cubs @ San Diego Padres",
+      "play": "San Diego Padres Moneyline",
+      "price": "-124",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+2.9%",
+      "signal": "watch"
     }
   ]
 }
