@@ -14849,6 +14849,39 @@
       "type": "ml",
       "edge": "+2.9%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-09-29",
+      "date_display": "September 29, 2026",
+      "game": "Houston Astros @ Chicago White Sox",
+      "play": "Houston Astros Moneyline",
+      "price": "+120",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+6.8%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-29",
+      "date_display": "September 29, 2026",
+      "game": "Boston Red Sox @ New York Yankees",
+      "play": "Boston Red Sox Moneyline",
+      "price": "+118",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+2.9%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-09-29",
+      "date_display": "September 29, 2026",
+      "game": "Chicago Cubs @ San Diego Padres",
+      "play": "Under 7.5 Runs",
+      "price": "-105",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+3.5%",
+      "signal": "watch"
     }
   ]
 }
