@@ -28,15 +28,15 @@
       "signal_label": ""
     },
     "Boston Red Sox @ New York Yankees": {
-      "play": "Boston Red Sox Moneyline",
-      "price": "+120",
-      "book": "79",
+      "play": "Under 6.5 Runs",
+      "price": "+105",
+      "book": "BetUS",
       "is_pass": false,
-      "edge": "+1.1%",
+      "edge": "+1.2%",
       "away_true": 45,
       "home_true": 55,
-      "away_fair": "+123",
-      "home_fair": "-123",
+      "away_fair": "+124",
+      "home_fair": "-124",
       "signal": "watch",
       "signal_label": ""
     },
@@ -45,11 +45,11 @@
       "price": "-130",
       "book": "PointsBet",
       "is_pass": false,
-      "edge": "+1.9%",
+      "edge": "+2.0%",
       "away_true": 44,
       "home_true": 56,
-      "away_fair": "+129",
-      "home_fair": "-129",
+      "away_fair": "+130",
+      "home_fair": "-130",
       "signal": "watch",
       "signal_label": ""
     }
