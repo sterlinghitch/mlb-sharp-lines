@@ -1,6 +1,6 @@
 {
-  "date": "2026-09-29",
-  "date_display": "September 29, 2026",
+  "date": "2026-09-30",
+  "date_display": "September 30, 2026",
   "bets": [
     {
       "game": "Houston Astros @ Chicago White Sox",
@@ -9,13 +9,13 @@
       "away_id": 117,
       "home_id": 145,
       "play": "Houston Astros Moneyline",
-      "price": "+120",
-      "book": "BetUS",
+      "price": "+128",
+      "book": "MyBookie.ag",
       "type": "ml",
       "pick_team": "Houston Astros",
       "side": null,
       "total_line": null,
-      "edge": "+6.8%",
+      "edge": "+4.3%",
       "signal": "watch"
     },
     {
@@ -24,14 +24,14 @@
       "home": "New York Yankees",
       "away_id": 111,
       "home_id": 147,
-      "play": "Boston Red Sox Moneyline",
-      "price": "+118",
+      "play": "New York Yankees Moneyline",
+      "price": "-135",
       "book": "BetUS",
       "type": "ml",
-      "pick_team": "Boston Red Sox",
+      "pick_team": "New York Yankees",
       "side": null,
       "total_line": null,
-      "edge": "+2.9%",
+      "edge": "+2.8%",
       "signal": "watch"
     },
     {
@@ -40,14 +40,14 @@
       "home": "San Diego Padres",
       "away_id": 112,
       "home_id": 135,
-      "play": "Under 7.5 Runs",
-      "price": "-105",
+      "play": "San Diego Padres Moneyline",
+      "price": "-132",
       "book": "BetUS",
-      "type": "total",
-      "pick_team": null,
-      "side": "Under",
-      "total_line": 7.5,
-      "edge": "+3.5%",
+      "type": "ml",
+      "pick_team": "San Diego Padres",
+      "side": null,
+      "total_line": null,
+      "edge": "+2.8%",
       "signal": "watch"
     }
   ]
