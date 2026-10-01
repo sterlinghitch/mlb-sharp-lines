@@ -1,57 +1,18 @@
 {
-  "date": "2026-09-30",
+  "date": "2026-10-01",
   "games": {
     "Atlanta Braves @ Philadelphia Phillies": {
-      "play": "Atlanta Braves Moneyline",
-      "price": "-115",
-      "book": "William Hill",
-      "is_pass": false,
-      "edge": "+0.7%",
-      "away_true": 52,
-      "home_true": 48,
-      "away_fair": "-107",
-      "home_fair": "+107",
-      "signal": "fire",
-      "signal_label": "SPLIT MARKET"
-    },
-    "Houston Astros @ Chicago White Sox": {
-      "play": "Houston Astros Moneyline",
-      "price": "+128",
+      "play": "Over 7.5 Runs",
+      "price": "+100",
       "book": "MyBookie.ag",
       "is_pass": false,
-      "edge": "+4.3%",
-      "away_true": 46,
-      "home_true": 54,
-      "away_fair": "+116",
-      "home_fair": "-116",
-      "signal": "watch",
-      "signal_label": ""
-    },
-    "Boston Red Sox @ New York Yankees": {
-      "play": "New York Yankees Moneyline",
-      "price": "-135",
-      "book": "BetUS",
-      "is_pass": false,
-      "edge": "+3.0%",
-      "away_true": 42,
-      "home_true": 58,
-      "away_fair": "+139",
-      "home_fair": "-139",
-      "signal": "watch",
-      "signal_label": ""
-    },
-    "Chicago Cubs @ San Diego Padres": {
-      "play": "San Diego Padres Moneyline",
-      "price": "-132",
-      "book": "BetUS",
-      "is_pass": false,
-      "edge": "+3.6%",
-      "away_true": 42,
-      "home_true": 58,
-      "away_fair": "+139",
-      "home_fair": "-139",
-      "signal": "watch",
-      "signal_label": ""
+      "edge": "+0.8%",
+      "away_true": 51,
+      "home_true": 49,
+      "away_fair": "-105",
+      "home_fair": "+105",
+      "signal": "fire",
+      "signal_label": "SPLIT MARKET"
     }
   }
 }
