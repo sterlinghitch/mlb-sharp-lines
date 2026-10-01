@@ -2,15 +2,15 @@
   "date": "2026-10-01",
   "games": {
     "Atlanta Braves @ Philadelphia Phillies": {
-      "play": "Over 7.5 Runs",
-      "price": "+100",
-      "book": "MyBookie.ag",
+      "play": "Philadelphia Phillies Moneyline",
+      "price": "-105",
+      "book": "BetUS",
       "is_pass": false,
-      "edge": "+0.5%",
-      "away_true": 51,
-      "home_true": 49,
-      "away_fair": "-103",
-      "home_fair": "+103",
+      "edge": "+1.6%",
+      "away_true": 50,
+      "home_true": 50,
+      "away_fair": "+102",
+      "home_fair": "-102",
       "signal": "fire",
       "signal_label": "SPLIT MARKET"
     }

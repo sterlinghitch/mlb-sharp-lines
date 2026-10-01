@@ -14915,6 +14915,17 @@
       "type": "ml",
       "edge": "+2.8%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-10-01",
+      "date_display": "October 01, 2026",
+      "game": "Atlanta Braves @ Philadelphia Phillies",
+      "play": "Philadelphia Phillies Moneyline",
+      "price": "-105",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+1.6%",
+      "signal": "fire"
     }
   ]
 }
