@@ -16,14 +16,14 @@
     },
     "Los Angeles Dodgers @ Atlanta Braves": {
       "play": "Los Angeles Dodgers Moneyline",
-      "price": "+185",
+      "price": "+205",
       "book": "PointsBet",
       "is_pass": false,
-      "edge": "+1.5%",
+      "edge": "+3.1%",
       "away_true": 35,
       "home_true": 65,
-      "away_fair": "+186",
-      "home_fair": "-186",
+      "away_fair": "+189",
+      "home_fair": "-189",
       "signal": "watch",
       "signal_label": ""
     },
