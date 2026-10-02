@@ -1,18 +1,57 @@
 {
-  "date": "2026-10-01",
+  "date": "2026-10-02",
   "games": {
-    "Atlanta Braves @ Philadelphia Phillies": {
-      "play": "Philadelphia Phillies Moneyline",
+    "Cleveland Guardians @ Chicago White Sox": {
+      "play": "Under 7.0 Runs",
       "price": "-105",
       "book": "BetUS",
       "is_pass": false,
-      "edge": "+4.0%",
-      "away_true": 47,
-      "home_true": 53,
-      "away_fair": "+113",
-      "home_fair": "-113",
-      "signal": "fire",
-      "signal_label": "SPLIT MARKET"
+      "edge": "+5.5%",
+      "away_true": 46,
+      "home_true": 54,
+      "away_fair": "+119",
+      "home_fair": "-119",
+      "signal": "watch",
+      "signal_label": ""
+    },
+    "Los Angeles Dodgers @ Atlanta Braves": {
+      "play": "Los Angeles Dodgers Moneyline",
+      "price": "+172",
+      "book": "DraftKings",
+      "is_pass": false,
+      "edge": "+0.2%",
+      "away_true": 35,
+      "home_true": 65,
+      "away_fair": "+183",
+      "home_fair": "-183",
+      "signal": "watch",
+      "signal_label": ""
+    },
+    "Tampa Bay Rays @ New York Yankees": {
+      "play": "Tampa Bay Rays Moneyline",
+      "price": "+118",
+      "book": "PointsBet",
+      "is_pass": false,
+      "edge": "+1.1%",
+      "away_true": 45,
+      "home_true": 55,
+      "away_fair": "+122",
+      "home_fair": "-122",
+      "signal": "watch",
+      "signal_label": ""
+    },
+    "Milwaukee Brewers @ San Diego Padres": {
+      "play": "Milwaukee Brewers Moneyline",
+      "price": "+190",
+      "book": "79",
+      "is_pass": false,
+      "edge": "+2.0%",
+      "away_true": 35,
+      "home_true": 65,
+      "away_fair": "+185",
+      "home_fair": "-185",
+      "signal": "watch",
+      "signal_label": ""
     }
   }
 }
