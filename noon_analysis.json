@@ -15,11 +15,11 @@
       "signal_label": ""
     },
     "Los Angeles Dodgers @ Atlanta Braves": {
-      "play": "Over 8.5 Runs",
-      "price": "+104",
+      "play": "Los Angeles Dodgers Moneyline",
+      "price": "+188",
       "book": "PointsBet",
       "is_pass": false,
-      "edge": "+1.6%",
+      "edge": "+1.1%",
       "away_true": 34,
       "home_true": 66,
       "away_fair": "+190",
