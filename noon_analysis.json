@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-02",
+  "date": "2026-10-03",
   "games": {
     "Cleveland Guardians @ Chicago White Sox": {
       "play": "Under 7.0 Runs",
@@ -15,26 +15,26 @@
       "signal_label": ""
     },
     "Los Angeles Dodgers @ Atlanta Braves": {
-      "play": "Over 8.5 Runs",
-      "price": "+104",
-      "book": "PointsBet",
+      "play": "Atlanta Braves Moneyline",
+      "price": "-210",
+      "book": "BetUS",
       "is_pass": false,
-      "edge": "+1.6%",
+      "edge": "+1.4%",
       "away_true": 34,
       "home_true": 66,
-      "away_fair": "+193",
-      "home_fair": "-193",
+      "away_fair": "+196",
+      "home_fair": "-196",
       "signal": "watch",
       "signal_label": ""
     },
     "Tampa Bay Rays @ New York Yankees": {
-      "play": "Tampa Bay Rays Moneyline",
-      "price": "+115",
-      "book": "DraftKings",
+      "play": "Under 7.0 Runs",
+      "price": "-113",
+      "book": "MyBookie.ag",
       "is_pass": false,
-      "edge": "+0.7%",
-      "away_true": 45,
-      "home_true": 55,
+      "edge": "+1.9%",
+      "away_true": 46,
+      "home_true": 54,
       "away_fair": "+120",
       "home_fair": "-120",
       "signal": "watch",
@@ -45,11 +45,11 @@
       "price": "+185",
       "book": "BetUS",
       "is_pass": false,
-      "edge": "+2.8%",
-      "away_true": 36,
-      "home_true": 64,
-      "away_fair": "+175",
-      "home_fair": "-175",
+      "edge": "+2.9%",
+      "away_true": 37,
+      "home_true": 63,
+      "away_fair": "+174",
+      "home_fair": "-174",
       "signal": "watch",
       "signal_label": ""
     }
