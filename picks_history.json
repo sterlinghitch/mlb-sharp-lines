@@ -14970,6 +14970,39 @@
       "type": "ml",
       "edge": "+2.6%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-10-03",
+      "date_display": "October 03, 2026",
+      "game": "Los Angeles Dodgers @ Atlanta Braves",
+      "play": "Atlanta Braves Moneyline",
+      "price": "-210",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+2.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-10-03",
+      "date_display": "October 03, 2026",
+      "game": "Tampa Bay Rays @ New York Yankees",
+      "play": "Under 7.0 Runs",
+      "price": "-113",
+      "book": "PointsBet",
+      "type": "total",
+      "edge": "+2.0%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-10-03",
+      "date_display": "October 03, 2026",
+      "game": "Milwaukee Brewers @ San Diego Padres",
+      "play": "Milwaukee Brewers Moneyline",
+      "price": "+185",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+2.4%",
+      "signal": "watch"
     }
   ]
 }
