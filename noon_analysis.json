@@ -41,15 +41,15 @@
       "signal_label": ""
     },
     "Milwaukee Brewers @ San Diego Padres": {
-      "play": "Milwaukee Brewers Moneyline",
-      "price": "+185",
-      "book": "BetUS",
+      "play": "San Diego Padres Moneyline",
+      "price": "-209",
+      "book": "MyBookie.ag",
       "is_pass": false,
-      "edge": "+2.4%",
-      "away_true": 36,
-      "home_true": 64,
-      "away_fair": "+178",
-      "home_fair": "-178",
+      "edge": "+2.3%",
+      "away_true": 33,
+      "home_true": 67,
+      "away_fair": "+203",
+      "home_fair": "-203",
       "signal": "watch",
       "signal_label": ""
     }
