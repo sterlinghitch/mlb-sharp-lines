@@ -15080,6 +15080,50 @@
       "type": "ml",
       "edge": "+1.8%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-10-06",
+      "date_display": "October 06, 2026",
+      "game": "Los Angeles Dodgers @ Atlanta Braves",
+      "play": "Under 6.5 Runs",
+      "price": "-101",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+2.0%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-10-06",
+      "date_display": "October 06, 2026",
+      "game": "Milwaukee Brewers @ San Diego Padres",
+      "play": "Milwaukee Brewers Moneyline",
+      "price": "+120",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+2.8%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-10-06",
+      "date_display": "October 06, 2026",
+      "game": "Cleveland Guardians @ Chicago White Sox",
+      "play": "Cleveland Guardians Moneyline",
+      "price": "+110",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+5.8%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-10-06",
+      "date_display": "October 06, 2026",
+      "game": "Tampa Bay Rays @ New York Yankees",
+      "play": "Tampa Bay Rays Moneyline",
+      "price": "+136",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+1.9%",
+      "signal": "watch"
     }
   ]
 }
