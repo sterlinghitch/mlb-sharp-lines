@@ -2,15 +2,15 @@
   "date": "2026-10-06",
   "games": {
     "Los Angeles Dodgers @ Atlanta Braves": {
-      "play": "Under 6.5 Runs",
-      "price": "-101",
+      "play": "Los Angeles Dodgers Moneyline",
+      "price": "-102",
       "book": "BetUS",
       "is_pass": false,
-      "edge": "+3.6%",
+      "edge": "+3.0%",
       "away_true": 51,
       "home_true": 49,
-      "away_fair": "-104",
-      "home_fair": "+104",
+      "away_fair": "-105",
+      "home_fair": "+105",
       "signal": "fire",
       "signal_label": "SPLIT MARKET"
     },
