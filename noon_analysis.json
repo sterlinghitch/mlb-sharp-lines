@@ -1,32 +1,6 @@
 {
-  "date": "2026-10-05",
+  "date": "2026-10-06",
   "games": {
-    "Cleveland Guardians @ Chicago White Sox": {
-      "play": "Cleveland Guardians Moneyline",
-      "price": "+130",
-      "book": "PointsBet",
-      "is_pass": false,
-      "edge": "+4.5%",
-      "away_true": 46,
-      "home_true": 54,
-      "away_fair": "+117",
-      "home_fair": "-117",
-      "signal": "watch",
-      "signal_label": ""
-    },
-    "Tampa Bay Rays @ New York Yankees": {
-      "play": "New York Yankees Moneyline",
-      "price": "+108",
-      "book": "BetUS",
-      "is_pass": false,
-      "edge": "+2.1%",
-      "away_true": 52,
-      "home_true": 48,
-      "away_fair": "-107",
-      "home_fair": "+107",
-      "signal": "watch",
-      "signal_label": ""
-    },
     "Los Angeles Dodgers @ Atlanta Braves": {
       "play": "Under 6.5 Runs",
       "price": "-101",
@@ -35,21 +9,47 @@
       "edge": "+3.8%",
       "away_true": 51,
       "home_true": 49,
-      "away_fair": "-105",
-      "home_fair": "+105",
+      "away_fair": "-104",
+      "home_fair": "+104",
       "signal": "fire",
       "signal_label": "SPLIT MARKET"
     },
     "Milwaukee Brewers @ San Diego Padres": {
-      "play": "Under 7.0 Runs",
-      "price": "+105",
-      "book": "William Hill",
+      "play": "Milwaukee Brewers Moneyline",
+      "price": "+119",
+      "book": "MyBookie.ag",
       "is_pass": false,
-      "edge": "+2.4%",
+      "edge": "+3.1%",
       "away_true": 47,
       "home_true": 53,
       "away_fair": "+114",
       "home_fair": "-114",
+      "signal": "watch",
+      "signal_label": ""
+    },
+    "Cleveland Guardians @ Chicago White Sox": {
+      "play": "Cleveland Guardians Moneyline",
+      "price": "+110",
+      "book": "BetUS",
+      "is_pass": false,
+      "edge": "+5.3%",
+      "away_true": 51,
+      "home_true": 49,
+      "away_fair": "-102",
+      "home_fair": "+102",
+      "signal": "watch",
+      "signal_label": ""
+    },
+    "Tampa Bay Rays @ New York Yankees": {
+      "play": "Tampa Bay Rays Moneyline",
+      "price": "+136",
+      "book": "PointsBet",
+      "is_pass": false,
+      "edge": "+1.6%",
+      "away_true": 42,
+      "home_true": 58,
+      "away_fair": "+136",
+      "home_fair": "-136",
       "signal": "watch",
       "signal_label": ""
     }
