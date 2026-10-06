@@ -41,15 +41,15 @@
       "signal_label": "SPLIT MARKET"
     },
     "Milwaukee Brewers @ San Diego Padres": {
-      "play": "Milwaukee Brewers Moneyline",
-      "price": "+116",
-      "book": "PointsBet",
+      "play": "Under 7.0 Runs",
+      "price": "+105",
+      "book": "William Hill",
       "is_pass": false,
-      "edge": "+2.3%",
+      "edge": "+2.4%",
       "away_true": 47,
       "home_true": 53,
-      "away_fair": "+113",
-      "home_fair": "-113",
+      "away_fair": "+114",
+      "home_fair": "-114",
       "signal": "watch",
       "signal_label": ""
     }
