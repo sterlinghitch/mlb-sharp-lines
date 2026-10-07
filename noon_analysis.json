@@ -29,14 +29,14 @@
     },
     "Tampa Bay Rays @ New York Yankees": {
       "play": "Tampa Bay Rays Moneyline",
-      "price": "+138",
+      "price": "+140",
       "book": "MyBookie.ag",
       "is_pass": false,
-      "edge": "+2.0%",
+      "edge": "+2.2%",
       "away_true": 42,
       "home_true": 58,
-      "away_fair": "+137",
-      "home_fair": "-137",
+      "away_fair": "+138",
+      "home_fair": "-138",
       "signal": "watch",
       "signal_label": ""
     },
@@ -45,11 +45,11 @@
       "price": "-104",
       "book": "PointsBet",
       "is_pass": false,
-      "edge": "+1.9%",
+      "edge": "+1.7%",
       "away_true": 51,
       "home_true": 49,
-      "away_fair": "-103",
-      "home_fair": "+103",
+      "away_fair": "-102",
+      "home_fair": "+102",
       "signal": "fire",
       "signal_label": "SPLIT MARKET"
     }
