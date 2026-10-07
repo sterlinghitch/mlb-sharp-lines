@@ -15124,6 +15124,39 @@
       "type": "ml",
       "edge": "+1.9%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-10-07",
+      "date_display": "October 07, 2026",
+      "game": "Milwaukee Brewers @ San Diego Padres",
+      "play": "Milwaukee Brewers Moneyline",
+      "price": "-106",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+1.8%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-10-07",
+      "date_display": "October 07, 2026",
+      "game": "Los Angeles Dodgers @ Atlanta Braves",
+      "play": "Atlanta Braves Moneyline",
+      "price": "+129",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+2.5%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-10-07",
+      "date_display": "October 07, 2026",
+      "game": "Tampa Bay Rays @ New York Yankees",
+      "play": "Over 7.0 Runs",
+      "price": "-117",
+      "book": "MyBookie.ag",
+      "type": "total",
+      "edge": "+2.7%",
+      "signal": "watch"
     }
   ]
 }
