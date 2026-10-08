@@ -3,14 +3,14 @@
   "games": {
     "Cleveland Guardians @ Chicago White Sox": {
       "play": "Cleveland Guardians Moneyline",
-      "price": "-117",
+      "price": "-114",
       "book": "MyBookie.ag",
       "is_pass": false,
-      "edge": "+2.8%",
+      "edge": "+3.0%",
       "away_true": 54,
       "home_true": 46,
-      "away_fair": "-119",
-      "home_fair": "+119",
+      "away_fair": "-117",
+      "home_fair": "+117",
       "signal": "fire",
       "signal_label": "SPLIT MARKET"
     }
