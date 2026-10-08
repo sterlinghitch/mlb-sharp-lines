@@ -15157,6 +15157,17 @@
       "type": "total",
       "edge": "+2.7%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-10-08",
+      "date_display": "October 08, 2026",
+      "game": "Cleveland Guardians @ Chicago White Sox",
+      "play": "Cleveland Guardians Moneyline",
+      "price": "-112",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+3.7%",
+      "signal": "fire"
     }
   ]
 }
