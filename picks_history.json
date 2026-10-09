@@ -15168,6 +15168,17 @@
       "type": "ml",
       "edge": "+3.7%",
       "signal": "fire"
+    },
+    {
+      "date": "2026-10-09",
+      "date_display": "October 09, 2026",
+      "game": "Cleveland Guardians @ Chicago White Sox",
+      "play": "Cleveland Guardians Moneyline",
+      "price": "+119",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+4.5%",
+      "signal": "watch"
     }
   ]
 }
