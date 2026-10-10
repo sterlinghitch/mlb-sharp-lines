@@ -1,24 +1,66 @@
 {
-  "timestamp": "2026-10-08T23:01:13.461326-04:00",
-  "time_display": "11:01 PM ET",
+  "timestamp": "2026-10-09T22:33:53.402295-04:00",
+  "time_display": "10:33 PM ET",
   "type": "closing",
   "games": {
-    "Cleveland Guardians @ Chicago White Sox": {
-      "away": "Cleveland Guardians",
-      "home": "Chicago White Sox",
-      "commence_time": "2026-10-09T00:08:44Z",
+    "Chicago White Sox @ Cleveland Guardians": {
+      "away": "Chicago White Sox",
+      "home": "Cleveland Guardians",
+      "commence_time": "2026-10-11T00:01:00Z",
       "books": {
+        "FanDuel": {
+          "away_price": 118,
+          "home_price": -138,
+          "total_line": 7.5,
+          "over_price": 110
+        },
+        "DraftKings": {
+          "away_price": 114,
+          "home_price": -137,
+          "total_line": 7.0,
+          "over_price": -120
+        },
         "MyBookie.ag": {
-          "away_price": -10000,
-          "home_price": 1400,
-          "total_line": 14.5,
-          "over_price": -133
+          "away_price": 116,
+          "home_price": -137,
+          "total_line": 7.0,
+          "over_price": -119
+        },
+        "BetOnline.ag": {
+          "away_price": 121,
+          "home_price": -133,
+          "total_line": 7.0,
+          "over_price": -120
+        },
+        "LowVig.ag": {
+          "away_price": 121,
+          "home_price": -133,
+          "total_line": 7.0,
+          "over_price": -118
+        },
+        "Bovada": {
+          "away_price": 113,
+          "home_price": -135,
+          "total_line": 7.0,
+          "over_price": -120
+        },
+        "BetRivers": {
+          "away_price": 117,
+          "home_price": -139,
+          "total_line": 7.0,
+          "over_price": -113
+        },
+        "BetUS": {
+          "away_price": 121,
+          "home_price": -133,
+          "total_line": 7.0,
+          "over_price": -120
         },
         "BetMGM": {
-          "away_price": -10000,
-          "home_price": 3300,
-          "total_line": 14.5,
-          "over_price": 100
+          "away_price": 115,
+          "home_price": -135,
+          "total_line": 7.0,
+          "over_price": -120
         }
       }
     },
@@ -28,28 +70,28 @@
       "commence_time": "2026-10-12T00:00:00Z",
       "books": {
         "FanDuel": {
-          "away_price": -102,
-          "home_price": -116,
+          "away_price": -104,
+          "home_price": -112,
           "total_line": 6.5,
-          "over_price": 104
+          "over_price": 106
         },
         "BetMGM": {
-          "away_price": -110,
-          "home_price": -110,
+          "away_price": -105,
+          "home_price": -115,
           "total_line": 6.0,
-          "over_price": -118
+          "over_price": -110
         },
         "DraftKings": {
           "away_price": -107,
           "home_price": -113,
           "total_line": 6.0,
-          "over_price": -117
+          "over_price": -112
         },
         "MyBookie.ag": {
-          "away_price": -107,
-          "home_price": -115,
+          "away_price": -108,
+          "home_price": -113,
           "total_line": 6.0,
-          "over_price": -117
+          "over_price": -111
         },
         "Bovada": {
           "away_price": -108,
@@ -70,16 +112,16 @@
           "over_price": -106
         },
         "BetUS": {
-          "away_price": 100,
-          "home_price": -110,
+          "away_price": -103,
+          "home_price": -107,
           "total_line": 6.0,
           "over_price": -110
         },
         "BetRivers": {
-          "away_price": -105,
-          "home_price": -114,
+          "away_price": -114,
+          "home_price": -105,
           "total_line": 6.0,
-          "over_price": -124
+          "over_price": -103
         }
       }
     }
