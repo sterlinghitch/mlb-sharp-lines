@@ -15179,6 +15179,28 @@
       "type": "ml",
       "edge": "+4.5%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-10-10",
+      "date_display": "October 10, 2026",
+      "game": "Cleveland Guardians @ Chicago White Sox",
+      "play": "Cleveland Guardians Moneyline",
+      "price": "+120",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+4.4%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-10-10",
+      "date_display": "October 10, 2026",
+      "game": "Los Angeles Dodgers @ Milwaukee Brewers",
+      "play": "Under 6.0 Runs",
+      "price": "-103",
+      "book": "PointsBet",
+      "type": "total",
+      "edge": "+1.2%",
+      "signal": "fire"
     }
   ]
 }

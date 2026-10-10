@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-09",
-  "date_display": "October 09, 2026",
+  "date": "2026-10-10",
+  "date_display": "October 10, 2026",
   "bets": [
     {
       "game": "Cleveland Guardians @ Chicago White Sox",
@@ -9,14 +9,30 @@
       "away_id": 114,
       "home_id": 145,
       "play": "Cleveland Guardians Moneyline",
-      "price": "+119",
-      "book": "BetUS",
+      "price": "+120",
+      "book": "PointsBet",
       "type": "ml",
       "pick_team": "Cleveland Guardians",
       "side": null,
       "total_line": null,
-      "edge": "+4.5%",
+      "edge": "+4.4%",
       "signal": "watch"
+    },
+    {
+      "game": "Los Angeles Dodgers @ Milwaukee Brewers",
+      "away": "Los Angeles Dodgers",
+      "home": "Milwaukee Brewers",
+      "away_id": 119,
+      "home_id": 158,
+      "play": "Under 6.0 Runs",
+      "price": "-103",
+      "book": "PointsBet",
+      "type": "total",
+      "pick_team": null,
+      "side": "Under",
+      "total_line": 6.0,
+      "edge": "+1.2%",
+      "signal": "fire"
     }
   ]
 }
