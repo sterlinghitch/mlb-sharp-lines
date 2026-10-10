@@ -6,7 +6,7 @@
       "price": "+119",
       "book": "BetUS",
       "is_pass": false,
-      "edge": "+4.4%",
+      "edge": "+4.5%",
       "away_true": 48,
       "home_true": 52,
       "away_fair": "+107",
@@ -15,15 +15,15 @@
       "signal_label": ""
     },
     "Los Angeles Dodgers @ Milwaukee Brewers": {
-      "play": "Milwaukee Brewers Moneyline",
-      "price": "-105",
+      "play": "Under 6.0 Runs",
+      "price": "-106",
       "book": "PointsBet",
       "is_pass": false,
-      "edge": "+1.4%",
-      "away_true": 50,
-      "home_true": 50,
-      "away_fair": "+102",
-      "home_fair": "-102",
+      "edge": "+1.0%",
+      "away_true": 49,
+      "home_true": 51,
+      "away_fair": "+103",
+      "home_fair": "-103",
       "signal": "fire",
       "signal_label": "SPLIT MARKET"
     }
