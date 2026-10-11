@@ -1,31 +1,31 @@
 {
-  "date": "2026-10-10",
+  "date": "2026-10-11",
   "games": {
-    "Cleveland Guardians @ Chicago White Sox": {
-      "play": "Over 7.5 Runs",
-      "price": "+108",
-      "book": "PointsBet",
-      "is_pass": false,
-      "edge": "+3.0%",
-      "away_true": 46,
-      "home_true": 54,
-      "away_fair": "+118",
-      "home_fair": "-118",
-      "signal": "watch",
-      "signal_label": ""
-    },
     "Los Angeles Dodgers @ Milwaukee Brewers": {
-      "play": "Milwaukee Brewers Moneyline",
-      "price": "-106",
-      "book": "PointsBet",
+      "play": "Under 6.5 Runs",
+      "price": "-114",
+      "book": "BetUS",
       "is_pass": false,
-      "edge": "+1.2%",
-      "away_true": 50,
-      "home_true": 50,
-      "away_fair": "+102",
-      "home_fair": "-102",
+      "edge": "+2.8%",
+      "away_true": 49,
+      "home_true": 51,
+      "away_fair": "+103",
+      "home_fair": "-103",
       "signal": "fire",
       "signal_label": "SPLIT MARKET"
+    },
+    "Cleveland Guardians @ Tampa Bay Rays": {
+      "play": "Cleveland Guardians Moneyline",
+      "price": "+139",
+      "book": "BetUS",
+      "is_pass": false,
+      "edge": "+1.1%",
+      "away_true": 41,
+      "home_true": 59,
+      "away_fair": "+142",
+      "home_fair": "-142",
+      "signal": "watch",
+      "signal_label": ""
     }
   }
 }
