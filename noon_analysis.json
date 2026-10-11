@@ -6,7 +6,7 @@
       "price": "-106",
       "book": "PointsBet",
       "is_pass": false,
-      "edge": "+1.1%",
+      "edge": "+0.9%",
       "away_true": 50,
       "home_true": 50,
       "away_fair": "+101",
@@ -19,11 +19,11 @@
       "price": "+144",
       "book": "MyBookie.ag",
       "is_pass": false,
-      "edge": "+1.8%",
+      "edge": "+1.5%",
       "away_true": 41,
       "home_true": 59,
-      "away_fair": "+144",
-      "home_fair": "-144",
+      "away_fair": "+145",
+      "home_fair": "-145",
       "signal": "watch",
       "signal_label": ""
     }
