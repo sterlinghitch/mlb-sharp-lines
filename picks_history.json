@@ -15201,6 +15201,28 @@
       "type": "total",
       "edge": "+1.2%",
       "signal": "fire"
+    },
+    {
+      "date": "2026-10-11",
+      "date_display": "October 11, 2026",
+      "game": "Los Angeles Dodgers @ Milwaukee Brewers",
+      "play": "Under 6.0 Runs",
+      "price": "-107",
+      "book": "MyBookie.ag",
+      "type": "total",
+      "edge": "+1.0%",
+      "signal": "fire"
+    },
+    {
+      "date": "2026-10-11",
+      "date_display": "October 11, 2026",
+      "game": "Cleveland Guardians @ Tampa Bay Rays",
+      "play": "Cleveland Guardians Moneyline",
+      "price": "+144",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "edge": "+1.6%",
+      "signal": "watch"
     }
   ]
 }

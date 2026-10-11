@@ -1,23 +1,7 @@
 {
-  "date": "2026-10-10",
-  "date_display": "October 10, 2026",
+  "date": "2026-10-11",
+  "date_display": "October 11, 2026",
   "bets": [
-    {
-      "game": "Cleveland Guardians @ Chicago White Sox",
-      "away": "Cleveland Guardians",
-      "home": "Chicago White Sox",
-      "away_id": 114,
-      "home_id": 145,
-      "play": "Cleveland Guardians Moneyline",
-      "price": "+120",
-      "book": "PointsBet",
-      "type": "ml",
-      "pick_team": "Cleveland Guardians",
-      "side": null,
-      "total_line": null,
-      "edge": "+4.4%",
-      "signal": "watch"
-    },
     {
       "game": "Los Angeles Dodgers @ Milwaukee Brewers",
       "away": "Los Angeles Dodgers",
@@ -25,14 +9,30 @@
       "away_id": 119,
       "home_id": 158,
       "play": "Under 6.0 Runs",
-      "price": "-103",
-      "book": "PointsBet",
+      "price": "-107",
+      "book": "MyBookie.ag",
       "type": "total",
       "pick_team": null,
       "side": "Under",
       "total_line": 6.0,
-      "edge": "+1.2%",
+      "edge": "+1.0%",
       "signal": "fire"
+    },
+    {
+      "game": "Cleveland Guardians @ Tampa Bay Rays",
+      "away": "Cleveland Guardians",
+      "home": "Tampa Bay Rays",
+      "away_id": 114,
+      "home_id": 139,
+      "play": "Cleveland Guardians Moneyline",
+      "price": "+144",
+      "book": "MyBookie.ag",
+      "type": "ml",
+      "pick_team": "Cleveland Guardians",
+      "side": null,
+      "total_line": null,
+      "edge": "+1.6%",
+      "signal": "watch"
     }
   ]
 }
