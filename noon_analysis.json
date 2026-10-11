@@ -19,11 +19,11 @@
       "price": "-106",
       "book": "PointsBet",
       "is_pass": false,
-      "edge": "+1.1%",
+      "edge": "+1.2%",
       "away_true": 50,
       "home_true": 50,
-      "away_fair": "+101",
-      "home_fair": "-101",
+      "away_fair": "+102",
+      "home_fair": "-102",
       "signal": "fire",
       "signal_label": "SPLIT MARKET"
     }
