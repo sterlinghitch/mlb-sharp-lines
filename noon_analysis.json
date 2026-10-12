@@ -1,29 +1,29 @@
 {
-  "date": "2026-10-11",
+  "date": "2026-10-12",
   "games": {
     "Los Angeles Dodgers @ Milwaukee Brewers": {
-      "play": "Under 6.0 Runs",
-      "price": "-107",
-      "book": "MyBookie.ag",
+      "play": "Under 7.0 Runs",
+      "price": "-113",
+      "book": "BetUS",
       "is_pass": false,
-      "edge": "+0.9%",
-      "away_true": 51,
-      "home_true": 49,
-      "away_fair": "-103",
-      "home_fair": "+103",
-      "signal": "fire",
-      "signal_label": "SPLIT MARKET"
+      "edge": "+1.5%",
+      "away_true": 54,
+      "home_true": 46,
+      "away_fair": "-119",
+      "home_fair": "+119",
+      "signal": "watch",
+      "signal_label": ""
     },
     "Cleveland Guardians @ Tampa Bay Rays": {
       "play": "Cleveland Guardians Moneyline",
-      "price": "+141",
-      "book": "MyBookie.ag",
+      "price": "+143",
+      "book": "PointsBet",
       "is_pass": false,
       "edge": "+1.6%",
       "away_true": 41,
       "home_true": 59,
-      "away_fair": "+142",
-      "home_fair": "-142",
+      "away_fair": "+145",
+      "home_fair": "-145",
       "signal": "watch",
       "signal_label": ""
     }
