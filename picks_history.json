@@ -15223,6 +15223,17 @@
       "type": "ml",
       "edge": "+1.6%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-10-12",
+      "date_display": "October 12, 2026",
+      "game": "Cleveland Guardians @ Tampa Bay Rays",
+      "play": "Cleveland Guardians Moneyline",
+      "price": "+140",
+      "book": "DraftKings",
+      "type": "ml",
+      "edge": "+4.2%",
+      "signal": "watch"
     }
   ]
 }

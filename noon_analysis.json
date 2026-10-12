@@ -16,14 +16,14 @@
     },
     "Cleveland Guardians @ Tampa Bay Rays": {
       "play": "Cleveland Guardians Moneyline",
-      "price": "+143",
-      "book": "MyBookie.ag",
+      "price": "+140",
+      "book": "DraftKings",
       "is_pass": false,
-      "edge": "+1.6%",
-      "away_true": 41,
-      "home_true": 59,
-      "away_fair": "+144",
-      "home_fair": "-144",
+      "edge": "+4.2%",
+      "away_true": 44,
+      "home_true": 56,
+      "away_fair": "+127",
+      "home_fair": "-127",
       "signal": "watch",
       "signal_label": ""
     }
