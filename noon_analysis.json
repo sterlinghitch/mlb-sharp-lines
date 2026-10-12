@@ -19,11 +19,11 @@
       "price": "+141",
       "book": "MyBookie.ag",
       "is_pass": false,
-      "edge": "+1.5%",
+      "edge": "+1.6%",
       "away_true": 41,
       "home_true": 59,
-      "away_fair": "+143",
-      "home_fair": "-143",
+      "away_fair": "+142",
+      "home_fair": "-142",
       "signal": "watch",
       "signal_label": ""
     }
