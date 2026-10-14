@@ -1,66 +1,48 @@
 {
-  "timestamp": "2026-10-12T23:44:15.366408-04:00",
-  "time_display": "11:44 PM ET",
+  "timestamp": "2026-10-13T22:03:51.385851-04:00",
+  "time_display": "10:03 PM ET",
   "type": "closing",
   "games": {
     "Cleveland Guardians @ Tampa Bay Rays": {
       "away": "Cleveland Guardians",
       "home": "Tampa Bay Rays",
-      "commence_time": "2026-10-14T00:00:00Z",
+      "commence_time": "2026-10-14T00:05:00Z",
       "books": {
         "FanDuel": {
-          "away_price": 108,
-          "home_price": -126,
-          "total_line": 6.5,
-          "over_price": -115
+          "away_price": 870,
+          "home_price": -2500,
+          "total_line": 4.5,
+          "over_price": 104
         },
         "DraftKings": {
-          "away_price": 114,
-          "home_price": -137,
-          "total_line": 7.0,
-          "over_price": -102
+          "away_price": 900,
+          "home_price": -2700,
+          "total_line": 4.5,
+          "over_price": 102
         },
         "BetMGM": {
-          "away_price": 110,
-          "home_price": -135,
-          "total_line": 6.5,
-          "over_price": -120
+          "away_price": 875,
+          "home_price": -2000,
+          "total_line": 4.5,
+          "over_price": -135
         },
         "Bovada": {
-          "away_price": 107,
-          "home_price": -128,
-          "total_line": 6.5,
-          "over_price": -115
+          "away_price": 800,
+          "home_price": -1800,
+          "total_line": 4.5,
+          "over_price": -105
         },
         "MyBookie.ag": {
-          "away_price": 112,
-          "home_price": -131,
-          "total_line": 7.0,
-          "over_price": -102
-        },
-        "LowVig.ag": {
-          "away_price": 120,
-          "home_price": -132,
-          "total_line": 7.0,
-          "over_price": -102
-        },
-        "BetOnline.ag": {
-          "away_price": 120,
-          "home_price": -132,
-          "total_line": 7.0,
-          "over_price": -105
+          "away_price": 1000,
+          "home_price": -3333,
+          "total_line": 4.5,
+          "over_price": -143
         },
         "BetRivers": {
-          "away_price": 110,
-          "home_price": -130,
-          "total_line": 6.5,
-          "over_price": -120
-        },
-        "BetUS": {
-          "away_price": 120,
-          "home_price": -132,
-          "total_line": 7.0,
-          "over_price": -105
+          "away_price": 1000,
+          "home_price": -10000,
+          "total_line": 4.5,
+          "over_price": -114
         }
       }
     },
@@ -73,25 +55,25 @@
           "away_price": 150,
           "home_price": -178,
           "total_line": 7.5,
-          "over_price": 100
+          "over_price": -104
         },
         "DraftKings": {
-          "away_price": 144,
-          "home_price": -175,
+          "away_price": 148,
+          "home_price": -180,
           "total_line": 7.5,
-          "over_price": -108
+          "over_price": -106
         },
         "BetMGM": {
-          "away_price": 145,
-          "home_price": -175,
+          "away_price": 150,
+          "home_price": -185,
           "total_line": 7.5,
           "over_price": -105
         },
         "MyBookie.ag": {
-          "away_price": 143,
-          "home_price": -177,
+          "away_price": 151,
+          "home_price": -179,
           "total_line": 7.5,
-          "over_price": -108
+          "over_price": -106
         },
         "BetOnline.ag": {
           "away_price": 154,
@@ -106,8 +88,8 @@
           "over_price": -107
         },
         "Bovada": {
-          "away_price": 145,
-          "home_price": -177,
+          "away_price": 146,
+          "home_price": -178,
           "total_line": 7.5,
           "over_price": -105
         },
@@ -118,10 +100,10 @@
           "over_price": -105
         },
         "BetRivers": {
-          "away_price": 155,
-          "home_price": -190,
+          "away_price": 150,
+          "home_price": -182,
           "total_line": 7.5,
-          "over_price": -108
+          "over_price": -105
         }
       }
     }
