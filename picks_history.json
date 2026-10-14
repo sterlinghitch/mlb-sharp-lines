@@ -15256,6 +15256,28 @@
       "type": "total",
       "edge": "+1.7%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-10-14",
+      "date_display": "October 14, 2026",
+      "game": "Los Angeles Dodgers @ Milwaukee Brewers",
+      "play": "Over 7.5 Runs",
+      "price": "+105",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+0.8%",
+      "signal": "watch"
+    },
+    {
+      "date": "2026-10-14",
+      "date_display": "October 14, 2026",
+      "game": "Cleveland Guardians @ Tampa Bay Rays",
+      "play": "Cleveland Guardians Moneyline",
+      "price": "+113",
+      "book": "79",
+      "type": "ml",
+      "edge": "+1.2%",
+      "signal": "watch"
     }
   ]
 }

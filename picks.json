@@ -1,23 +1,7 @@
 {
-  "date": "2026-10-13",
-  "date_display": "October 13, 2026",
+  "date": "2026-10-14",
+  "date_display": "October 14, 2026",
   "bets": [
-    {
-      "game": "Cleveland Guardians @ Tampa Bay Rays",
-      "away": "Cleveland Guardians",
-      "home": "Tampa Bay Rays",
-      "away_id": 114,
-      "home_id": 139,
-      "play": "Cleveland Guardians Moneyline",
-      "price": "+115",
-      "book": "William Hill",
-      "type": "ml",
-      "pick_team": "Cleveland Guardians",
-      "side": null,
-      "total_line": null,
-      "edge": "+2.0%",
-      "signal": "watch"
-    },
     {
       "game": "Los Angeles Dodgers @ Milwaukee Brewers",
       "away": "Los Angeles Dodgers",
@@ -31,7 +15,23 @@
       "pick_team": null,
       "side": "Over",
       "total_line": 7.5,
-      "edge": "+1.7%",
+      "edge": "+0.8%",
+      "signal": "watch"
+    },
+    {
+      "game": "Cleveland Guardians @ Tampa Bay Rays",
+      "away": "Cleveland Guardians",
+      "home": "Tampa Bay Rays",
+      "away_id": 114,
+      "home_id": 139,
+      "play": "Cleveland Guardians Moneyline",
+      "price": "+113",
+      "book": "79",
+      "type": "ml",
+      "pick_team": "Cleveland Guardians",
+      "side": null,
+      "total_line": null,
+      "edge": "+1.2%",
       "signal": "watch"
     }
   ]
