@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-14",
-  "date_display": "October 14, 2026",
+  "date": "2026-10-15",
+  "date_display": "October 15, 2026",
   "bets": [
     {
       "game": "Los Angeles Dodgers @ Milwaukee Brewers",
@@ -9,29 +9,13 @@
       "away_id": 119,
       "home_id": 158,
       "play": "Over 7.5 Runs",
-      "price": "+105",
+      "price": "-107",
       "book": "BetUS",
       "type": "total",
       "pick_team": null,
       "side": "Over",
       "total_line": 7.5,
-      "edge": "+0.8%",
-      "signal": "watch"
-    },
-    {
-      "game": "Cleveland Guardians @ Tampa Bay Rays",
-      "away": "Cleveland Guardians",
-      "home": "Tampa Bay Rays",
-      "away_id": 114,
-      "home_id": 139,
-      "play": "Cleveland Guardians Moneyline",
-      "price": "+113",
-      "book": "79",
-      "type": "ml",
-      "pick_team": "Cleveland Guardians",
-      "side": null,
-      "total_line": null,
-      "edge": "+1.2%",
+      "edge": "+2.3%",
       "signal": "watch"
     }
   ]

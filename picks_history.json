@@ -15278,6 +15278,17 @@
       "type": "ml",
       "edge": "+1.2%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-10-15",
+      "date_display": "October 15, 2026",
+      "game": "Los Angeles Dodgers @ Milwaukee Brewers",
+      "play": "Over 7.5 Runs",
+      "price": "-107",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+2.3%",
+      "signal": "watch"
     }
   ]
 }
