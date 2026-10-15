@@ -15,15 +15,15 @@
       "signal_label": ""
     },
     "Los Angeles Dodgers @ Milwaukee Brewers": {
-      "play": "Over 7.5 Runs",
-      "price": "-107",
+      "play": "Los Angeles Dodgers Moneyline",
+      "price": "+144",
       "book": "BetUS",
       "is_pass": false,
-      "edge": "+2.3%",
-      "away_true": 41,
-      "home_true": 59,
-      "away_fair": "+142",
-      "home_fair": "-142",
+      "edge": "+6.5%",
+      "away_true": 46,
+      "home_true": 54,
+      "away_fair": "+119",
+      "home_fair": "-119",
       "signal": "watch",
       "signal_label": ""
     }
