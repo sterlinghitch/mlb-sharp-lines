@@ -2,15 +2,15 @@
   "date": "2026-10-16",
   "games": {
     "Cleveland Guardians @ Tampa Bay Rays": {
-      "play": "Cleveland Guardians Moneyline",
-      "price": "-108",
+      "play": "Under 6.5 Runs",
+      "price": "-105",
       "book": "PointsBet",
       "is_pass": false,
-      "edge": "+1.2%",
+      "edge": "+1.3%",
       "away_true": 51,
       "home_true": 49,
-      "away_fair": "-105",
-      "home_fair": "+105",
+      "away_fair": "-103",
+      "home_fair": "+103",
       "signal": "fire",
       "signal_label": "SPLIT MARKET"
     }
