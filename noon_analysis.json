@@ -1,31 +1,18 @@
 {
-  "date": "2026-10-15",
+  "date": "2026-10-16",
   "games": {
     "Cleveland Guardians @ Tampa Bay Rays": {
       "play": "Cleveland Guardians Moneyline",
-      "price": "+115",
-      "book": "William Hill",
+      "price": "-108",
+      "book": "PointsBet",
       "is_pass": false,
-      "edge": "+1.5%",
-      "away_true": 46,
-      "home_true": 54,
-      "away_fair": "+116",
-      "home_fair": "-116",
-      "signal": "watch",
-      "signal_label": ""
-    },
-    "Los Angeles Dodgers @ Milwaukee Brewers": {
-      "play": "Los Angeles Dodgers Moneyline",
-      "price": "+144",
-      "book": "BetUS",
-      "is_pass": false,
-      "edge": "+6.5%",
-      "away_true": 46,
-      "home_true": 54,
-      "away_fair": "+119",
-      "home_fair": "-119",
-      "signal": "watch",
-      "signal_label": ""
+      "edge": "+1.6%",
+      "away_true": 51,
+      "home_true": 49,
+      "away_fair": "-105",
+      "home_fair": "+105",
+      "signal": "fire",
+      "signal_label": "SPLIT MARKET"
     }
   }
 }
