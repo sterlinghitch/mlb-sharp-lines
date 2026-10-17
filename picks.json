@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-16",
-  "date_display": "October 16, 2026",
+  "date": "2026-10-17",
+  "date_display": "October 17, 2026",
   "bets": [
     {
       "game": "Cleveland Guardians @ Tampa Bay Rays",
@@ -8,14 +8,14 @@
       "home": "Tampa Bay Rays",
       "away_id": 114,
       "home_id": 139,
-      "play": "Cleveland Guardians Moneyline",
-      "price": "-108",
-      "book": "PointsBet",
-      "type": "ml",
-      "pick_team": "Cleveland Guardians",
-      "side": null,
-      "total_line": null,
-      "edge": "+1.2%",
+      "play": "Over 6.5 Runs",
+      "price": "-105",
+      "book": "BetUS",
+      "type": "total",
+      "pick_team": null,
+      "side": "Over",
+      "total_line": 6.5,
+      "edge": "+2.2%",
       "signal": "fire"
     }
   ]

@@ -2,11 +2,11 @@
   "date": "2026-10-17",
   "games": {
     "Cleveland Guardians @ Tampa Bay Rays": {
-      "play": "Under 6.5 Runs",
-      "price": "+102",
-      "book": "PointsBet",
+      "play": "Over 6.5 Runs",
+      "price": "-105",
+      "book": "BetUS",
       "is_pass": false,
-      "edge": "+3.1%",
+      "edge": "+2.2%",
       "away_true": 52,
       "home_true": 48,
       "away_fair": "-110",
