@@ -6,11 +6,11 @@
       "price": "-105",
       "book": "BetUS",
       "is_pass": false,
-      "edge": "+2.2%",
-      "away_true": 53,
-      "home_true": 47,
-      "away_fair": "-111",
-      "home_fair": "+111",
+      "edge": "+1.8%",
+      "away_true": 52,
+      "home_true": 48,
+      "away_fair": "-110",
+      "home_fair": "+110",
       "signal": "fire",
       "signal_label": "SPLIT MARKET"
     }
