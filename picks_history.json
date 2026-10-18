@@ -15311,6 +15311,17 @@
       "type": "total",
       "edge": "+2.2%",
       "signal": "fire"
+    },
+    {
+      "date": "2026-10-18",
+      "date_display": "October 18, 2026",
+      "game": "Cleveland Guardians @ Tampa Bay Rays",
+      "play": "Tampa Bay Rays Moneyline",
+      "price": "+112",
+      "book": "PointsBet",
+      "type": "ml",
+      "edge": "+3.4%",
+      "signal": "watch"
     }
   ]
 }
