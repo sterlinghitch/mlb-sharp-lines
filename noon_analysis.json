@@ -2,9 +2,9 @@
   "date": "2026-10-19",
   "games": {
     "Cleveland Guardians @ Tampa Bay Rays": {
-      "play": "Over 6.5 Runs",
-      "price": "-110",
-      "book": "BetUS",
+      "play": "Under 7.0 Runs",
+      "price": "-105",
+      "book": "DraftKings",
       "is_pass": false,
       "edge": "+3.0%",
       "away_true": 42,
