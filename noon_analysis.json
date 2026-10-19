@@ -1,16 +1,16 @@
 {
-  "date": "2026-10-18",
+  "date": "2026-10-19",
   "games": {
     "Cleveland Guardians @ Tampa Bay Rays": {
-      "play": "Tampa Bay Rays Moneyline",
-      "price": "+112",
-      "book": "PointsBet",
+      "play": "Cleveland Guardians Moneyline",
+      "price": "+123",
+      "book": "MyBookie.ag",
       "is_pass": false,
-      "edge": "+3.4%",
-      "away_true": 51,
-      "home_true": 49,
-      "away_fair": "-105",
-      "home_fair": "+105",
+      "edge": "+1.6%",
+      "away_true": 45,
+      "home_true": 55,
+      "away_fair": "+125",
+      "home_fair": "-125",
       "signal": "watch",
       "signal_label": ""
     }
