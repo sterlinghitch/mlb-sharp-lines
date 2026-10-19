@@ -6,11 +6,11 @@
       "price": "+128",
       "book": "PointsBet",
       "is_pass": false,
-      "edge": "+1.9%",
+      "edge": "+1.5%",
       "away_true": 44,
       "home_true": 56,
-      "away_fair": "+128",
-      "home_fair": "-128",
+      "away_fair": "+129",
+      "home_fair": "-129",
       "signal": "watch",
       "signal_label": ""
     }
