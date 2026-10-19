@@ -15322,6 +15322,17 @@
       "type": "ml",
       "edge": "+3.4%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-10-19",
+      "date_display": "October 19, 2026",
+      "game": "Cleveland Guardians @ Tampa Bay Rays",
+      "play": "Over 6.5 Runs",
+      "price": "-110",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+3.0%",
+      "signal": "watch"
     }
   ]
 }
