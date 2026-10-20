@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-10-18T21:30:45.291643-04:00",
-  "time_display": "09:30 PM ET",
+  "timestamp": "2026-10-19T21:59:22.915497-04:00",
+  "time_display": "09:59 PM ET",
   "type": "closing",
   "games": {
     "Cleveland Guardians @ Tampa Bay Rays": {
@@ -9,46 +9,40 @@
       "commence_time": "2026-10-20T00:10:00Z",
       "books": {
         "FanDuel": {
-          "away_price": 118,
-          "home_price": -138,
+          "away_price": 420,
+          "home_price": -650,
           "total_line": 6.5,
-          "over_price": -110
+          "over_price": -108
         },
         "BetRivers": {
-          "away_price": 118,
-          "home_price": -141,
+          "away_price": 430,
+          "home_price": -910,
           "total_line": 6.5,
-          "over_price": -113
+          "over_price": -122
         },
         "MyBookie.ag": {
-          "away_price": 117,
-          "home_price": -138,
+          "away_price": 450,
+          "home_price": -714,
           "total_line": 6.5,
-          "over_price": -112
+          "over_price": -133
         },
         "BetMGM": {
-          "away_price": 118,
-          "home_price": -145,
+          "away_price": 425,
+          "home_price": -625,
           "total_line": 6.5,
-          "over_price": -110
+          "over_price": -120
         },
         "Bovada": {
-          "away_price": 121,
-          "home_price": -144,
+          "away_price": 375,
+          "home_price": -600,
           "total_line": 6.5,
-          "over_price": -110
+          "over_price": -125
         },
         "DraftKings": {
-          "away_price": 116,
-          "home_price": -140,
+          "away_price": 430,
+          "home_price": -700,
           "total_line": 6.5,
-          "over_price": -114
-        },
-        "BetUS": {
-          "away_price": 123,
-          "home_price": -136,
-          "total_line": 6.5,
-          "over_price": -110
+          "over_price": -125
         }
       }
     }
