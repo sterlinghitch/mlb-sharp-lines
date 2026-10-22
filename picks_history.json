@@ -15333,6 +15333,17 @@
       "type": "total",
       "edge": "+3.0%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-10-22",
+      "date_display": "October 22, 2026",
+      "game": "Milwaukee Brewers @ Tampa Bay Rays",
+      "play": "Over 6.5 Runs",
+      "price": "+106",
+      "book": "PointsBet",
+      "type": "total",
+      "edge": "+1.9%",
+      "signal": "watch"
     }
   ]
 }
