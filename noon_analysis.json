@@ -1,16 +1,16 @@
 {
-  "date": "2026-10-19",
+  "date": "2026-10-22",
   "games": {
-    "Cleveland Guardians @ Tampa Bay Rays": {
-      "play": "Under 7.0 Runs",
-      "price": "-105",
-      "book": "DraftKings",
+    "Milwaukee Brewers @ Tampa Bay Rays": {
+      "play": "Under 6.5 Runs",
+      "price": "-117",
+      "book": "BetUS",
       "is_pass": false,
-      "edge": "+3.0%",
-      "away_true": 42,
-      "home_true": 58,
-      "away_fair": "+138",
-      "home_fair": "-138",
+      "edge": "+2.1%",
+      "away_true": 41,
+      "home_true": 59,
+      "away_fair": "+145",
+      "home_fair": "-145",
       "signal": "watch",
       "signal_label": ""
     }
