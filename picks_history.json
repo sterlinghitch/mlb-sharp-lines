@@ -15344,6 +15344,17 @@
       "type": "total",
       "edge": "+1.9%",
       "signal": "watch"
+    },
+    {
+      "date": "2026-10-23",
+      "date_display": "October 23, 2026",
+      "game": "Milwaukee Brewers @ Tampa Bay Rays",
+      "play": "Tampa Bay Rays Moneyline",
+      "price": "-159",
+      "book": "BetUS",
+      "type": "ml",
+      "edge": "+3.3%",
+      "signal": "watch"
     }
   ]
 }

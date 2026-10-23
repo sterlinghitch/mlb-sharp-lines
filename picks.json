@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-22",
-  "date_display": "October 22, 2026",
+  "date": "2026-10-23",
+  "date_display": "October 23, 2026",
   "bets": [
     {
       "game": "Milwaukee Brewers @ Tampa Bay Rays",
@@ -8,14 +8,14 @@
       "home": "Tampa Bay Rays",
       "away_id": 158,
       "home_id": 139,
-      "play": "Over 6.5 Runs",
-      "price": "+106",
-      "book": "PointsBet",
-      "type": "total",
-      "pick_team": null,
-      "side": "Over",
-      "total_line": 6.5,
-      "edge": "+1.9%",
+      "play": "Tampa Bay Rays Moneyline",
+      "price": "-159",
+      "book": "BetUS",
+      "type": "ml",
+      "pick_team": "Tampa Bay Rays",
+      "side": null,
+      "total_line": null,
+      "edge": "+3.3%",
       "signal": "watch"
     }
   ]
