@@ -1,66 +1,66 @@
 {
-  "timestamp": "2026-10-24T13:14:14.399273-04:00",
-  "time_display": "01:14 PM ET",
+  "timestamp": "2026-10-25T13:26:09.859384-04:00",
+  "time_display": "01:26 PM ET",
   "type": "opening",
   "games": {
-    "Tampa Bay Rays @ Milwaukee Brewers": {
-      "away": "Tampa Bay Rays",
-      "home": "Milwaukee Brewers",
-      "commence_time": "2026-10-25T00:00:00Z",
+    "Milwaukee Brewers @ Tampa Bay Rays": {
+      "away": "Milwaukee Brewers",
+      "home": "Tampa Bay Rays",
+      "commence_time": "2026-10-27T00:10:00Z",
       "books": {
-        "DraftKings": {
-          "away_price": 100,
-          "home_price": -120,
-          "total_line": 6.5,
-          "over_price": -110
-        },
-        "MyBookie.ag": {
-          "away_price": 103,
-          "home_price": -121,
-          "total_line": 6.5,
-          "over_price": -109
-        },
         "FanDuel": {
           "away_price": 102,
           "home_price": -120,
           "total_line": 6.5,
-          "over_price": -110
+          "over_price": -152
         },
-        "BetMGM": {
+        "DraftKings": {
           "away_price": 100,
           "home_price": -120,
-          "total_line": 6.5,
-          "over_price": -110
-        },
-        "BetOnline.ag": {
-          "away_price": 104,
-          "home_price": -115,
-          "total_line": 6.5,
-          "over_price": -110
+          "total_line": 7.0,
+          "over_price": -112
         },
         "LowVig.ag": {
-          "away_price": 104,
-          "home_price": -115,
-          "total_line": 6.5,
-          "over_price": -107
-        },
-        "Bovada": {
           "away_price": 103,
-          "home_price": -123,
-          "total_line": 6.5,
-          "over_price": -110
-        },
-        "BetUS": {
-          "away_price": 107,
-          "home_price": -117,
-          "total_line": 6.5,
-          "over_price": -110
+          "home_price": -113,
+          "total_line": 7.0,
+          "over_price": -114
         },
         "BetRivers": {
-          "away_price": 105,
-          "home_price": -124,
-          "total_line": 6.5,
-          "over_price": -104
+          "away_price": 102,
+          "home_price": -121,
+          "total_line": 7.5,
+          "over_price": 102
+        },
+        "BetOnline.ag": {
+          "away_price": 103,
+          "home_price": -113,
+          "total_line": 7.0,
+          "over_price": -116
+        },
+        "BetMGM": {
+          "away_price": -102,
+          "home_price": -118,
+          "total_line": 7.0,
+          "over_price": -120
+        },
+        "Bovada": {
+          "away_price": 102,
+          "home_price": -122,
+          "total_line": 7.0,
+          "over_price": -120
+        },
+        "MyBookie.ag": {
+          "away_price": 100,
+          "home_price": -122,
+          "total_line": 7.0,
+          "over_price": -115
+        },
+        "BetUS": {
+          "away_price": 103,
+          "home_price": -113,
+          "total_line": 7.0,
+          "over_price": -120
         }
       }
     }
