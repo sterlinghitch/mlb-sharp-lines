@@ -2,11 +2,11 @@
   "date": "2026-10-25",
   "games": {
     "Milwaukee Brewers @ Tampa Bay Rays": {
-      "play": "Under 7.0 Runs",
-      "price": "+103",
-      "book": "DraftKings",
+      "play": "Over 7.0 Runs",
+      "price": "+102",
+      "book": "BetUS",
       "is_pass": false,
-      "edge": "+3.7%",
+      "edge": "+3.0%",
       "away_true": 48,
       "home_true": 52,
       "away_fair": "+110",
