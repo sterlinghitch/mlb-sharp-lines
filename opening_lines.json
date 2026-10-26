@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-10-25T13:26:09.859384-04:00",
-  "time_display": "01:26 PM ET",
+  "timestamp": "2026-10-26T15:45:35.209158-04:00",
+  "time_display": "03:45 PM ET",
   "type": "opening",
   "games": {
     "Milwaukee Brewers @ Tampa Bay Rays": {
@@ -11,32 +11,32 @@
         "FanDuel": {
           "away_price": 102,
           "home_price": -120,
-          "total_line": 6.5,
-          "over_price": -152
+          "total_line": 7.5,
+          "over_price": 112
         },
         "DraftKings": {
-          "away_price": 100,
-          "home_price": -120,
+          "away_price": -102,
+          "home_price": -118,
           "total_line": 7.0,
-          "over_price": -112
+          "over_price": -115
         },
         "LowVig.ag": {
           "away_price": 103,
           "home_price": -113,
           "total_line": 7.0,
-          "over_price": -114
+          "over_price": -115
         },
         "BetRivers": {
-          "away_price": 102,
-          "home_price": -121,
-          "total_line": 7.5,
-          "over_price": 102
+          "away_price": 104,
+          "home_price": -124,
+          "total_line": 7.0,
+          "over_price": -107
         },
         "BetOnline.ag": {
           "away_price": 103,
           "home_price": -113,
           "total_line": 7.0,
-          "over_price": -116
+          "over_price": -117
         },
         "BetMGM": {
           "away_price": -102,
@@ -45,22 +45,22 @@
           "over_price": -120
         },
         "Bovada": {
-          "away_price": 102,
-          "home_price": -122,
+          "away_price": -102,
+          "home_price": -118,
           "total_line": 7.0,
           "over_price": -120
         },
         "MyBookie.ag": {
           "away_price": 100,
-          "home_price": -122,
+          "home_price": -118,
           "total_line": 7.0,
-          "over_price": -115
+          "over_price": -116
         },
         "BetUS": {
-          "away_price": 103,
-          "home_price": -113,
+          "away_price": 102,
+          "home_price": -112,
           "total_line": 7.0,
-          "over_price": -120
+          "over_price": -115
         }
       }
     }
