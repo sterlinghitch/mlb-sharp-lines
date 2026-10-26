@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-25",
-  "date_display": "October 25, 2026",
+  "date": "2026-10-26",
+  "date_display": "October 26, 2026",
   "bets": [
     {
       "game": "Milwaukee Brewers @ Tampa Bay Rays",
@@ -15,7 +15,7 @@
       "pick_team": null,
       "side": "Over",
       "total_line": 7.0,
-      "edge": "+3.0%",
+      "edge": "+4.6%",
       "signal": "fire"
     }
   ]

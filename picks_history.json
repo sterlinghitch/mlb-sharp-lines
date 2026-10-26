@@ -15377,6 +15377,17 @@
       "type": "total",
       "edge": "+3.0%",
       "signal": "fire"
+    },
+    {
+      "date": "2026-10-26",
+      "date_display": "October 26, 2026",
+      "game": "Milwaukee Brewers @ Tampa Bay Rays",
+      "play": "Over 7.0 Runs",
+      "price": "+102",
+      "book": "BetUS",
+      "type": "total",
+      "edge": "+4.6%",
+      "signal": "fire"
     }
   ]
 }
