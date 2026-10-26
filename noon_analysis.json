@@ -2,11 +2,11 @@
   "date": "2026-10-26",
   "games": {
     "Milwaukee Brewers @ Tampa Bay Rays": {
-      "play": "Over 7.0 Runs",
+      "play": "Milwaukee Brewers Moneyline",
       "price": "+102",
-      "book": "BetUS",
+      "book": "MyBookie.ag",
       "is_pass": false,
-      "edge": "+4.6%",
+      "edge": "+3.8%",
       "away_true": 52,
       "home_true": 48,
       "away_fair": "-108",
