@@ -2,15 +2,15 @@
   "date": "2026-10-27",
   "games": {
     "Milwaukee Brewers @ Tampa Bay Rays": {
-      "play": "Tampa Bay Rays Moneyline",
-      "price": "+115",
-      "book": "DraftKings",
+      "play": "Milwaukee Brewers Moneyline",
+      "price": "-118",
+      "book": "BetUS",
       "is_pass": false,
-      "edge": "+4.9%",
-      "away_true": 51,
-      "home_true": 49,
-      "away_fair": "-102",
-      "home_fair": "+102",
+      "edge": "+3.1%",
+      "away_true": 55,
+      "home_true": 45,
+      "away_fair": "-121",
+      "home_fair": "+121",
       "signal": "fire",
       "signal_label": "SPLIT MARKET"
     }
