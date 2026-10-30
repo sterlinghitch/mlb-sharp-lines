@@ -1,44 +1,6 @@
 {
-  "timestamp": "2026-10-28T22:38:59.041337-04:00",
-  "time_display": "10:38 PM ET",
+  "timestamp": "2026-10-29T22:47:02.246946-04:00",
+  "time_display": "10:47 PM ET",
   "type": "closing",
-  "games": {
-    "Milwaukee Brewers @ Tampa Bay Rays": {
-      "away": "Milwaukee Brewers",
-      "home": "Tampa Bay Rays",
-      "commence_time": "2026-10-29T00:10:00Z",
-      "books": {
-        "FanDuel": {
-          "away_price": -7000,
-          "home_price": 1500,
-          "total_line": 5.5,
-          "over_price": -102
-        },
-        "BetMGM": {
-          "away_price": -10000,
-          "home_price": 1700,
-          "total_line": 5.5,
-          "over_price": 110
-        },
-        "DraftKings": {
-          "away_price": -10000,
-          "home_price": 1420,
-          "total_line": 5.5,
-          "over_price": 105
-        },
-        "MyBookie.ag": {
-          "away_price": -5000,
-          "home_price": 1200,
-          "total_line": 5.5,
-          "over_price": 100
-        },
-        "Bovada": {
-          "away_price": -2800,
-          "home_price": 1100,
-          "total_line": 5.5,
-          "over_price": -105
-        }
-      }
-    }
-  }
+  "games": {}
 }
